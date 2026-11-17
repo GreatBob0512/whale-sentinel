@@ -44,7 +44,8 @@
     "scripts/build-artwork.py",
     "scripts/build-it-artwork.py",
     "scripts/split-frames.py",
-    "docs/task-panel.png"
+    "docs/panel-preview.png",
+    "docs/notification-preview.png"
   ],
   "dsh": {
     "bundle": {

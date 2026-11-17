@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Whale Sentinel",
+    "description": "Whale Sentinel: a lightweight DSH task radar. Collapsed, the mascot sits at her desk; once the panel opens she stands beside it, gripping the edge and pointing at the tasks. Collapsed and expanded sizes are adjustable independently, in-page notices survive hiding the mascot, and foreground system notifications are optional. Does not modify the DSH core.",
+    "detail": "README.md"
+  }
+}

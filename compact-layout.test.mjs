@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
+test('native template is side-by-side not hero header artwork',()=>{const s=readFileSync(new URL('./native-wake.ps1',import.meta.url),'utf8');assert.doesNotMatch(s,/SetAttribute\('placement', 'hero'\)/);assert.match(s,/CreateElement\('group'\)/);assert.match(s,/hint-weight/);assert.match(s,/activationUri/);assert.doesNotMatch(s,/SetAttribute\('launch', 'dsh:\/\/open'\)/)});

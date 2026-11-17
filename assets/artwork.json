@@ -1,0 +1,251 @@
+{
+  "id": "whale-it-seated-v1",
+  "approvedSource": "outputs/whale-relock/mini-three-views.png",
+  "forms": [
+    "child"
+  ],
+  "poseSheet": "outputs/whale-it-states/it-states-seated-white.png",
+  "approvedSha256": "cfd45958ad3b04ffe7eeadc65e1d436782eacc80427c9c9df63cbc5dc9b422a9",
+  "sheetSha256": "8c1c5513db3c7a454cb54c2adf01f7f8763077fa2fd9e255cf4a547026924f17",
+  "model": "gpt-image-2.6-sunburst",
+  "canvas": [
+    384,
+    576
+  ],
+  "states": {
+    "idle": {
+      "source": "outputs/whale-it-states/frames-seated/idle-384.png",
+      "sourceSha256": "880edd913a5efa1d890dd75d9d4fb0af489139a9abf17223f32cf5cdabbce5ae",
+      "normalizedBounds": [
+        9,
+        8,
+        375,
+        568
+      ],
+      "files": {
+        "sprite": {
+          "sha256": "13fe864d92c88b64a4d0bb121e90e318090810ddd4b6c6a13425a0fa0d1ba5e1",
+          "bytes": 62644,
+          "size": [
+            384,
+            576
+          ]
+        },
+        "-icon": {
+          "sha256": "a4832152490ef62f32e51543df3cda0dc4cca8822eb6d469fdad9ad2beabfa0a",
+          "bytes": 5891,
+          "size": [
+            128,
+            128
+          ]
+        },
+        "-side": {
+          "sha256": "6dda4ba40f643fdf61969e3ef2303ff1e7ede39eb2d1586a5ef1276a28becf1e",
+          "bytes": 10768,
+          "size": [
+            160,
+            192
+          ]
+        }
+      }
+    },
+    "running": {
+      "source": "outputs/whale-it-states/frames-seated/running-384.png",
+      "sourceSha256": "96db58954cc734ee67119e8144668c4552ad74e9b886cdbbfe15c666410335dd",
+      "normalizedBounds": [
+        8,
+        16,
+        376,
+        568
+      ],
+      "files": {
+        "sprite": {
+          "sha256": "6d0d94928d867822e7d67fbb72b18b4d29215d3f1fb7db1a3ca7fcba0b09595e",
+          "bytes": 61539,
+          "size": [
+            384,
+            576
+          ]
+        },
+        "-icon": {
+          "sha256": "fecd4d9928e72ae1a052c30ac686fa71ba3b6f75c9dc275770c05d7e576592cd",
+          "bytes": 5912,
+          "size": [
+            128,
+            128
+          ]
+        },
+        "-side": {
+          "sha256": "2fb1c6ba80ad9c2401130265d085687436572570fdc08b47b08bbe15bdaab301",
+          "bytes": 10655,
+          "size": [
+            160,
+            192
+          ]
+        }
+      }
+    },
+    "waiting": {
+      "source": "outputs/whale-it-states/frames-seated/waiting-384.png",
+      "sourceSha256": "adbc42c37a381f0ff0b7ebd42eaceece82f070f5a9510b79be7d59b30bc25584",
+      "normalizedBounds": [
+        8,
+        31,
+        376,
+        568
+      ],
+      "files": {
+        "sprite": {
+          "sha256": "76c08911c95ae397794cb5776f01400f6572fd4ae6f1310a1de67158486591ea",
+          "bytes": 62099,
+          "size": [
+            384,
+            576
+          ]
+        },
+        "-icon": {
+          "sha256": "75b010c3d088018dc55c8aceeb110a6047f5b0da94f697c67a578f9e021e7e36",
+          "bytes": 5911,
+          "size": [
+            128,
+            128
+          ]
+        },
+        "-side": {
+          "sha256": "0712184f167953533c168456bbfc651f4bb685056a9ce7a40dd922ae630b9189",
+          "bytes": 10714,
+          "size": [
+            160,
+            192
+          ]
+        }
+      }
+    },
+    "done": {
+      "source": "outputs/whale-it-states/frames-seated/done-384.png",
+      "sourceSha256": "f0b9feb6c2ab9a78736620cdedab97055f22f888d1de234e66c4351e19b798ec",
+      "normalizedBounds": [
+        12,
+        8,
+        372,
+        568
+      ],
+      "files": {
+        "sprite": {
+          "sha256": "3e2d041b390b9c55bd04a3c70dc5baa56200372eb4f994f5d6e5ef45a7a4ee13",
+          "bytes": 62606,
+          "size": [
+            384,
+            576
+          ]
+        },
+        "-icon": {
+          "sha256": "3d92689b928fb2b3e843673b06225f8a543efb1d2168ec3ad5421d2cdcd7d245",
+          "bytes": 5994,
+          "size": [
+            128,
+            128
+          ]
+        },
+        "-side": {
+          "sha256": "922c5556eb6032e6803442824f30620fc2ced12df761084c0c487c64783490f4",
+          "bytes": 10919,
+          "size": [
+            160,
+            192
+          ]
+        }
+      }
+    },
+    "error": {
+      "source": "outputs/whale-it-states/frames-seated/error-384.png",
+      "sourceSha256": "3d2ccc7330f171e8f86086c7bcd763e8bfedc75c93d19b7fdb6073c34a73117e",
+      "normalizedBounds": [
+        8,
+        208,
+        376,
+        568
+      ],
+      "files": {
+        "sprite": {
+          "sha256": "d275adc08fc774ed0fc4379b2f50288770eca289bee692c6a1f55fd59955ab5b",
+          "bytes": 46916,
+          "size": [
+            384,
+            576
+          ]
+        },
+        "-icon": {
+          "sha256": "c3de2460f5437b2226e99afa5ab8af311ade655d56b635c97f322d3ad0379535",
+          "bytes": 4520,
+          "size": [
+            128,
+            128
+          ]
+        },
+        "-side": {
+          "sha256": "fa5d643b709b3430a5d0790bf031b700585b474c33de52ea11707bd869a021d2",
+          "bytes": 8192,
+          "size": [
+            160,
+            192
+          ]
+        }
+      }
+    }
+  },
+  "buddy": {
+    "pose": "standing, gripping the panel edge and pointing at it",
+    "sheet": "outputs/whale-buddy/buddy-five-white.png",
+    "sheetSha256": "2d8d4f7f46bfcc2d5b98f94ca9e1f6da9dd846ee963bea482b91275848368160",
+    "format": "webp",
+    "crop": "tight bounds, no transparent padding",
+    "states": {
+      "idle": {
+        "source": "outputs/whale-buddy/frames/idle-tight.png",
+        "sha256": "74b0680e773ab5e05989e899254c563252900d0c009a4bdc77972a9ead774ec6",
+        "bytes": 27046,
+        "size": [
+          224,
+          462
+        ]
+      },
+      "running": {
+        "source": "outputs/whale-buddy/frames/running-tight.png",
+        "sha256": "206648aaa37565cdbc1d6d3a927da16cb8996356d60a00c25172ec7abf9818fd",
+        "bytes": 26710,
+        "size": [
+          224,
+          462
+        ]
+      },
+      "waiting": {
+        "source": "outputs/whale-buddy/frames/waiting-tight.png",
+        "sha256": "aba8b5d54dd74d416fbfb9dc05a174141358c221e1c94b6eeb41d437dcdd2083",
+        "bytes": 27278,
+        "size": [
+          223,
+          462
+        ]
+      },
+      "done": {
+        "source": "outputs/whale-buddy/frames/done-tight.png",
+        "sha256": "bd07db2bfd97035aac4bb61decc7d7145ceef345c1a00ae6c0f9e7f3066c4f59",
+        "bytes": 26698,
+        "size": [
+          224,
+          462
+        ]
+      },
+      "error": {
+        "source": "outputs/whale-buddy/frames/error-tight.png",
+        "sha256": "c9b7fb05cc975a07e36af637d72810737ef1ee42842a9f40ced94b4b24110fcb",
+        "bytes": 26916,
+        "size": [
+          223,
+          462
+        ]
+      }
+    }
+  }
+}

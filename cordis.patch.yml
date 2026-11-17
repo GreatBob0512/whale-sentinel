@@ -1,0 +1,3 @@
+- insert:
+    - id: whale-sentinel
+      name: '@local/whale-sentinel'

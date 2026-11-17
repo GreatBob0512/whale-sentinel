@@ -3,7 +3,7 @@
   "version": "1.8.8",
   "private": true,
   "type": "module",
-  "description": "鲸哨：DSH 轻量任务雷达。收起时坐姿办公，展开后站到看板旁指向任务，两种尺寸可分别调整。",
+  "description": "小鲸哨：DSH 轻量任务雷达。收起时坐姿办公，展开后站到看板旁指向任务，两种尺寸可分别调整。",
   "exports": {
     ".": "./release-1.8.8.js",
     "./client": "./client.js",
@@ -11,7 +11,8 @@
     "./assets/*": "./assets/*",
     "./icon": "./icon.png",
     "./README.md": "./README.md",
-    "./docs/*": "./docs/*"
+    "./docs/*": "./docs/*",
+    "./README.en.md": "./README.en.md"
   },
   "files": [
     "index.js",
@@ -45,7 +46,8 @@
     "scripts/build-it-artwork.py",
     "scripts/split-frames.py",
     "docs/panel-preview.png",
-    "docs/notification-preview.png"
+    "docs/notification-preview.png",
+    "README.en.md"
   ],
   "dsh": {
     "bundle": {

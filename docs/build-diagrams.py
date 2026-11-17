@@ -48,7 +48,7 @@ def lines(d, xy, value, width, n=24, color=MUTED, bold=False, gap=9):
 def base(title, subtitle, h):
     im = Image.new('RGB', (1600, h), BG)
     d = ImageDraw.Draw(im)
-    text(d, (48, 24), '鲸哨 / WHALE SENTINEL · 1.8.8', 19, BLUE, True)
+    text(d, (48, 24), '小鲸哨 / WHALE SENTINEL · 1.8.8', 19, BLUE, True)
     text(d, (48, 63), title, 41, INK, True)
     text(d, (48, 126), subtitle, 22, MUTED)
     return im, d

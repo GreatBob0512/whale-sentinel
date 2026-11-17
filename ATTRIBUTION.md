@@ -2,7 +2,7 @@
 
 ## 1. 当前角色素材
 
-鲸哨 1.8.8 的角色素材以**用户指定的角色形象基准**（工作区 `outputs/whale-relock/mini-three-views.png`）为准：收起时的五态坐姿与展开时抓边指向的五种表情，均使用 `gpt-image-2.6` 以该角色为参考图生图生成，再在本地完成抠图、拆帧、尺寸与运行格式处理。当前只采用幼年形态，无年龄阶段切换或换装。角色名称「小鲸哨」和插件名称「鲸哨」不等于角色权利已获得独立确认。
+小鲸哨 1.8.8 的角色素材以**用户指定的角色形象基准**（工作区 `outputs/whale-relock/mini-three-views.png`）为准：收起时的五态坐姿与展开时抓边指向的五种表情，均使用 `gpt-image-2.6` 以该角色为参考图生图生成，再在本地完成抠图、拆帧、尺寸与运行格式处理。当前只采用幼年形态，无年龄阶段切换或换装。插件名称「小鲸哨」与角色同名不等于角色权利已获得独立确认。
 
 素材保留了蓝发鲸鱼娘、女仆衣装、鲸尾及相关装饰等社区角色衍生特征。**不将这批图描述为“完全原创、自有且不受第三方授权限制”**，也不声称重新生成、换衣或改名即可解除既有角色、参考图或衍生作品的权利义务。
 
@@ -38,4 +38,4 @@
 
 **English note:** The current release uses only the child-form mascot in five seated workstation poses, with fully covered, non-sexual styling and full-body artwork; there is no age-stage selector. The poses are AI image-to-image material generated from a user-supplied character reference, then background-removed, split and resized locally. It retains community whale-maid character features. Renaming, changing outfits or generating new pixels does not establish exclusive ownership or remove third-party rights. The upstream repository's MIT code license must not be assumed to license its character artwork; verify applicable attribution, non-commercial and share-alike requirements before distribution or commercial use.
 
-本插件为非官方作品，与 DeepSeek 无隶属关系；角色权利与授权范围不在此作法律保证。
+小鲸哨为非官方作品，与 DeepSeek 无隶属关系；角色权利与授权范围不在此作法律保证。

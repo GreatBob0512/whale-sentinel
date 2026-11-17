@@ -43,7 +43,8 @@
     "scripts/prepare-soft-artwork.py",
     "scripts/build-artwork.py",
     "scripts/build-it-artwork.py",
-    "scripts/split-frames.py"
+    "scripts/split-frames.py",
+    "docs/task-panel.png"
   ],
   "dsh": {
     "bundle": {

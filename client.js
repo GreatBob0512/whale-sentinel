@@ -41,7 +41,7 @@ window.__ModuleLoader__.load({
     const DICT = {
       zh: {
         name: '小鲸哨',
-        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
+        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'alert.saved':'已保存', 'alert.retry':'稍后自动重试', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
         'event.stopped': '已手动停止', 'event.interrupted': '任务意外中断', 'event.forked': '已分叉', 'event.unknown': '任务结束', 'waiting.approval': '需要你批准', 'waiting.choice': '需要你选择', 'waiting.input': '需要你输入文字',
         title: '任务提醒',
         'state.idle': '待命中',
@@ -117,7 +117,7 @@ window.__ModuleLoader__.load({
       },
       en: {
         name: 'Xiao Jingshao',
-        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
+        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'alert.saved':'Saved', 'alert.retry':'retrying', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
         'event.stopped': 'Stopped by user', 'event.interrupted': 'Task interrupted', 'event.forked': 'Forked', 'event.unknown': 'Task ended', 'waiting.approval': 'Approval needed', 'waiting.choice': 'A choice is needed', 'waiting.input': 'Text input needed',
         title: 'Task reminders',
         'state.idle': 'Standing by',
@@ -257,6 +257,14 @@ window.__ModuleLoader__.load({
         const abort=new AbortController();controllers.add(abort);
         const timeout=setTimeout(()=>abort.abort(),10000);
         try{const res=await fetch(url,{...init,signal:abort.signal});if(!res.ok)throw new Error('HTTP '+res.status);return await res.json();}
+        catch(error){
+          // A timeout or a page resume can abort the fetch. Surface plain Chinese
+          // instead of the raw DOMException text.
+          const message=String(error&&error.message||error||'');
+          if(error&&(error.name==='AbortError'||/abort/i.test(message)))throw new Error('请求超时，稍后会自动重试');
+          if(/^HTTP \d+$/.test(message))throw error;
+          throw new Error('暂时连不上后台，稍后会自动重试');
+        }
         finally{clearTimeout(timeout);controllers.delete(abort);}
       }
       const processed = new Set(), shown = new Map();
@@ -356,19 +364,31 @@ window.__ModuleLoader__.load({
       }
       function toggleMute(){const muted=!snapshot.muted;writeFlag(MUTE_KEY,muted);patch({muted,bubble:muted?null:snapshot.bubble});}
       function toggleHidden(){const hidden=!snapshot.hidden;writeFlag(HIDDEN_KEY,hidden);patch({hidden});}
-      function toggleNotify(){const notifyEnabled=!snapshot.notifyEnabled;writeFlag(NOTIFY_KEY,notifyEnabled);patch({notifyEnabled});action({action:'preferences',enabled:notifyEnabled}).catch(e=>noteAlert('设置',{ok:false,reason:String(e)}));}
-      function clearHistory(){action({action:'clear'}).then(()=>{events=[];patch({events:[],bubble:null});updatePhase()}).catch(e=>noteAlert('清空记录',{ok:false,reason:String(e)}));}
-      function testNotification(){cues.unlock();return action({action:'test'}).catch(e=>noteAlert('测试通知',{ok:false,reason:String(e)}));}
+      function toggleNotify(){const notifyEnabled=!snapshot.notifyEnabled;writeFlag(NOTIFY_KEY,notifyEnabled);patch({notifyEnabled});action({action:'preferences',enabled:notifyEnabled}).catch(e=>noteAlert('设置',{ok:false,reason:String(e&&e.message?e.message:e)}));}
+      function clearHistory(){action({action:'clear'}).then(()=>{events=[];patch({events:[],bubble:null});updatePhase()}).catch(e=>noteAlert('清空记录',{ok:false,reason:String(e&&e.message?e.message:e)}));}
+      function testNotification(){cues.unlock();return action({action:'test'}).catch(e=>noteAlert('测试通知',{ok:false,reason:String(e&&e.message?e.message:e)}));}
       function dispose(){disposed=true;cues.dispose();
         if(typeof document.removeEventListener==='function'){document.removeEventListener('visibilitychange',onPresenceChange);window.removeEventListener?.('focus',onPresenceChange);window.removeEventListener?.('blur',onPresenceChange);}for(const controller of controllers)controller.abort();controllers.clear();clearTimeout(timer);clearTimeout(bubbleTimer);clearTimeout(settleTimer);for(const n of shown.values())try{n.close()}catch{}listeners.clear();}
       function toggleSound(){
         cues.unlock();const soundEnabled=!snapshot.soundEnabled;patch({soundEnabled});
-        action({action:'preferences',soundEnabled}).catch(e=>noteAlert('音效设置',{ok:false,reason:String(e)}));
+        action({action:'preferences',soundEnabled}).catch(e=>noteAlert('音效设置',{ok:false,reason:String(e&&e.message?e.message:e)}));
       }
       function previewSound(){return cues.unlock().then(ok=>{if(ok)return cues.play('done',true,snapshot.soundVolume);noteAlert('音效',{ok:false,reason:'请通过用户交互解锁音效'});return false;});}
-      function setVolume(value){const soundVolume=Math.min(.5,Math.max(.05,Number(value)||.2));patch({soundVolume});action({action:'preferences',soundVolume}).catch(e=>noteAlert('音量设置',{ok:false,reason:String(e)}));}
+      function setVolume(value){const soundVolume=Math.min(.5,Math.max(.05,Number(value)||.2));patch({soundVolume});action({action:'preferences',soundVolume}).catch(e=>noteAlert('音量设置',{ok:false,reason:String(e&&e.message?e.message:e)}));}
       function toggleSize(){const size=snapshot.size==='large'?'standard':'large';try{window.localStorage.setItem(SIZE_KEY,size)}catch{}patch({size});}
-      function saveSetting(values){patch(values);action({action:'preferences',...values}).catch(e=>noteAlert('设置',{ok:false,reason:String(e)}));}
+      const pendingSettings={};let settingsTimer=null;
+      function saveSetting(values){
+        patch(values);
+        Object.assign(pendingSettings,values);
+        clearTimeout(settingsTimer);
+        settingsTimer=setTimeout(()=>{
+          const body={...pendingSettings};
+          for(const k of Object.keys(pendingSettings))delete pendingSettings[k];
+          action({action:'preferences',...body})
+            .then(()=>noteAlert('设置',{ok:true,reason:t('alert.saved')}))
+            .catch(e=>noteAlert('设置',{ok:false,reason:String(e&&e.message?e.message:e)}));
+        },220);
+      }
       function setMascotScale(value){const mascotScale=Math.min(1.6,Math.max(0.8,Math.round((Number(value)||1)*10)/10));saveSetting({mascotScale});}
       function setBuddyScale(value){const buddyScale=Math.min(1.6,Math.max(0.8,Math.round((Number(value)||1)*10)/10));saveSetting({buddyScale});}
       function toggleFocusedNotify(){saveSetting({notifyWhenFocused:!snapshot.notifyWhenFocused});}

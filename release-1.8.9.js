@@ -1,3 +1,4 @@
+// 1.8.9: friendly Chinese text for timeouts, plus debounced settings writes.
 // 1.8.8: separate size settings for the seated and expanded mascot.
 // 1.8.7: smaller default for the expand pose.
 // 1.8.6: give the expand pose a pixel base height so the size slider really works.
@@ -14,9 +15,9 @@
 // 1.7.0: five IT-scene poses replace the single standing figure; no behaviour change.
 import {readFileSync,writeFileSync,mkdirSync,renameSync} from 'node:fs';
 import {join} from 'node:path';import {homedir} from 'node:os';import {randomBytes} from 'node:crypto';
-import {initialState,foldTask} from './task-state.js?release=1.8.8';
-import {createTaskHost} from './host.js?release=1.8.8';
-import {createNativeBridge} from './native.js?release=1.8.8';
+import {initialState,foldTask} from './task-state.js?release=1.8.9';
+import {createTaskHost} from './host.js?release=1.8.9';
+import {createNativeBridge} from './native.js?release=1.8.9';
 import {createWindowsActivation} from './win-activation.js';
 import {createActivationQueue} from './activation-queue.js';
 export const inject=['agents','sessionProjections','webServer','connection'];

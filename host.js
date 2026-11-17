@@ -64,7 +64,7 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
    const currentTools=x.currentTools??[];
    return {sessionId:x.sessionId,title:titleOf(x),running:x.running,waiting:x.pending.length>0,waitKind:x.pending[0]?.kind??null,message:x.pending[0]?.message??'',since:x.since,phase:x.pending.length?'waiting':x.phase??'thinking',step:x.step??null,currentTools:currentTools.map(t=>({...t})),tool:currentTools.at(-1)?.name??null,toolCount:x.toolCount??0,todoTotal:x.todoTotal??0,todoDone:x.todoDone??0,progress:x.progress??null,updatedAt,stalled};
   });
-  return {boot,version:'1.8.8',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,events:[...history],notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
+  return {boot,version:'1.8.9',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,events:[...history],notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
  }
  function wording(n){
   const formatted=formatNotice(n);

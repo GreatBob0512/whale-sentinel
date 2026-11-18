@@ -16,8 +16,13 @@ function validText(value, max, required = false) {
 function validNotification(value) {
   if (!value || typeof value !== 'object') return false;
   if(value.soundEnabled!==undefined&&typeof value.soundEnabled!=='boolean')return false;
+  if(value.noNavigation!==undefined&&typeof value.noNavigation!=='boolean')return false;
   if(value.meta!==undefined&&!validText(value.meta,100))return false;
   if(value.activationUri!==undefined&&(typeof value.activationUri!=='string'||!/^dsh-whale-[a-f0-9]{12}:\/\/activate\/[a-f0-9]{64}$/.test(value.activationUri)))return false;
+  // A toast may only skip navigation when the caller says so explicitly; then it
+  // must not also carry a clickable URI that would silently do nothing.
+  if(value.activationUri===undefined&&value.noNavigation!==true)return false;
+  if(value.activationUri!==undefined&&value.noNavigation===true)return false;
   if (!validText(value.title, 200, true) || !validText(value.body, 2000)
     || !validText(value.sessionId, 256, true) || !validText(value.kind, 64, true)) return false;
   if (value.iconPath !== undefined) {
@@ -89,7 +94,7 @@ export function createNativeBridge({ platform = process.platform, spawnImpl = sp
       if (!validNotification(input)) return Promise.resolve(result(false, 'invalid-notification'));
       const { title, body, sessionId, kind, iconPath } = input;
       const tag = createHash('sha256').update(sessionId, 'utf8').digest('hex').slice(0, 16);
-      const encoded = Buffer.from(JSON.stringify({ title, body, sessionId, kind, iconPath, tag, soundEnabled:input.soundEnabled===true,meta:input.meta??'',activationUri:input.activationUri??'' }), 'utf8').toString('base64');
+      const encoded = Buffer.from(JSON.stringify({ title, body, sessionId, kind, iconPath, tag, soundEnabled:input.soundEnabled===true,meta:input.meta??'',activationUri:input.activationUri??'',noNavigation:input.noNavigation===true }), 'utf8').toString('base64');
       return run('Notify', ['-PayloadBase64', encoded]);
     },
     dispose() {

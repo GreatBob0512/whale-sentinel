@@ -9,7 +9,12 @@ export function createActivationQueue({dir,protocol,now=()=>Date.now(),ttlMs=10*
  function expire(){for(const[token,x]of issued)if(x.expires<=now())remove(token);}
  return{
   issue(notice){if(disposed)return null;if(!notice||typeof notice.id!=='string'||typeof notice.sessionId!=='string')throw Error('invalid notice');expire();while(issued.size>=limit)remove(issued.keys().next().value);const token=randomBytes(32).toString('hex');issued.set(token,{noticeId:notice.id,sessionId:notice.sessionId,expires:now()+ttlMs});return protocol+'://activate/'+token;},
-  consume(){if(disposed)return[];expire();const clicks=[];for(const file of readdirSync(dir)){if(!/^[a-f0-9]{64}\.click$/.test(file))continue;const token=file.slice(0,-6),path=join(dir,file);try{const stat=lstatSync(path);if(!stat.isFile()||stat.isSymbolicLink()||stat.size>128)continue;const text=readClick(path,'utf8');const entry=issued.get(token);if(entry&&text!==token)continue;unlinkSync(path);issued.delete(token);if(!entry||entry.expires<=now())continue;clicks.push({...entry,token});}catch(error){if(!['ENOENT','EBUSY','EPERM','EACCES'].includes(error.code))continue;}}return clicks;},
+  consume(){if(disposed)return[];expire();const clicks=[];for(const file of readdirSync(dir)){if(!/^[a-f0-9]{64}\.click$/.test(file))continue;const token=file.slice(0,-6),path=join(dir,file);try{const stat=lstatSync(path);if(!stat.isFile()||stat.isSymbolicLink()||stat.size>128)continue;const entry=issued.get(token);
+   // Another live plugin instance shares this protocol directory. Its token is
+   // not ours: never read it as a click and never delete it. Sweep only files
+   // old enough that no owner can still claim them.
+   if(!entry){if(Number(stat.mtimeMs||0)>0&&now()-Number(stat.mtimeMs)>2*ttlMs){try{unlinkSync(path);}catch{}}continue;}
+   const text=readClick(path,'utf8');if(text!==token)continue;unlinkSync(path);issued.delete(token);if(entry.expires<=now())continue;clicks.push({...entry,token});}catch(error){if(!['ENOENT','EBUSY','EPERM','EACCES'].includes(error.code))continue;}}return clicks;},
   dispose(){if(disposed)return;for(const token of [...issued.keys()])remove(token);disposed=true;}
  };
 }

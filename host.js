@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { DeliveryQueue } from './task-state.js';
-import { formatNotice } from './notification-format.js?release=1.3.1';
+import { DeliveryQueue, selectAttention } from './task-state.js';
+import { formatNotice } from './notification-format.js?release=2.0.0';
 
 const response=(res,status,body)=>{res.statusCode=status;res.setHeader('content-type','application/json; charset=utf-8');res.setHeader('cache-control','no-store');res.end(JSON.stringify(body));};
 const relevant=new Set(['turn/start','turn/end','step/start','assistant/message','todo/write','session/title','approval/asked','approval/decided','tool/call','tool/result']);
@@ -10,7 +10,8 @@ const pendingKinds={approval:'需要批准',choice:'需要选择',input:'需要�
 
 export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),preferences,activation}={}) {
  const boot=randomUUID(),queue=new DeliveryQueue({now}),facts=new Map(),seen=new Map(),waitingEvents=new Map(),detached=new Set(),stalledStates=new Map();
- const loaded=preferences?.load()??{};
+ const loadedRaw=preferences?.load?.();
+ const loaded=loadedRaw&&typeof loadedRaw==='object'&&!Array.isArray(loadedRaw)?loadedRaw:{};
  const SCOPES=new Set(['all','attention']),LIMITS=new Set([3,5,10]);
  const clampScale=v=>typeof v==='number'&&Number.isFinite(v)?Math.min(1.6,Math.max(0.8,Math.round(v*10)/10)):1;
  let serial=0,revision=0,enabled=loaded.enabled!==false,soundEnabled=loaded.soundEnabled===true,soundVolume=clampVolume(loaded.soundVolume),notifyWhenFocused=loaded.notifyWhenFocused===true,scope=SCOPES.has(loaded.scope)?loaded.scope:'all',historyLimit=LIMITS.has(loaded.historyLimit)?loaded.historyLimit:3,mascotScale=clampScale(loaded.mascotScale),buddyScale=clampScale(loaded.buddyScale),disposed=false,timer=null,lastWake=null;
@@ -32,7 +33,7 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
  }
  function restoreWait(s,force=false){
   if(!enabled||detached.has(s.sessionId)||!s.pending.length)return;
-  const p=s.pending.at(-1),event=waitingEvent(s,p);
+  const p=selectAttention(s.pending),event=waitingEvent(s,p);
   const current=queue.items.filter(n=>n.sessionId===s.sessionId&&n.kind==='waiting'&&n.status!=='withdrawn').at(-1);
   if(!force&&current?.pendingId===p.id)return;
   // Promotion/re-enable is a new delivery attempt, not another history event.
@@ -61,10 +62,13 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
   const active=rows.map(x=>{
    const updatedAt=x.updatedAt??x.since??null,stalled=updatedAt!==null&&at-updatedAt>=300000;
    if(stalledStates.has(x.sessionId)&&stalledStates.get(x.sessionId)!==stalled)changed();stalledStates.set(x.sessionId,stalled);
-   const currentTools=x.currentTools??[];
-   return {sessionId:x.sessionId,title:titleOf(x),running:x.running,waiting:x.pending.length>0,waitKind:x.pending[0]?.kind??null,message:x.pending[0]?.message??'',since:x.since,phase:x.pending.length?'waiting':x.phase??'thinking',step:x.step??null,currentTools:currentTools.map(t=>({...t})),tool:currentTools.at(-1)?.name??null,toolCount:x.toolCount??0,todoTotal:x.todoTotal??0,todoDone:x.todoDone??0,progress:x.progress??null,updatedAt,stalled};
+   const currentTools=x.currentTools??[],attention=selectAttention(x.pending);
+   return {sessionId:x.sessionId,title:titleOf(x),running:x.running,waiting:!!attention,waitKind:attention?.kind??null,message:attention?.message??'',since:x.since,phase:attention?'waiting':x.phase??'thinking',step:x.step??null,currentTools:currentTools.map(t=>({...t})),tool:currentTools.at(-1)?.name??null,toolCount:x.toolCount??0,todoTotal:x.todoTotal??0,todoDone:x.todoDone??0,progress:x.progress??null,updatedAt,stalled};
   });
-  return {boot,version:'1.8.9',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,events:[...history],notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
+  // Business stats only: a channel test is a diagnostic, never a finished task.
+  const business=history.filter(e=>e.test!==true);
+  const stats={active:active.length,running:active.filter(x=>x.running).length,waiting:active.filter(x=>x.waiting).length,doneToday:business.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&at-e.at<86400000).length,events:business.length};
+  return {boot,version:'2.0.0',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,stats,events:[...history],notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
  }
  function wording(n){
   const formatted=formatNotice(n);
@@ -80,14 +84,33 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
    while(focusQueue[0]?.expires<=now()){focusQueue.shift();changed();}
    if(!enabled)return;
   // Deterministic time is injected in tests. Production deadlines use the host clock.
-  for(const n of queue.due()){
-   trace({id:n.id,stage:'native-attempt'});
-   const content=wording(n);
-    // A focused, visible page already shows its own reminder; a system toast on top is noise.
-    // Defer instead of dropping, so going to the background still gets a real toast.
-    if(!notifyWhenFocused&&presence&&presence.visible&&presence.focused&&now()-presence.at<20000){n.status='pending';n.deadline=now()+30000;changed();trace({id:n.id,stage:'native-skip-visible'});continue;}
-    if(activation){if(!activation.ready){trace({id:n.id,stage:'native-error',reason:'通知点击桥未就绪，未发送不可定位的备用提醒'});continue;}content.activationUri=activation.issue(n);}
-    native.notify(content).then(result=>{if(!disposed)trace({id:n.id,stage:result.ok?'native-submitted':'native-error',reason:result.reason});},error=>{if(!disposed)trace({id:n.id,stage:'native-error',reason:String(error)});});
+  const suppress=!notifyWhenFocused&&presence&&presence.visible&&presence.focused&&now()-presence.at<20000;
+  for(const candidate of queue.peekDue()){
+   // One notice can never abort the whole delivery pass.
+   try{
+    if(suppress){queue.defer(candidate.id,30000);changed();trace({id:candidate.id,stage:'native-skip-visible'});continue;}
+    if(!queue.beginNative(candidate.id))continue;
+    trace({id:candidate.id,stage:'native-attempt',attempts:candidate.attempts+1});
+    const content=wording(candidate);
+    // A ready bridge gives an exact clickable target. Without one the reminder
+    // still appears, but it must not pretend to know a session.
+    let uri=null;
+    if(activation?.ready){try{uri=activation.issue(candidate);}catch(error){trace({id:candidate.id,stage:'native-error',reason:'activation-issue-failed:'+String(error)});}}
+    if(activation?.ready&&!uri){trace({id:candidate.id,stage:'native-no-navigation',reason:'通知点击标识不可用，本条降级为仅提醒'});}
+    if(uri)content.activationUri=uri;else content.noNavigation=true;
+    native.notify(content).then(result=>{
+     if(disposed)return;
+     queue.settleNative(candidate.id,result);changed();
+     trace({id:candidate.id,stage:result.ok?'native-submitted':'native-error',reason:result.reason});
+    },error=>{
+     if(disposed)return;
+     queue.settleNative(candidate.id,{ok:false,reason:String(error)});changed();
+     trace({id:candidate.id,stage:'native-error',reason:String(error)});
+    });
+   }catch(error){
+    try{queue.settleNative(candidate.id,{ok:false,reason:String(error)});changed();}catch{}
+    trace({id:candidate.id,stage:'native-error',reason:String(error)});
+   }
   }
  }
  async function action(body){
@@ -118,7 +141,17 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
     else if(!wasEnabled)for(const s of facts.values())restoreWait(s);
     return{ok:true,enabled,settings:settings()};
    }
-   case 'test':{const target=body.sessionId===undefined?[...facts.values()].find(x=>!x.child)?.sessionId:body.sessionId;if(target!==undefined&&(typeof target!=='string'||!facts.has(target)))throw Error('unknown test session');const n=publish({kind:'done',sessionId:target||'',title:'通知通道测试',message:'点击可返回此通知绑定的会话',at:now()},body.native!==true);if(body.native===true){if(!activation?.ready)return{ok:false,reason:'activation-unavailable'};const content={...wording(n),activationUri:activation.issue(n)};const result=await native.notify(content);trace({id:n.id,stage:result.ok?'native-submitted':'native-error',reason:result.reason});return{...result,id:n.id,activationUri:content.activationUri};}return{ok:true,id:n.id};}
+   case 'test':{const target=body.sessionId===undefined?[...facts.values()].find(x=>!x.child)?.sessionId:body.sessionId;if(target!==undefined&&(typeof target!=='string'||!facts.has(target)))throw Error('unknown test session');
+     // A channel test is diagnostic: it must never enter recent activity or stats.
+     const n={kind:'done',sessionId:target||'',title:'通知通道测试',message:'点击可返回此通知绑定的会话',at:now(),id:`${boot}:${++serial}`,test:true};
+     changed();
+     if(body.native!==true){queue.push(n);return{ok:true,id:n.id};}
+     if(!activation?.ready){queue.push(n);return{ok:false,reason:'activation-unavailable',id:n.id};}
+     let activationUri=null;try{activationUri=activation.issue(n);}catch(error){trace({id:n.id,stage:'native-error',reason:String(error)});}
+     const content={...wording(n)};if(activationUri)content.activationUri=activationUri;else content.noNavigation=true;
+     const result=await native.notify(content);
+     trace({id:n.id,stage:result.ok?'native-submitted':'native-error',reason:result.reason});
+     return{...result,id:n.id,activationUri};}
    case 'claim':{if(typeof body.id!=='string'||typeof body.client!=='string'||body.client.length>100)throw new Error('invalid claim');const ok=enabled&&queue.claim(body.id,body.client);if(ok)changed();return{ok};}
    case 'ack':{if(!['shown','error'].includes(body.stage))throw new Error('invalid receipt');const ok=queue.ack(body.id,body.client,body.stage);if(ok)trace({id:body.id,stage:body.stage==='shown'?'client-shown':'client-error'});return{ok};}
    case 'wake':{if(body.sessionId!==undefined&&(typeof body.sessionId!=='string'||body.sessionId.length>256))throw new Error('invalid session');lastWake=await native.wake();changed();return lastWake;}

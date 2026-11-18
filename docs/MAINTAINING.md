@@ -1,6 +1,6 @@
 # 鲸哨文档与素材维护
 
-当前版本：1.8.8。两套运行素材：坐姿 `whale-it-seated-v1`（`assets/fish-*.png`）与展开态 `buddy-*.webp`（记录在 `assets/artwork.json` 的 `buddy` 字段）。
+当前版本：2.0.0。两套运行素材：坐姿 `whale-it-seated-v1`（`assets/fish-*.png`）与展开态 `buddy-*.webp`（记录在 `assets/artwork.json` 的 `buddy` 字段；WebP 必须同时出现在 `package.json` 的 `files` 中）。
 
 ## 唯一事实来源
 
@@ -52,6 +52,18 @@
 - 收起态独立，用 `--dpg-scale` 乘 `--dpg-base-h/--dpg-base-w`，与展开尺寸互不影响。两个滑块分别持久化。
 
 **必须用像素基准乘缩放，不要用父级百分比高度。** 父容器是自动高度（由内容决定），子元素写 `height: 46%` 会形成循环依赖，浏览器会忽略它并退回内容高度——表现是「改了 CSS 却完全没变化」，而且很难从视觉上判断原因。曾踩过这个坑，退回像素基准后立刻生效。
+
+## 2.0 可靠性不变量（改之前先读）
+
+以下五条是 2.0 修掉的真实缺陷，改动时不要回退：
+
+1. **不要把“开始尝试”当成“已发送”**：`DeliveryQueue.beginNative()` 只是进入发送中，必须由 `settleNative({ok,reason})` 落定；失败要回到 `pending` 并按 `nativeRetryMs` 重试，达到上限才允许 `native-failed`。
+2. **点击桥不可用也要提醒**：`activation.ready` 为 false 时，用 `noNavigation: true` 发送仅提醒；`native.js` 与 `native-wake.ps1` 都会拒绝“既无 URI 又未声明 noNavigation”的载荷，避免弹出一个点了没反应的横幅。
+3. **协议按 profile 共享**：`protocolFor(DSH_HOME)` 生成确定性协议；清理旧键必须证明其启动器目录已不存在，不能仅凭 marker 删除。卸载时用 `instances/` 心跳判断是否还有其他存活实例。
+4. **启动器必须 UTF-16**：`activate.vbs` 要写成 UTF-16 LE + BOM，否则中文用户目录会在 ASCII 编码时变成 `?`，注册成功但点击打不开。
+5. **导航不能污染轮询**：`handleFocus()` 独立于状态同步，导航失败只更新导航提示；连续失败 3 次释放该点击，不能让队首卡住 60 秒。
+
+另外：设置写入必须经过 `saveSetting()` 的脏值保护，旧快照不得覆盖刚拖动的值；`test` 通知不得写入 history 或参与统计。
 
 ## 分发
 

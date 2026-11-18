@@ -66,5 +66,9 @@ test('icon wrappers and failure state never reveal the retired character',()=>{
 });
 test('art upgrade stays small and contains only intended runtime resources',()=>{
  const pkg=JSON.parse(read('package.json'));assert.ok(pkg.files.includes('assets/*.png'),'do not ship exploratory gen/ images');
- assert.ok(pkg.files.includes('assets/artwork.json'));assert.ok(read('client.js').length<700000,'inline runtime budget 700KB');
+ assert.ok(pkg.files.includes('assets/*.webp'),'expanded-state WebP is a shipped asset, not only an inline copy');
+ assert.ok(pkg.files.includes('assets/artwork.json'));
+ // 2.0 adds narrow-viewport and dark-mode rules; the inline budget only grows
+ // with documented UI work, never with extra embedded artwork.
+ assert.ok(read('client.js').length<720000,'inline runtime budget 720KB');
 });

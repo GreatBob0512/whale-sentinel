@@ -124,9 +124,16 @@ function Invoke-DshToast {
     $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
     $toast = $xml.CreateElement('toast')
     # Exact per-notice capability, handled by this plugin's own protocol bridge.
-    if ([string]$data.activationUri -notmatch '^dsh-whale-[a-f0-9]{12}://activate/[a-f0-9]{64}$') { return 30 }
-    $toast.SetAttribute('activationType', 'protocol')
-    $toast.SetAttribute('launch', [string]$data.activationUri)
+    # When the bridge could not issue one, the reminder is delivered as
+    # notification-only: it must not claim a target it cannot reach.
+    if ([string]$data.activationUri -match '^dsh-whale-[a-f0-9]{12}://activate/[a-f0-9]{64}$') {
+        $toast.SetAttribute('activationType', 'protocol')
+        $toast.SetAttribute('launch', [string]$data.activationUri)
+    } elseif ($data.noNavigation -eq $true) {
+        $toast.SetAttribute('activationType', 'system')
+    } else {
+        return 30
+    }
     $visual = $xml.CreateElement('visual')
     $binding = $xml.CreateElement('binding')
     $binding.SetAttribute('template', 'ToastGeneric')

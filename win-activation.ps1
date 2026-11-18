@@ -58,7 +58,9 @@ ps = q & "$PowerShellPath" & q & " -NoProfile -NonInteractive -WindowStyle Hidde
 Set sh = CreateObject("WScript.Shell")
 sh.Run ps, 0, False
 "@
-    [IO.File]::WriteAllText($launcher, ($body -replace "`r?`n", "`r`n"), [Text.Encoding]::ASCII)
+    # UTF-16 LE with BOM: Windows Script Host only reads non-ASCII paths from a
+    # Unicode launcher. An ASCII copy silently turns CJK user directories into '?'.
+    [IO.File]::WriteAllText($launcher, ($body -replace "`r?`n", "`r`n"), [Text.Encoding]::Unicode)
     return $launcher
 }
 
@@ -146,16 +148,29 @@ try {
         exit 0
     }
     if ($decision -ceq 'owned') { exit 0 }
-    # Reclaim our own protocols left behind by earlier plugin generations: only
-    # keys carrying this marker are ours, and the current one is kept.
+    # Reclaim protocols left behind by earlier plugin generations only when they
+    # are provably dead: the launcher directory no longer exists. Deleting every
+    # key with our marker would break a second live instance of the same plugin.
     try {
         foreach ($stale in @($root.OpenSubKey('Software\Classes').GetSubKeyNames() | Where-Object { $_ -like 'dsh-whale-*' -and $_ -cne $Protocol })) {
             $staleKey = $root.OpenSubKey('Software\Classes\' + $stale, $false)
             if ($null -eq $staleKey) { continue }
+            $staleMarker = ''
+            $staleCommand = ''
             try {
                 $staleMarker = [string]$staleKey.GetValue($markerName, '', [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+                $staleRun = $staleKey.OpenSubKey('shell\open\command', $false)
+                if ($null -ne $staleRun) {
+                    try { $staleCommand = [string]$staleRun.GetValue('', '', [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames) }
+                    finally { $staleRun.Dispose() }
+                }
             } finally { $staleKey.Dispose() }
-            if ($staleMarker -ceq $marker) { $root.DeleteSubKeyTree('Software\Classes\' + $stale, $false) }
+            if ($staleMarker -cne $marker) { continue }
+            $dead = $false
+            if ($staleCommand -match '"([A-Za-z]:\\[^"]*activate\.vbs)"') {
+                try { $dead = -not [IO.Directory]::Exists([IO.Path]::GetDirectoryName($Matches[1])) } catch { $dead = $false }
+            }
+            if ($dead) { $root.DeleteSubKeyTree('Software\Classes\' + $stale, $false) }
         }
     } catch { }
     $key = $root.CreateSubKey($keyPath)

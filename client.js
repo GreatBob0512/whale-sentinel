@@ -248,7 +248,7 @@ window.__ModuleLoader__.load({
     }
 
     // All task facts come from the Host's committed-event projection.
-    function createStore(ctx, deliver) {
+    function createStore(ctx, deliver, t) {
       const listeners = new Set();
       let disposed = false, bubbleTimer = null, settleTimer = null, timer = null, boot = null;
       let events = [], lastRecent = null, polling = false;
@@ -292,9 +292,10 @@ window.__ModuleLoader__.load({
         if(!snapshot.muted){patch({bubble:{event,at:Date.now()}});clearTimeout(bubbleTimer);bubbleTimer=setTimeout(()=>patch({bubble:null}),event.kind==='error'?14000:9000);}
       }
       async function send(notice){
-        processed.add(notice.id);if(processed.size>200)processed.delete(processed.values().next().value);
+        // Claim first: a transient transport failure must not retire the reminder.
         const claim=await action({action:'claim',id:notice.id,client});
         if(!claim.ok||disposed)return;
+        processed.add(notice.id);if(processed.size>200)processed.delete(processed.values().next().value);
         let notification, receipted=false;
         const receipt=async(stage)=>{
           if(disposed||receipted)return;
@@ -316,37 +317,75 @@ window.__ModuleLoader__.load({
         }
         if(!n?.ok)receipt('error');
       }
+      /** Navigation is bounded: a hung UI must not freeze the radar. */
+      function navigate(sessionId){
+        const ui=ctx.get('uiWorkspace');
+        if(!ui||typeof ui.openSession!=='function')return Promise.reject(new Error('会话导航未就绪'));
+        return new Promise((resolve,reject)=>{
+          let settled=false;
+          const timer=setTimeout(()=>{if(settled)return;settled=true;reject(new Error('打开会话超时'));},4000);
+          Promise.resolve().then(()=>ui.openSession(sessionId)).then(()=>{
+            if(settled)return;settled=true;clearTimeout(timer);resolve();
+          },error=>{if(settled)return;settled=true;clearTimeout(timer);reject(error);});
+        });
+      }
+      let navFailures=0;
+      async function handleFocus(state){
+        try{
+          if(pendingFocusAck){const lease=await action({action:'focus-claim',id:pendingFocusAck,client});if(lease.ok){const ack=await action({action:'focus-ack',id:pendingFocusAck,client});if(ack.ok)pendingFocusAck=null;}else if(state.focusRequest?.id!==pendingFocusAck)pendingFocusAck=null;}
+          if(!state.focusRequest||state.focusRequest.id===lastFocusId)return;
+          const focus=state.focusRequest;const claim=await action({action:'focus-claim',id:focus.id,client});
+          if(!claim.ok||disposed)return;
+          try{
+            await navigate(claim.sessionId||focus.sessionId);
+            if(disposed)return;
+            navFailures=0;lastFocusId=focus.id;pendingFocusAck=focus.id;
+            try{window.focus()}catch{}
+            const ack=await action({action:'focus-ack',id:focus.id,client});if(ack.ok)pendingFocusAck=null;
+          }catch(error){
+            navFailures+=1;
+            if(navFailures<3){noteAlert('会话导航',{ok:false,reason:'暂时打不开目标会话，稍后自动重试'});return;}
+            // Release the request so one broken target cannot block later clicks.
+            navFailures=0;lastFocusId=focus.id;pendingFocusAck=focus.id;
+            noteAlert('会话导航',{ok:false,reason:'无法打开目标会话，已释放本次点击'});
+            try{const ack=await action({action:'focus-ack',id:focus.id,client});if(ack.ok)pendingFocusAck=null;}catch{}
+          }
+        }catch(error){if(!disposed)noteAlert('会话导航',{ok:false,reason:String(error&&error.message||error)});}
+      }
       async function poll(){
         if(disposed||polling)return;
         polling=true;
         try{
-          const state=await request('whale-sentinel/state',{cache:'no-store'});if(disposed)return;
+          let state;
+          try{state=await request('whale-sentinel/state',{cache:'no-store'});}
+          catch(error){if(!disposed){patch({hostReady:false,connectionLost:true});noteAlert('后台连接',{ok:false,reason:String(error&&error.message||error)});}return;}
+          if(disposed||!state)return;
           if(boot!==state.boot){boot=state.boot;processed.clear();lastRecent=state.events?.[0]?.id??null;lastRev=null;}
-          if(pendingFocusAck){const lease=await action({action:'focus-claim',id:pendingFocusAck,client});if(lease.ok){const ack=await action({action:'focus-ack',id:pendingFocusAck,client});if(ack.ok)pendingFocusAck=null;}else if(state.focusRequest?.id!==pendingFocusAck)pendingFocusAck=null;}
-          if(state.focusRequest&&state.focusRequest.id!==lastFocusId){
-            const focus=state.focusRequest;const claim=await action({action:'focus-claim',id:focus.id,client});
-            if(claim.ok&&!disposed){const target=claim.sessionId||focus.sessionId;const ui=ctx.get('uiWorkspace');if(!ui||typeof ui.openSession!=='function')throw Error('会话导航未就绪');await ui.openSession(target);if(disposed)return;lastFocusId=focus.id;pendingFocusAck=focus.id;try{window.focus()}catch{}const ack=await action({action:'focus-ack',id:focus.id,client});if(ack.ok)pendingFocusAck=null;}
-          }
+          // Navigation failure is its own condition, never "host offline".
+          await handleFocus(state);
           reportPresence();
           if(state.rev&&lastRev===state.rev){if(!snapshot.hostReady)patch({hostReady:true,connectionLost:false});return;}
           lastRev=state.rev;
           const list=Array.isArray(state.events)?state.events:[];
           const recent=list[0];
           events=list.slice(0,MAX_EVENTS);
-          patch({hostReady:true,connectionLost:false,notifyEnabled:state.enabled!==false,soundEnabled:state.settings?.soundEnabled===true,soundVolume:state.settings?.soundVolume??.2,mascotScale:state.settings?.mascotScale??1,buddyScale:state.settings?.buddyScale??1,notifyWhenFocused:state.settings?.notifyWhenFocused===true,scope:state.settings?.scope==='attention'?'attention':'all',historyLimit:[3,5,10].includes(state.settings?.historyLimit)?state.settings.historyLimit:3,native:state.native===true,active:state.active??[],runningCount:(state.active??[]).filter(x=>x.running).length,waitingCount:(state.active??[]).filter(x=>x.waiting).length,events});
+          const incoming={hostReady:true,connectionLost:false,notifyEnabled:state.enabled!==false,soundEnabled:state.settings?.soundEnabled===true,soundVolume:state.settings?.soundVolume??.2,mascotScale:state.settings?.mascotScale??1,buddyScale:state.settings?.buddyScale??1,notifyWhenFocused:state.settings?.notifyWhenFocused===true,scope:state.settings?.scope==='attention'?'attention':'all',historyLimit:[3,5,10].includes(state.settings?.historyLimit)?state.settings.historyLimit:3,native:state.native===true,active:state.active??[],stats:state.stats??null,runningCount:(state.active??[]).filter(x=>x.running).length,waitingCount:(state.active??[]).filter(x=>x.waiting).length,events};
+          // Never let a stale snapshot overwrite a value the user just changed.
+          for(const key of dirty)delete incoming[key];
+          patch(incoming);
           if(recent&&recent.id!==lastRecent){lastRecent=recent.id;replay(recent);cues.play(recent.kind,snapshot.soundEnabled,snapshot.soundVolume);clearTimeout(settleTimer);settleTimer=setTimeout(updatePhase,12100);}
           updatePhase();
           const notices=state.notices??[];
           for(const [id,n] of [...shown]){
             const latest=notices.filter(x=>x.sessionId===id).at(-1);
-            if(!latest||['withdrawn','native'].includes(latest.status)){try{n.close()}catch{}shown.delete(id);}
+            if(!latest||['withdrawn','native','native-failed'].includes(latest.status)){try{n.close()}catch{}shown.delete(id);}
           }
-          if(snapshot.notifyEnabled){for(const n of notices){if(n.status!=='pending'||processed.has(n.id))continue;await send(n);}}
+          if(snapshot.notifyEnabled){for(const n of notices){if(n.status!=='pending'||processed.has(n.id))continue;try{await send(n);}catch(error){noteAlert('通知',{ok:false,reason:'通知认领失败，稍后重试'});break;}}}
           const nativeResult=state.delivery?.[0];
           if(nativeResult&&(nativeResult.id+':'+nativeResult.stage)!==snapshot.lastDelivery&&nativeResult.stage.startsWith('native-')){patch({lastDelivery:nativeResult.id+':'+nativeResult.stage});noteAlert('后台通知',{ok:false,reason:nativeResult.stage==='native-submitted'?'已提交 Windows 通知，未确认显示':nativeResult.reason||'后台原生发送中'});}
-          
-        }catch(error){if(!disposed){patch({hostReady:false,connectionLost:true});noteAlert('后台连接',{ok:false,reason:String(error)});}}
-        finally{polling=false;if(!disposed)timer=setTimeout(poll,1500);}
+        }catch(error){
+          if(!disposed)noteAlert('面板同步',{ok:false,reason:'同步出现异常，任务状态不受影响'});
+        }finally{polling=false;if(!disposed)timer=setTimeout(poll,1500);}
       }
       let presenceAt=0;
       function reportPresence(force){
@@ -367,7 +406,7 @@ window.__ModuleLoader__.load({
       function toggleNotify(){const notifyEnabled=!snapshot.notifyEnabled;writeFlag(NOTIFY_KEY,notifyEnabled);patch({notifyEnabled});action({action:'preferences',enabled:notifyEnabled}).catch(e=>noteAlert('设置',{ok:false,reason:String(e&&e.message?e.message:e)}));}
       function clearHistory(){action({action:'clear'}).then(()=>{events=[];patch({events:[],bubble:null});updatePhase()}).catch(e=>noteAlert('清空记录',{ok:false,reason:String(e&&e.message?e.message:e)}));}
       function testNotification(){cues.unlock();return action({action:'test'}).catch(e=>noteAlert('测试通知',{ok:false,reason:String(e&&e.message?e.message:e)}));}
-      function dispose(){disposed=true;cues.dispose();
+      function dispose(){disposed=true;cues.dispose();clearTimeout(settingsTimer);settingsTimer=null;
         if(typeof document.removeEventListener==='function'){document.removeEventListener('visibilitychange',onPresenceChange);window.removeEventListener?.('focus',onPresenceChange);window.removeEventListener?.('blur',onPresenceChange);}for(const controller of controllers)controller.abort();controllers.clear();clearTimeout(timer);clearTimeout(bubbleTimer);clearTimeout(settleTimer);for(const n of shown.values())try{n.close()}catch{}listeners.clear();}
       function toggleSound(){
         cues.unlock();const soundEnabled=!snapshot.soundEnabled;patch({soundEnabled});
@@ -376,26 +415,35 @@ window.__ModuleLoader__.load({
       function previewSound(){return cues.unlock().then(ok=>{if(ok)return cues.play('done',true,snapshot.soundVolume);noteAlert('音效',{ok:false,reason:'请通过用户交互解锁音效'});return false;});}
       function setVolume(value){const soundVolume=Math.min(.5,Math.max(.05,Number(value)||.2));patch({soundVolume});action({action:'preferences',soundVolume}).catch(e=>noteAlert('音量设置',{ok:false,reason:String(e&&e.message?e.message:e)}));}
       function toggleSize(){const size=snapshot.size==='large'?'standard':'large';try{window.localStorage.setItem(SIZE_KEY,size)}catch{}patch({size});}
-      const pendingSettings={};let settingsTimer=null;
+      const pendingSettings={};let settingsTimer=null;const dirty=new Set();
+      function flushSettings(attempt=0){
+        const body={...pendingSettings};
+        for(const key of Object.keys(pendingSettings))delete pendingSettings[key];
+        if(!Object.keys(body).length)return;
+        action({action:'preferences',...body})
+          .then(()=>{
+            for(const key of Object.keys(body))dirty.delete(key);
+            noteAlert('设置',{ok:true,reason:t('alert.saved')});
+          })
+          .catch(error=>{
+            if(disposed)return;
+            if(attempt<2){Object.assign(pendingSettings,body);settingsTimer=setTimeout(()=>flushSettings(attempt+1),700);return;}
+            for(const key of Object.keys(body))dirty.delete(key);
+            noteAlert('设置',{ok:false,reason:'设置暂时没保存成功，稍后会自动重试'});
+          });
+      }
       function saveSetting(values){
         patch(values);
         Object.assign(pendingSettings,values);
+        for(const key of Object.keys(values))dirty.add(key);
         clearTimeout(settingsTimer);
-        settingsTimer=setTimeout(()=>{
-          const body={...pendingSettings};
-          for(const k of Object.keys(pendingSettings))delete pendingSettings[k];
-          action({action:'preferences',...body})
-            .then(()=>noteAlert('设置',{ok:true,reason:t('alert.saved')}))
-            .catch(e=>noteAlert('设置',{ok:false,reason:String(e&&e.message?e.message:e)}));
-        },220);
+        settingsTimer=setTimeout(()=>flushSettings(0),220);
       }
       function setMascotScale(value){const mascotScale=Math.min(1.6,Math.max(0.8,Math.round((Number(value)||1)*10)/10));saveSetting({mascotScale});}
       function setBuddyScale(value){const buddyScale=Math.min(1.6,Math.max(0.8,Math.round((Number(value)||1)*10)/10));saveSetting({buddyScale});}
       function toggleFocusedNotify(){saveSetting({notifyWhenFocused:!snapshot.notifyWhenFocused});}
-      function toggleScope(){saveSetting({scope:snapshot.scope==='attention'?'all':'attention'});}
-      function cycleHistoryLimit(){const order=[3,5,10];saveSetting({historyLimit:order[(order.indexOf(snapshot.historyLimit)+1)%order.length]});}
       poll();
-      return {toggleSound,previewSound,setVolume,toggleSize,setMascotScale,toggleFocusedNotify,toggleScope,cycleHistoryLimit,setBuddyScale,unlockAudio:()=>cues.unlock(),observable,noteAlert,toggleMute,toggleHidden,toggleNotify,clearHistory,testNotification,dismissBubble:()=>{clearTimeout(bubbleTimer);patch({bubble:null})},dispose};
+      return {toggleSound,previewSound,setVolume,toggleSize,setMascotScale,toggleFocusedNotify,setBuddyScale,unlockAudio:()=>cues.unlock(),observable,noteAlert,toggleMute,toggleHidden,toggleNotify,clearHistory,testNotification,dismissBubble:()=>{clearTimeout(bubbleTimer);patch({bubble:null})},dispose};
     }
 
     function formatDuration(t, ms) {
@@ -881,6 +929,33 @@ window.__ModuleLoader__.load({
 .dpg-vol input{flex:1;height:12px;accent-color:var(--sea);cursor:pointer}
 .dpg-debug{margin-top:7px;font-size:10.5px;font-weight:700;color:var(--muted);word-break:break-word}
 .dpg-debug[data-ready="false"]{color:#B4751D}
+/* 2.0: on a narrow viewport the panel keeps every control; the mascot yields. */
+@media(max-width:520px){
+.dpg-root{right:10px;bottom:10px;--dpg-base-h:132px;--dpg-base-w:128px}
+.dpg-anchor[data-open="true"] .dpg-mascot{display:none}
+.dpg-anchor[data-open="true"] .dpg-panel{width:calc(100vw - 20px);max-height:calc(100dvh - 84px)}
+}
+@media(max-width:360px){
+.dpg-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:7px 6px}
+.dpg-stat{font-size:10px;gap:2px;min-height:30px}
+.dpg-stat b{font-size:12px}
+.dpg-close,.dpg-tool{width:28px;height:28px}
+}
+/* 2.0: follow the OS dark preference; the artwork keeps its own palette. */
+@media(prefers-color-scheme:dark){
+.dpg-panel{--paper:#1B2436;--card:#243149;--ink:#E6EDF8;--muted:#A7B7CE;--sky:#2F6C93;--sea:#4E86C9;--mint:#2F8E74;--coral:#B65A64;--butter:#B9922F;--lav:#6B5FA8;box-shadow:4px 5px 0 rgba(0,0,0,.5),0 16px 34px rgba(0,0,0,.45)}
+.dpg-head{background:linear-gradient(135deg,#2B4A6B 0%,#3A3466 100%)}
+.dpg-conn-line{color:#C8D7EA}
+.dpg-stat[data-kind="tasks"]{background:#24405C}
+.dpg-stat[data-kind="running"]{background:#4A3D22}
+.dpg-stat[data-kind="done"]{background:#1F4438}
+.dpg-bar{background:#2C3A52}
+.dpg-tools{background:#1F2C42}
+.dpg-empty{border-color:#3A4A64}
+.dpg-more:hover{background:#1F2C42}
+.dpg-row:hover{box-shadow:4px 4px 0 rgba(0,0,0,.5)}
+.dpg-debug[data-ready="false"]{color:#E0A94A}
+}
 `;
 
     const Icons={
@@ -944,8 +1019,12 @@ window.__ModuleLoader__.load({
       const connText=state.hostReady?t('panel.connected'):state.connectionLost?t('panel.offline'):t('panel.connecting');
       const alertStatus=state.alert?(state.alert.ok?t('alert.sent',{n:state.alertCount}):state.alert.reason):t('alert.ready');
       const phaseGlyph=GLYPH[state.phase]??'dot';
-      const total=activity.length+state.events.length;
-      const doneToday=state.events.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&now-e.at<86400000).length;
+      // Counts come from the Host: sessions are not events, and a channel test is
+      // not a finished task.
+      const stats=state.stats??{};
+      const total=Number.isFinite(stats.active)?stats.active:activity.length;
+      const statRunning=Number.isFinite(stats.running)?stats.running:state.runningCount;
+      const doneToday=Number.isFinite(stats.doneToday)?stats.doneToday:state.events.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&now-e.at<86400000).length;
       const arrowBox=h('span',{className:'dpg-go','aria-hidden':'true'},h(Icon,{name:'arrow',size:14}));
       const activeRows=activity.map(item=>{
         const pct=Number.isFinite(item.progress)&&item.todoTotal>0?Math.round(item.progress*100):null;
@@ -989,7 +1068,7 @@ window.__ModuleLoader__.load({
           h('button',{type:'button',className:'dpg-close','aria-label':t('panel.close'),title:t('panel.close'),onClick:()=>setOpen(false)},h(Icon,{name:'close',size:16}))),
         h('div',{className:'dpg-stats'},
           h('span',{className:'dpg-stat','data-kind':'tasks'},h(Icon,{name:'layers',size:14}),h('span',null,t('panel.statTasks')),h('b',null,total)),
-          h('span',{className:'dpg-stat','data-kind':'running'},h(Icon,{name:'bolt',size:14}),h('span',null,t('panel.busy')),h('b',null,state.runningCount)),
+          h('span',{className:'dpg-stat','data-kind':'running'},h(Icon,{name:'bolt',size:14}),h('span',null,t('panel.busy')),h('b',null,statRunning)),
           h('span',{className:'dpg-stat','data-kind':'done'},h(Icon,{name:'checkCircle',size:14}),h('span',null,t('panel.statDone')),h('b',null,doneToday))),
         activeRows.length?h('div',{className:'dpg-list','aria-label':t('panel.active')},activeRows):h('p',{className:'dpg-empty'},t('panel.idleLine')),
         rows.length?h('div',{className:'dpg-list'},allHistory?rows:rows.slice(0,3)):null,
@@ -1036,7 +1115,7 @@ window.__ModuleLoader__.load({
         const store = createStore(ctx, (event, receipt) => {
           const alert = desktopAlert(t, event);
           return showDesktopNotification(alert, {icon:notificationFace(event.kind), ...receipt});
-        });
+        }, t);
         ctx.effect(() => () => store.dispose(), 'whale-sentinel: reminder store');
         ctx.slots.inject('shell.overlay', () => ctx.slots.register({
           name: 'shell.overlay',
@@ -1055,8 +1134,6 @@ window.__ModuleLoader__.load({
             setMascotScale: value => store.setMascotScale(value),
             setBuddyScale: value => store.setBuddyScale(value),
             toggleFocusedNotify: () => store.toggleFocusedNotify(),
-            toggleScope: () => store.toggleScope(),
-            cycleHistoryLimit: () => store.cycleHistoryLimit(),
             unlockAudio: () => store.unlockAudio(),
             testNotification: () => store.testNotification(),
             openSession: (sessionId) => openSession(ctx.get('uiWorkspace'), sessionId),

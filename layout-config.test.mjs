@@ -8,16 +8,17 @@ test('hidden mascot keeps an in-panel notice instead of losing every reminder',(
   assert.match(branch,/bubble/,'hidden branch still renders the bubble');
   assert.match(branch,/restore/,'hidden branch keeps the restore button');
 });
-test('mascot size and task scope are configurable data, not hard-coded strings',()=>{
-  assert.match(src,/mascotScale/,'mascot scale must come from settings');
+test('mascot sizes are configurable data, not hard-coded strings',()=>{
+  assert.match(src,/mascotScale/,'seated scale must come from settings');
+  assert.match(src,/buddyScale/,'expanded scale must come from settings');
   assert.match(src,/data-scale/,'root exposes the applied scale');
-  assert.match(src,/scope/,'active/history scope must be configurable');
-  assert.match(src,/historyLimit/,'result row count must be configurable');
 });
-test('settings expose focus-notification, scope and row-count controls',()=>{
+test('settings expose foreground notifications and both sizes, without retired filters',()=>{
   assert.match(src,/toggleFocusedNotify|setFocusedNotify/,'a control toggles foreground system notifications');
-  assert.match(src,/setScope|toggleScope/,'a control switches task scope');
-  assert.match(src,/setHistoryLimit|cycleHistoryLimit/,'a control cycles result rows');
+  assert.match(src,/setMascotScale/,'seated size has a setter');
+  assert.match(src,/setBuddyScale/,'expanded size has a setter');
+  // The scope and row-count filters were removed; a stale control must not return.
+  assert.doesNotMatch(src,/toggleScope|cycleHistoryLimit/,'retired filter controls must stay gone');
 });
 test('mascot animates as one whole body, with a pulse at the pointing hand',()=>{
   assert.doesNotMatch(src,/dpg-head-layer/,'a clipped head copy tears the silhouette');
@@ -50,9 +51,25 @@ test('layout anchors the mascot to the right of the panel',()=>{
   assert.match(anchor,/flex-direction:row/,'panel and mascot sit side by side');
   assert.match(anchor,/align-items:flex-end/,'both anchored on the same baseline');
 });
-
+test('a narrow viewport keeps the panel complete and lets the mascot yield',()=>{
+  const start=src.indexOf('@media(max-width:520px)');
+  assert.ok(start>0,'narrow layout rule must exist');
+  const block=src.slice(start,src.indexOf('}',src.indexOf('.dpg-anchor[data-open="true"] .dpg-panel',start))+1);
+  assert.match(block,/\.dpg-anchor\[data-open="true"\] \.dpg-mascot\{display:none\}/,'the character yields before a control is clipped');
+  assert.match(block,/width:calc\(100vw - 20px\)/,'the panel still fits the viewport');
+});
+test('the panel follows the OS dark preference instead of glowing white',()=>{
+  assert.match(src,/@media\(prefers-color-scheme:dark\)/,'dark appearance is handled');
+  const start=src.indexOf('@media(prefers-color-scheme:dark)');
+  assert.match(src.slice(start,start+1200),/--paper:#1B2436/,'panel surface is re-toned, not only text');
+});
+test('stat pills read host statistics instead of mixing sessions and events',()=>{
+  assert.match(src,/stats\.active/,'task count comes from the host');
+  assert.match(src,/stats\.doneToday/,'finished count has a real window');
+  assert.doesNotMatch(src,/activity\.length\+state\.events\.length/,'sessions and events must not be added together');
+});
 test('new controls are wired into the slot props and would not silently do nothing',()=>{
   const inject=src.slice(src.indexOf("inject: () => ({"),src.indexOf("})",src.indexOf("inject: () => ({"))+3);
-  for(const name of ['setMascotScale','toggleFocusedNotify','toggleScope','cycleHistoryLimit'])
+  for(const name of ['setMascotScale','toggleFocusedNotify','setBuddyScale','testNotification'])
     assert.match(inject,new RegExp('\\b'+name+'\\s*:'),name+' must be exposed to the component');
 });

@@ -57,13 +57,51 @@ export function foldTask(state,event) {
  return {...next,updatedAt:event.type==='session/title'?state.updatedAt:at,lastSeq:seq};
 }
 
-/** Ephemeral delivery receipts: never interpret a successful constructor as displayed. */
+/**
+ * One rule for every surface: the newest unanswered request is the one shown.
+ * Older prompts stay in the Session and become current again once it settles,
+ * so the panel row, the bubble and the system notice never disagree.
+ */
+export function selectAttention(pending){
+ if(!Array.isArray(pending)||pending.length===0)return null;
+ for(let i=pending.length-1;i>=0;i--)if(pending[i])return pending[i];
+ return null;
+}
+
+/**
+ * Ephemeral delivery receipts: never interpret a successful constructor as
+ * displayed. Native submission is a separate step with bounded retries, so a
+ * failed helper no longer consumes the only reminder.
+ */
 export class DeliveryQueue {
- constructor({now=()=>Date.now(),waitMs=7000,limit=100}={}){this.now=now;this.waitMs=waitMs;this.limit=limit;this.items=[];}
- push(event){if(this.items.some(n=>n.id===event.id))return this.items.find(n=>n.id===event.id);for(const n of this.items)if(n.sessionId===event.sessionId&&!['withdrawn','shown','native'].includes(n.status))n.status='withdrawn';const n={...event,status:'pending',client:null,deadline:this.now()+this.waitMs};this.items.push(n);if(this.items.length>this.limit)this.items.shift();return n;}
- claim(id,client){const n=this.items.find(n=>n.id===id);if(!n||n.status!=='pending')return false;n.client=client;n.status='claimed';n.deadline=this.now()+this.waitMs;return true;}
- ack(id,client,stage){const n=this.items.find(n=>n.id===id);if(!n||n.client!==client||n.status!=='claimed')return false;if(stage==='shown')n.status='shown';else if(stage==='error'){n.status='failed';n.deadline=this.now();}else return false;return true;}
+ constructor({now=()=>Date.now(),waitMs=7000,limit=100,maxNativeAttempts=3,nativeRetryMs=15000}={}){
+  this.now=now;this.waitMs=waitMs;this.limit=limit;this.maxNativeAttempts=Math.max(1,maxNativeAttempts);this.nativeRetryMs=nativeRetryMs;this.items=[];
+ }
+ find(id){return this.items.find(n=>n.id===id);}
+ push(event){
+  if(this.items.some(n=>n.id===event.id))return this.items.find(n=>n.id===event.id);
+  for(const n of this.items)if(n.sessionId===event.sessionId&&!['withdrawn','shown','native','native-submitted'].includes(n.status))n.status='withdrawn';
+  const n={...event,status:'pending',client:null,attempts:0,deadline:this.now()+this.waitMs};
+  this.items.push(n);if(this.items.length>this.limit)this.items.shift();return n;
+ }
+ claim(id,client){const n=this.find(id);if(!n||n.status!=='pending')return false;n.client=client;n.status='claimed';n.deadline=this.now()+this.waitMs;return true;}
+ ack(id,client,stage){const n=this.find(id);if(!n||n.client!==client||n.status!=='claimed')return false;if(stage==='shown')n.status='shown';else if(stage==='error'){n.status='failed';n.deadline=this.now();}else return false;return true;}
  withdraw(sessionId){for(const n of this.items)if(n.sessionId===sessionId&&n.kind==='waiting')n.status='withdrawn';}
- due(){const due=this.items.filter(n=>['pending','claimed','failed'].includes(n.status)&&n.deadline<=this.now());for(const n of due)n.status='native';return due;}
+ /** Eligible for a native attempt; does not mutate, so presence can defer them first. */
+ peekDue(){return this.items.filter(n=>['pending','claimed','failed'].includes(n.status)&&n.deadline<=this.now());}
+ /** Atomically takes an eligible item into the native-attempt state. */
+ beginNative(id){const n=this.find(id);if(!n||!['pending','claimed','failed'].includes(n.status)||n.deadline>this.now())return false;n.status='native';n.attempts+=1;n.deadline=this.now()+this.waitMs;return true;}
+ /** Records the real helper outcome; failures return to the queue until attempts run out. */
+ settleNative(id,{ok=false,reason='' }={}){
+  const n=this.find(id);if(!n||!['native','native-submitted'].includes(n.status))return null;
+  if(ok){n.status='native-submitted';n.nativeReason=reason;return n.status;}
+  n.nativeReason=reason;
+  if(n.attempts<this.maxNativeAttempts){n.status='pending';n.deadline=this.now()+this.nativeRetryMs;return n.status;}
+  n.status='native-failed';return n.status;
+ }
+ /** Foreground suppression: retry later without charging an attempt. */
+ defer(id,ms=30000){const n=this.find(id);if(!n||!['pending','claimed','failed'].includes(n.status))return false;n.status='pending';n.deadline=this.now()+ms;return true;}
+ /** Keep eligibility semantics of 1.x: one eligible item leaves the queue once. */
+ due(){const due=this.peekDue();for(const n of due)this.beginNative(n.id);return due;}
  list(){return this.items.map(n=>({...n}));}
 }

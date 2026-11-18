@@ -8,7 +8,6 @@ window.__ModuleLoader__.load({
     const MUTE_KEY = 'dsh.whale-sentinel.muted';
     const NOTIFY_KEY = 'dsh.whale-sentinel.notify';
     const HIDDEN_KEY = 'dsh.whale-sentinel.hidden';
-    const SIZE_KEY = 'dsh.whale-sentinel.size';
     const LONG_RUN_MS = 180000;
     const MAX_EVENTS = 12;
 
@@ -41,7 +40,7 @@ window.__ModuleLoader__.load({
     const DICT = {
       zh: {
         name: '小鲸哨',
-        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'alert.saved':'已保存', 'alert.retry':'稍后自动重试', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'panel.children':'{n} 个子任务运行中', 'panel.longRun':'长任务提醒', 'panel.tab.waiting':'待处理', 'panel.tab.running':'进行中', 'panel.tab.results':'结果', 'panel.emptyWaiting':'没有需要你处理的任务', 'panel.emptyRunning':'没有正在运行的任务', 'panel.emptyResults':'还没有结果', 'panel.archiveNote':'仅保留最近 50 条结束记录，更早的结果已归档', 'panel.resultCount':'保留了 {n} 次结束记录', 'panel.previousTurn':'上一轮', 'panel.staleSync':'离线 · 上次同步 {ago}', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
+        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'alert.saved':'已保存', 'alert.retry':'稍后自动重试', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'panel.children':'{n} 个子任务运行中', 'panel.longRun':'长任务提醒', 'panel.tab.waiting':'待处理', 'panel.tab.running':'进行中', 'panel.tab.results':'结果', 'panel.emptyWaiting':'没有需要你处理的任务', 'panel.emptyRunning':'没有正在运行的任务', 'panel.emptyResults':'还没有结果', 'panel.archiveNote':'仅保留最近 50 条结束记录，更早的结果已归档', 'panel.resultCount':'保留了 {n} 次结束记录', 'panel.previousTurn':'上一轮', 'panel.staleSync':'离线 · 上次同步 {ago}', 'panel.morePending':'另有 {n} 个待处理', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
         'event.stopped': '已手动停止', 'event.interrupted': '任务意外中断', 'event.forked': '已分叉', 'event.unknown': '任务结束', 'waiting.approval': '需要你批准', 'waiting.choice': '需要你选择', 'waiting.input': '需要你输入文字',
         title: '任务提醒',
         'state.idle': '待命中',
@@ -117,7 +116,7 @@ window.__ModuleLoader__.load({
       },
       en: {
         name: 'Xiao Jingshao',
-        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'alert.saved':'Saved', 'alert.retry':'retrying', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'panel.children':'{n} subagents running', 'panel.longRun':'Long-run nudge', 'panel.tab.waiting':'Pending', 'panel.tab.running':'Running', 'panel.tab.results':'Results', 'panel.emptyWaiting':'Nothing needs your answer', 'panel.emptyRunning':'Nothing is running', 'panel.emptyResults':'No results yet', 'panel.archiveNote':'Only the latest 50 terminal events are kept; older results are archived', 'panel.resultCount':'{n} terminal records kept', 'panel.previousTurn':'Previous turn', 'panel.staleSync':'Offline · last sync {ago}', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
+        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'alert.saved':'Saved', 'alert.retry':'retrying', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'panel.children':'{n} subagents running', 'panel.longRun':'Long-run nudge', 'panel.tab.waiting':'Pending', 'panel.tab.running':'Running', 'panel.tab.results':'Results', 'panel.emptyWaiting':'Nothing needs your answer', 'panel.emptyRunning':'Nothing is running', 'panel.emptyResults':'No results yet', 'panel.archiveNote':'Only the latest 50 terminal events are kept; older results are archived', 'panel.resultCount':'{n} terminal records kept', 'panel.previousTurn':'Previous turn', 'panel.staleSync':'Offline · last sync {ago}', 'panel.morePending':'{n} more pending', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
         'event.stopped': 'Stopped by user', 'event.interrupted': 'Task interrupted', 'event.forked': 'Forked', 'event.unknown': 'Task ended', 'waiting.approval': 'Approval needed', 'waiting.choice': 'A choice is needed', 'waiting.input': 'Text input needed',
         title: 'Task reminders',
         'state.idle': 'Standing by',
@@ -270,9 +269,8 @@ window.__ModuleLoader__.load({
       const processed = new Set(), shown = new Map();
       const cues=createCuePlayer();
       let lastRev=null,lastFocusId=null,pendingFocusAck=null;
-      let storedSize='standard';try{storedSize=window.localStorage.getItem(SIZE_KEY)==='large'?'large':'standard'}catch{}
       const client = 'page-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
-      let snapshot = {phase:'idle',phaseSince:Date.now(),runningCount:0,waitingCount:0,muted:readFlag(MUTE_KEY,false),notifyEnabled:readFlag(NOTIFY_KEY,true),hidden:readFlag(HIDDEN_KEY,false),size:storedSize,mascotScale:1,buddyScale:1,notifyWhenFocused:false,longRunEnabled:false,scope:'all',historyLimit:3,soundEnabled:false,soundVolume:.2,active:[],stats:null,events:[],results:[],resultsTotal:0,lastSyncAt:null,bubble:null,alert:null,alertCount:0,hostReady:false,native:false};
+      let snapshot = {phase:'idle',phaseSince:Date.now(),runningCount:0,waitingCount:0,muted:readFlag(MUTE_KEY,false),notifyEnabled:readFlag(NOTIFY_KEY,true),hidden:readFlag(HIDDEN_KEY,false),size:'standard',mascotScale:1,buddyScale:1,notifyWhenFocused:false,longRunEnabled:false,scope:'all',historyLimit:3,soundEnabled:false,soundVolume:.2,active:[],stats:null,events:[],results:[],resultsTotal:0,lastSyncAt:null,bubble:null,alert:null,alertCount:0,hostReady:false,native:false};
       const patch = values => {if(disposed)return;snapshot={...snapshot,...values};for(const fn of [...listeners])fn();};
       const observable={getSnapshot:()=>snapshot,subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn)}};
       async function action(body) {
@@ -428,7 +426,7 @@ window.__ModuleLoader__.load({
       function toggleMute(){const muted=!snapshot.muted;writeFlag(MUTE_KEY,muted);patch({muted,bubble:muted?null:snapshot.bubble});}
       function toggleHidden(){const hidden=!snapshot.hidden;writeFlag(HIDDEN_KEY,hidden);patch({hidden});}
       function toggleNotify(){const notifyEnabled=!snapshot.notifyEnabled;writeFlag(NOTIFY_KEY,notifyEnabled);patch({notifyEnabled});action({action:'preferences',enabled:notifyEnabled}).catch(e=>noteAlert('设置',{ok:false,reason:String(e&&e.message?e.message:e)}));}
-      function clearHistory(){action({action:'clear'}).then(()=>{events=[];patch({events:[],bubble:null});updatePhase()}).catch(e=>noteAlert('清空记录',{ok:false,reason:String(e&&e.message?e.message:e)}));}
+      function clearHistory(){action({action:'clear'}).then(()=>{events=[];processed.clear();for(const n of shown.values())try{n.close()}catch{}shown.clear();patch({events:[],results:[],resultsTotal:0,bubble:null});updatePhase()}).catch(e=>noteAlert('清空记录',{ok:false,reason:String(e&&e.message?e.message:e)}));}
       function testNotification(){cues.unlock();return action({action:'test'}).catch(e=>noteAlert('测试通知',{ok:false,reason:String(e&&e.message?e.message:e)}));}
       function dispose(){disposed=true;cues.dispose();clearTimeout(settingsTimer);settingsTimer=null;
         if(typeof document.removeEventListener==='function'){document.removeEventListener('visibilitychange',onPresenceChange);window.removeEventListener?.('focus',onPresenceChange);window.removeEventListener?.('blur',onPresenceChange);}for(const controller of controllers)controller.abort();controllers.clear();clearTimeout(timer);clearTimeout(bubbleTimer);clearTimeout(settleTimer);for(const n of shown.values())try{n.close()}catch{}listeners.clear();}
@@ -438,7 +436,7 @@ window.__ModuleLoader__.load({
       }
       function previewSound(){return cues.unlock().then(ok=>{if(ok)return cues.play('done',true,snapshot.soundVolume);noteAlert('音效',{ok:false,reason:'请通过用户交互解锁音效'});return false;});}
       function setVolume(value){const soundVolume=Math.min(.5,Math.max(.05,Number(value)||.2));patch({soundVolume});action({action:'preferences',soundVolume}).catch(e=>noteAlert('音量设置',{ok:false,reason:String(e&&e.message?e.message:e)}));}
-      function toggleSize(){const size=snapshot.size==='large'?'standard':'large';try{window.localStorage.setItem(SIZE_KEY,size)}catch{}patch({size});}
+      function toggleSize(){/* removed: the two size sliders are the only size control */}
       const pendingSettings={};let settingsTimer=null;const dirty=new Set();
       function flushSettings(attempt=0){
         const body={...pendingSettings};
@@ -468,7 +466,7 @@ window.__ModuleLoader__.load({
       function toggleFocusedNotify(){saveSetting({notifyWhenFocused:!snapshot.notifyWhenFocused});}
       function toggleLongRun(){saveSetting({longRunEnabled:!snapshot.longRunEnabled});}
       poll();
-      return {toggleSound,previewSound,setVolume,toggleSize,setMascotScale,toggleFocusedNotify,toggleLongRun,setBuddyScale,unlockAudio:()=>cues.unlock(),observable,noteAlert,toggleMute,toggleHidden,toggleNotify,clearHistory,testNotification,openSession:(sessionId,noticeId)=>openSessionWithDiagnostic(sessionId,noticeId),dismissBubble:()=>{clearTimeout(bubbleTimer);patch({bubble:null})},dispose};
+      return {toggleSound,previewSound,setVolume,setMascotScale,toggleFocusedNotify,toggleLongRun,setBuddyScale,unlockAudio:()=>cues.unlock(),observable,noteAlert,toggleMute,toggleHidden,toggleNotify,clearHistory,testNotification,openSession:(sessionId,noticeId)=>openSessionWithDiagnostic(sessionId,noticeId),dismissBubble:()=>{clearTimeout(bubbleTimer);patch({bubble:null})},dispose};
     }
 
     function formatDuration(t, ms) {
@@ -1092,6 +1090,7 @@ window.__ModuleLoader__.load({
         const meta=[];
         if(item.workspace)meta.push({icon:'layers',text:item.workspace});
         if(item.children&&item.children.running>0)meta.push({icon:'bolt',text:t('panel.children',{n:item.children.running})});
+        if(item.pendingCount>1)meta.push({icon:'clock',text:t('panel.morePending',{n:item.pendingCount-1})});
         if(item.waiting)meta.push({icon:'clock',text:t('waiting.'+(item.waitKind||'choice'))});
         else if(item.phase==='tool'&&item.tool)meta.push({icon:'gear',text:t('panel.toolShort',{tool:item.tool})});
         else meta.push({icon:item.phase==='thinking'?'pulse':'gear',text:item.phase==='thinking'?t('panel.thinking'):t('panel.working')});
@@ -1124,7 +1123,16 @@ window.__ModuleLoader__.load({
       const toolButton=(icon,label,pressed,action)=>h('button',{type:'button',className:'dpg-tool','aria-label':label,title:label,'aria-pressed':pressed===undefined?undefined:pressed,'data-active':pressed?'true':'false',onClick:action},h(Icon,{name:icon,size:15}));
       const tabButton=(item,index)=>h('button',{key:item.key,type:'button',className:'dpg-stat',role:'tab',id:'dpg-tab-'+item.key,'aria-controls':'dpg-tabpanel',tabIndex:tabKey===item.key?0:-1,ref:el=>{tabRefs.current[index]=el;},'data-kind':item.key,'data-active':tabKey===item.key?'true':'false','aria-selected':tabKey===item.key,title:item.label,onClick:()=>setTab(item.key),onKeyDown:event=>onTabKey(index,event)},
         h(Icon,{name:item.icon,size:14}),h('span',null,item.label),h('b',null,item.count));
-      const panel=open?h('section',{id:'dpg-panel',ref:panelRef,className:'dpg-panel',role:'dialog','aria-label':t('panel.radar'),'aria-modal':false},
+      const onPanelKeyDown=event=>{
+        if(event.key!=='Tab')return;
+        const root=panelRef.current;if(!root)return;
+        const nodes=[...root.querySelectorAll('button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el=>el.offsetParent!==null);
+        if(!nodes.length)return;
+        const first=nodes[0],last=nodes[nodes.length-1];
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+      };
+      const panel=open?h('section',{id:'dpg-panel',ref:panelRef,className:'dpg-panel',role:'dialog','aria-label':t('panel.radar'),'aria-modal':false,onKeyDown:onPanelKeyDown},
         h('header',{className:'dpg-head'},
           h('span',{className:'dpg-orb','data-phase':state.phase,role:'img','aria-label':topLabel,title:topLabel},h(Icon,{name:phaseGlyph,size:20}),state.runningCount||waiting?h('b',null,state.runningCount||waiting):null),
           h('span',{className:'dpg-headline'},
@@ -1145,7 +1153,6 @@ window.__ModuleLoader__.load({
             toolButton('bell',t('panel.notify'),state.notifyEnabled,props.toggleNotify),
             toolButton('sound',t('panel.sound'),state.soundEnabled,props.toggleSound),
             toolButton('play',t('panel.preview'),undefined,props.previewSound),
-            toolButton('expand',t('panel.size')+' · '+t(state.size==='large'?'panel.large':'panel.standard'),state.size==='large',props.toggleSize),
             toolButton('hide',t('panel.hide'),undefined,props.toggleHidden),
             toolButton('pulse',t('panel.test'),undefined,props.testNotification),
             toolButton('trash',t('panel.clear'),undefined,props.clearHistory)),
@@ -1196,7 +1203,6 @@ window.__ModuleLoader__.load({
             toggleSound: () => store.toggleSound(),
             previewSound: () => store.previewSound(),
             setVolume: value => store.setVolume(value),
-            toggleSize: () => store.toggleSize(),
             setMascotScale: value => store.setMascotScale(value),
             setBuddyScale: value => store.setBuddyScale(value),
             toggleFocusedNotify: () => store.toggleFocusedNotify(),

@@ -97,6 +97,13 @@ test('tabs are keyboard operable and own a labelled tab panel',()=>{
   assert.match(src,/tabIndex:tabKey===item\.key\?0:-1/,'roving tab index');
   assert.match(src,/onKeyDown:event=>onTabKey/,'keyboard handler is wired');
 });
+test('the dialog keeps keyboard focus inside itself and only sliders size the mascot',()=>{
+  assert.match(src,/onKeyDown:onPanelKeyDown/,'the panel handles Tab');
+  assert.match(src,/last\.focus\(\)/,'Shift+Tab wraps to the last control');
+  assert.match(src,/first\.focus\(\)/,'Tab wraps to the first control');
+  assert.doesNotMatch(src,/props\.toggleSize/,'the duplicate standard/large button is gone');
+  assert.doesNotMatch(src,/toggleSize: \(\) =>/,'the legacy setter is not exposed');
+});
 test('the opening tab is chosen once, and a hidden mascot opens the panel',()=>{
   assert.match(src,/if\(!open\)setTab\(preferredTab\(\)\)/,'opening freezes the default tab');
   assert.match(src,/onClick:\(\)=>setOpen\(true\)/,'the restore badge opens the radar');

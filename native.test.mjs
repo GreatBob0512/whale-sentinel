@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { win32 as winPath } from 'node:path';
 import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 
 // The only mock is the process boundary: never restore a user's window or show
 // a real notification as a side effect of the unit test suite.
@@ -313,6 +314,24 @@ test('native script enumerates hidden Chromium windows and validates process anc
   // Quoted Chromium arguments are still process-type arguments, not a main process.
   const rendererRule = script.split('\n').find(line => line.includes('$record.CommandLine -match'));
   assert.ok(rendererRule?.includes('["\\s]'), 'quoted --type renderer arguments must be excluded');
+});
+
+test('removing a toast targets the same per-session tag, and an empty target removes the group', async () => {
+  const fake = processes();
+  const native = bridge({ spawnImpl: fake.spawnImpl });
+  const one = native.remove({ sessionId: 'session-a' });
+  const call = fake.calls.at(-1);
+  assert.equal(call.args[call.args.indexOf('-Mode') + 1], 'Remove');
+  const tag = createHash('sha256').update('session-a', 'utf8').digest('hex').slice(0, 16);
+  assert.equal(call.args[call.args.indexOf('-Tag') + 1], tag);
+  call.child.emit('close', 0);
+  assert.deepEqual(await one, { ok: true, reason: 'removed' });
+  const all = native.remove();
+  assert.ok(!fake.calls.at(-1).args.includes('-Tag'), 'no tag removes the group');
+  fake.calls.at(-1).child.emit('close', 0);
+  assert.deepEqual(await all, { ok: true, reason: 'removed' });
+  assert.deepEqual(await native.remove({ sessionId: 42 }), { ok: false, reason: 'invalid-notification' });
+  native.dispose();
 });
 
 test('toast script builds XML as data, supports an inline PNG, and never registers protocol/task/daemon', async () => {

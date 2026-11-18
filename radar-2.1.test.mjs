@@ -6,7 +6,7 @@ import {createTaskHost} from './host.js';
 import {cleanExcerpt} from './notification-format.js';
 
 function setup(options={}){
- const native={notifyCalls:[],async notify(n){this.notifyCalls.push(n);return{ok:true,reason:'submitted'}},async wake(){return{ok:true,reason:'foreground'}},dispose(){}};
+ const native={notifyCalls:[],removeCalls:[],async notify(n){this.notifyCalls.push(n);return{ok:true,reason:'submitted'}},async remove(n){this.removeCalls.push(n);return{ok:true,reason:'removed'}},async wake(){return{ok:true,reason:'foreground'}},dispose(){}};
  const ctx={on(){},effect(f){return f()},get(){},webServer:{register:()=>()=>{}},connection:{requestRejection:()=>undefined},agents:{list:()=>[]}};
  const host=createTaskHost(ctx,{stateOf:s=>s.state},native,{now:()=>now,...options});
  host.mount();

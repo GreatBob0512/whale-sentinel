@@ -18,10 +18,14 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
  let serial=0,revision=0,enabled=loaded.enabled!==false,soundEnabled=loaded.soundEnabled===true,soundVolume=clampVolume(loaded.soundVolume),notifyWhenFocused=loaded.notifyWhenFocused===true,longRunEnabled=loaded.longRunEnabled===true,scope=SCOPES.has(loaded.scope)?loaded.scope:'all',historyLimit=LIMITS.has(loaded.historyLimit)?loaded.historyLimit:3,mascotScale=clampScale(loaded.mascotScale),buddyScale=clampScale(loaded.buddyScale),disposed=false,timer=null,lastWake=null;
  const history=[],delivery=[],focusQueue=[],nudges=new Map();let presence=new Map();
  const results=[];
+ let doneDay=null;let doneCount=0;
+ const dayOf=at=>new Date(at).toDateString();
  const LONG_RUN_MS=15*60*1000;
  const changed=()=>{revision++;};
  const settings=()=>({enabled,soundEnabled,soundVolume,notifyWhenFocused,longRunEnabled,scope,historyLimit,mascotScale,buddyScale});
  const trace=(event)=>{delivery.unshift({at:now(),...event});delivery.splice(20);changed();};
+ /** Withdrawing a Windows toast is best effort; a missing bridge is not an error. */
+ const removeToast=(payload={})=>{try{const pending=native.remove?.(payload);pending?.catch?.(()=>{});}catch{}};
  const titleOf=s=>s.title||'这个任务';
  const terminalKinds=new Set(['done','error','interrupted','stopped','forked','unknown']);
  function publish(row,notify=true){
@@ -29,6 +33,11 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
   // Results get their own bounded record: mixed history would push finished
   // work out of reach as transient start/waiting events accumulate.
   if(terminalKinds.has(event.kind)&&event.test!==true){results.unshift(event);results.splice(50);}
+  if(event.kind==='done'&&event.test!==true){
+   const day=dayOf(event.at);
+   if(day!==doneDay){doneDay=day;doneCount=0;}
+   doneCount+=1;
+  }
   changed();
   if(notify&&enabled)queue.push(event);
   return event;
@@ -60,7 +69,9 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
   const livePending=new Set(s.pending.map(p=>p.id));
   const latest=queue.items.filter(n=>n.sessionId===session.id&&n.kind==='waiting').at(-1);
   const retired=latest&&latest.status!=='withdrawn'&&!livePending.has(latest.pendingId);
-  for(const n of queue.items)if(n.sessionId===session.id&&n.kind==='waiting'&&!livePending.has(n.pendingId)&&n.status!=='withdrawn'){n.status='withdrawn';changed();}
+  let withdrawn=false;
+  for(const n of queue.items)if(n.sessionId===session.id&&n.kind==='waiting'&&!livePending.has(n.pendingId)&&n.status!=='withdrawn'){n.status='withdrawn';withdrawn=true;changed();}
+  if(withdrawn)removeToast({sessionId:session.id});
   const liveKeys=new Set(s.pending.map(p=>waitKey(s,p)));
   for(const [key,event] of waitingEvents)if(event.sessionId===s.sessionId&&!liveKeys.has(key))waitingEvents.delete(key);
   for(const p of s.pending)waitingEvent(s,p);
@@ -82,17 +93,17 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
    const updatedAt=x.updatedAt??x.since??null,stalled=updatedAt!==null&&at-updatedAt>=300000;
    if(stalledStates.has(x.sessionId)&&stalledStates.get(x.sessionId)!==stalled)changed();stalledStates.set(x.sessionId,stalled);
    const currentTools=x.currentTools??[],attention=selectAttention(x.pending);
-   return {sessionId:x.sessionId,title:titleOf(x),running:x.running,waiting:!!attention,waitKind:attention?.kind??null,message:attention?.message??'',since:x.since,phase:attention?'waiting':x.phase??'thinking',step:x.step??null,currentTools:currentTools.map(t=>({...t})),tool:currentTools.at(-1)?.name??null,toolCount:x.toolCount??0,todoTotal:x.todoTotal??0,todoDone:x.todoDone??0,progress:x.progress??null,updatedAt,stalled,workspace:x.cwd?basename(x.cwd):'',children:delegated.get(x.sessionId)??{running:0,total:0,waiting:0}};
+   return {sessionId:x.sessionId,title:titleOf(x),running:x.running,waiting:!!attention,waitKind:attention?.kind??null,message:attention?.message??'',pendingCount:x.pending.length,since:x.since,phase:attention?'waiting':x.phase??'thinking',step:x.step??null,currentTools:currentTools.map(t=>({...t})),tool:currentTools.at(-1)?.name??null,toolCount:x.toolCount??0,todoTotal:x.todoTotal??0,todoDone:x.todoDone??0,progress:x.progress??null,updatedAt,stalled,workspace:x.cwd?basename(x.cwd):'',children:delegated.get(x.sessionId)??{running:0,total:0,waiting:0}};
   });
   // Business stats only: a channel test is a diagnostic, never a finished task.
   const business=history.filter(e=>e.test!==true);
-  const stats={active:active.length,running:active.filter(x=>x.running).length,waiting:active.filter(x=>x.waiting).length,children:active.reduce((n,x)=>n+x.children.running,0),doneToday:results.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&at-e.at<86400000).length,events:business.length,results:results.length};
-  return {boot,version:'2.3.0',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,stats,events:[...history],results:[...results],resultsTotal:results.length,notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
+  const stats={active:active.length,running:active.filter(x=>x.running).length,waiting:active.filter(x=>x.waiting).length,children:active.reduce((n,x)=>n+x.children.running,0),doneToday:dayOf(at)===doneDay?doneCount:0,events:business.length,results:results.length,sessions:facts.size};
+  return {boot,version:'2.3.1',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,stats,events:[...history],results:[...results],resultsTotal:results.length,notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
  }
  function wording(n){
   const formatted=formatNotice(n);
   const phase=n.kind==='done'?'done':n.kind==='waiting'?'waiting':['error','interrupted'].includes(n.kind)?'error':'idle';
-  const meta=n.aggregated?`${formatted.meta} · 另有 ${n.aggregated} 个任务已完成`:formatted.meta;
+  const meta=n.aggregated?`${formatted.meta} · ${n.kind==='longRun'?`另有 ${n.aggregated} 个任务运行较久`:`另有 ${n.aggregated} 个任务已完成`}`:formatted.meta;
   return {title:formatted.title,body:formatted.body,meta,sessionId:n.sessionId||'whale-sentinel-test',kind:n.kind,soundEnabled,soundVolume,iconPath:fileURLToPath(new URL(`./assets/fish-${phase}-side.png`,import.meta.url))};
  }
  function foregroundNow(){
@@ -123,13 +134,14 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
    checkLongRuns(at);
   // Deterministic time is injected in tests. Production deadlines use the host clock.
   const suppress=!notifyWhenFocused&&foregroundNow();
-  // Several tasks finishing at once should be one interruption, not a burst.
+  // Several tasks finishing (or running long) at once is one interruption.
   if(!suppress){
-   const done=queue.peekDue().filter(n=>n.kind==='done'&&!n.test);
-   if(done.length>1){
-    const keep=done.reduce((a,b)=>((b.at??0)>=(a.at??0)?b:a));
-    for(const n of done)if(n!==keep){queue.aggregate(n.id);changed();trace({id:n.id,stage:'native-aggregated'});}
-    keep.aggregated=done.length-1;
+   for(const kind of ['done','longRun']){
+    const batch=queue.peekDue().filter(n=>n.kind===kind&&!n.test);
+    if(batch.length<2)continue;
+    const keep=batch.reduce((a,b)=>((b.at??0)>=(a.at??0)?b:a));
+    for(const n of batch)if(n!==keep){queue.aggregate(n.id);changed();trace({id:n.id,stage:'native-aggregated'});}
+    keep.aggregated=batch.length-1;
    }
   }
   for(const candidate of queue.peekDue()){
@@ -185,7 +197,7 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
     preferences?.save?.(next);const wasEnabled=enabled;
     if(JSON.stringify(settings())!==JSON.stringify(next))changed();
     ({enabled,soundEnabled,soundVolume,notifyWhenFocused,longRunEnabled,scope,historyLimit,mascotScale,buddyScale}=next);
-    if(!enabled){for(const n of queue.items)if(n.status!=='withdrawn'){n.status='withdrawn';changed();}}
+    if(!enabled){for(const n of queue.items)if(n.status!=='withdrawn'){n.status='withdrawn';changed();}removeToast({});}
     else if(!wasEnabled)for(const s of facts.values())restoreWait(s);
     return{ok:true,enabled,settings:settings()};
    }
@@ -231,7 +243,15 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
     trace({id:typeof body.noticeId==='string'?body.noticeId:undefined,stage:body.stage,sessionId:body.sessionId,reason:typeof body.reason==='string'?body.reason.slice(0,200):undefined});
     return{ok:true};
    }
-   case 'clear':if(history.length){history.length=0;changed();}return{ok:true};
+   case 'clear':{
+    history.length=0;results.length=0;delivery.length=0;
+    doneDay=null;doneCount=0;waitingEvents.clear();
+    // Keep `nudges`: clearing records must not re-nudge turns already nudged.
+    for(const n of queue.items)if(n.status!=='withdrawn')n.status='withdrawn';
+    removeToast({});
+    changed();
+    return{ok:true};
+   }
    default:throw new Error('unknown action');
   }
  }
@@ -243,9 +263,12 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
    // The inspected event fires after driver quiescence, before session detach.
    remember(agent.session);
    const s=facts.get(agent.session.id);if(!s||detached.has(s.sessionId))return;
-   detached.add(s.sessionId);queue.withdraw(s.sessionId);changed();
-   if(s.child)return;
-   if(s.running||s.pending.length)publish({kind:'interrupted',sessionId:s.sessionId,title:titleOf(s),at:now(),message:'任务已结束运行（代理已释放）',summary:s.summary??'',summaryFinal:false,durationMs:s.since===null?null:Math.max(0,now()-s.since)},true);
+   detached.add(s.sessionId);queue.withdraw(s.sessionId);removeToast({sessionId:s.sessionId});changed();
+   if(!s.child&&(s.running||s.pending.length))publish({kind:'interrupted',sessionId:s.sessionId,title:titleOf(s),at:now(),message:'任务已结束运行（代理已释放）',summary:s.summary??'',summaryFinal:false,durationMs:s.since===null?null:Math.max(0,now()-s.since)},true);
+   // Reclaim per-session state; the tombstone in `detached` suppresses late
+   // events and is cleared by agent/created if the Session comes back.
+   for(const [key,event] of waitingEvents)if(event.sessionId===s.sessionId)waitingEvents.delete(key);
+   seen.delete(s.sessionId);nudges.delete(s.sessionId);stalledStates.delete(s.sessionId);facts.delete(s.sessionId);
   });
   const guard=(req,res,method)=>{const rejection=ctx.connection.requestRejection(req);if(rejection!==undefined){response(res,rejection,{error:'unauthorized'});return false;}if(req.method!==method){res.setHeader('allow',method);response(res,405,{error:'method'});return false;}return true;};
   ctx.effect(()=>ctx.webServer.register({kind:'exact',path:'/whale-sentinel/state',handler:(req,res)=>{if(!guard(req,res,'GET'))return;response(res,200,snapshot());}}));

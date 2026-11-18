@@ -4,13 +4,13 @@ import {mkdtempSync,writeFileSync,readFileSync,readdirSync,existsSync} from 'nod
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DeliveryQueue,selectAttention} from './task-state.js';
-import {readPreferences,protocolFor} from './release-2.3.0.js';
+import {readPreferences,protocolFor} from './release-2.3.1.js';
 import {createActivationQueue} from './activation-queue.js';
 import {createTaskHost} from './host.js';
 
 function hostSetup(options={}){
  const handlers={},routes=new Map();
- const native={notifyCalls:[],wakeCalls:0,async notify(n){this.notifyCalls.push(n);return options.notifyResult??{ok:true,reason:'submitted'}},async wake(){this.wakeCalls++;return{ok:true,reason:'restored'}},dispose(){}};
+ const native={notifyCalls:[],removeCalls:[],wakeCalls:0,async notify(n){this.notifyCalls.push(n);return options.notifyResult??{ok:true,reason:'submitted'}},async remove(n){this.removeCalls.push(n);return{ok:true,reason:'removed'}},async wake(){this.wakeCalls++;return{ok:true,reason:'restored'}},dispose(){}};
  const handle={stateOf:s=>s.state};
  const ctx={on(n,f){handlers[n]=f},effect(f){return f()},get(){},webServer:{register:r=>{routes.set(r.path,r);return()=>{}}},connection:{requestRejection:()=>undefined},agents:{list:()=>[]}};
  const host=createTaskHost(ctx,handle,native,options);
@@ -235,5 +235,100 @@ test('simultaneous completions become one toast that says how many were folded',
  assert.match(native.notifyCalls[0].meta,/另有 1 个任务已完成/);
  const statuses=host.snapshot().notices.filter(n=>n.kind==='done').map(n=>n.status).sort();
  assert.deepEqual(statuses,['aggregated','native-submitted']);
+ host.dispose();
+});
+
+test('clearing history also clears results, pending notices and shows a withdrawal',async()=>{
+ let now=1000;
+ const{host,native}=hostSetup({now:()=>now});
+ const session={id:'c',state:{sessionId:'c',title:'C',child:false,running:true,since:1,lastSeq:1,pending:[],outcome:null}};
+ host.remember(session,false);
+ session.state={...session.state,lastSeq:2,running:false,outcome:{kind:'done',at:now,seq:2,durationMs:1000,summary:'ok',summaryFinal:true}};
+ host.remember(session);
+ await host.action({action:'test'});
+ assert.equal(host.snapshot().results.length,1);
+ assert.ok(host.snapshot().notices.some(n=>n.status==='pending'));
+ await host.action({action:'clear'});
+ const snap=host.snapshot();
+ assert.equal(snap.results.length,0,'results are cleared with history');
+ assert.equal(snap.stats.doneToday,0,'the completion counter is cleared too');
+ assert.equal(snap.notices.some(n=>!['withdrawn','shown','native-submitted','native-failed','aggregated'].includes(n.status)),false,'no pending notice survives');
+ assert.ok(native.removeCalls.length>0,'the Windows toast group is withdrawn');
+ host.dispose();
+});
+
+test('completed-today is a counter, not a slice of the 50-result window',async()=>{
+ let now=1000;
+ const{host}=hostSetup({now:()=>now});
+ const session={id:'many',state:{sessionId:'many',title:'Many',child:false,running:true,since:1,lastSeq:0,pending:[],outcome:null}};
+ host.remember(session,false);
+ for(let i=1;i<=60;i++){
+  session.state={...session.state,running:true,since:i,lastSeq:i*2-1,outcome:null};
+  host.remember(session);
+  session.state={...session.state,running:false,lastSeq:i*2,outcome:{kind:'done',at:now,seq:i*2,durationMs:100,summary:'',summaryFinal:false}};
+  host.remember(session);
+ }
+ const snap=host.snapshot();
+ assert.equal(snap.results.length,50,'the result record stays bounded');
+ assert.equal(snap.stats.doneToday,60,'the count is not truncated by the record cap');
+ host.dispose();
+});
+
+test('a session with several pending prompts exposes how many are waiting',()=>{
+ let now=1000;
+ const{host}=hostSetup({now:()=>now});
+ const session={id:'m',state:{sessionId:'m',title:'M',child:false,running:true,since:1,lastSeq:2,pending:[{id:'a',seq:1,at:1,kind:'approval',message:'A'},{id:'b',seq:2,at:2,kind:'input',message:'B'}],outcome:null}};
+ host.remember(session,false);host.remember(session);
+ const row=host.snapshot().active[0];
+ assert.equal(row.pendingCount,2);
+ assert.equal(row.message,'B','the newest prompt is the visible one');
+ host.dispose();
+});
+
+test('a disposed agent reclaims its per-session state, and a return re-adds it',()=>{
+ let now=1000;
+ const{host,handlers}=hostSetup({now:()=>now});
+ const session={id:'z',state:{sessionId:'z',title:'Z',child:false,running:true,since:1,lastSeq:1,pending:[],outcome:null}};
+ host.remember(session,false);host.remember(session);
+ assert.equal(host.snapshot().stats.sessions,1);
+ handlers['agent/disposed']({agent:{session}});
+ assert.equal(host.snapshot().stats.sessions,0,'facts are dropped after disposal');
+ handlers['agent/created']({agent:{session}});
+ assert.equal(host.snapshot().stats.sessions,1,'a returning session is tracked again');
+ host.dispose();
+});
+
+test('clearing records does not re-nudge a turn that was already nudged',async()=>{
+ let now=1000;
+ const{host,native}=hostSetup({now:()=>now});
+ await host.action({action:'preferences',longRunEnabled:true});
+ host.remember({id:'lr',state:{sessionId:'lr',title:'LR',child:false,running:true,since:1000,lastSeq:0,pending:[],outcome:null}},false);
+ now=1000+20*60*1000;
+ host.tick();
+ now+=8000;host.tick();
+ for(let i=0;i<8;i++)await Promise.resolve();
+ assert.equal(host.snapshot().events.filter(e=>e.kind==='longRun').length,1);
+ assert.equal(native.notifyCalls.filter(n=>n.kind==='longRun').length,1);
+ await host.action({action:'clear'});
+ now+=8000;host.tick();await Promise.resolve();
+ assert.equal(host.snapshot().events.filter(e=>e.kind==='longRun').length,0,'cleared history stays cleared, no instant re-nudge');
+ assert.equal(native.notifyCalls.filter(n=>n.kind==='longRun').length,1,'no second nudge after clear');
+ host.dispose();
+});
+
+test('a long-run batch is folded into one toast with its own wording',async()=>{
+ let now=1000;
+ const{host,native}=hostSetup({now:()=>now});
+ await host.action({action:'preferences',longRunEnabled:true});
+ for(const id of ['x','y']){
+  host.remember({id,state:{sessionId:id,title:id,child:false,running:true,since:1000,lastSeq:0,pending:[],outcome:null}},false);
+ }
+ now=1000+20*60*1000;
+ host.tick();
+ now+=8000;host.tick();
+ for(let i=0;i<12;i++)await Promise.resolve();
+ const calls=native.notifyCalls.filter(n=>n.kind==='longRun');
+ assert.equal(calls.length,1);
+ assert.match(calls[0].meta,/另有 1 个任务运行较久/);
  host.dispose();
 });

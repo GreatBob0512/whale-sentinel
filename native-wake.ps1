@@ -2,9 +2,10 @@
 # Exit codes are the IPC result channel because all child stdio is ignored.
 [CmdletBinding()]
 param(
-    [ValidateSet('Wake', 'Notify')][string]$Mode = 'Wake',
+    [ValidateSet('Wake', 'Notify', 'Remove')][string]$Mode = 'Wake',
     [int]$ParentPid = 0,
-    [string]$PayloadBase64 = ''
+    [string]$PayloadBase64 = '',
+    [string]$Tag = ''
 )
 $ErrorActionPreference = 'Stop'
 
@@ -182,6 +183,15 @@ function Invoke-DshToast {
     $notification.Tag = [string]$data.tag
     $notification.Group = 'whale-sentinel'
     $notification.ExpirationTime = [DateTimeOffset]::Now.AddMinutes(5)
+    $appId = Get-DshAppId
+    $notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($appId)
+    # Setting's enum projection may be null in Windows PowerShell 5.1. Show's
+    # acceptance/exception is the result boundary, not a delivery guarantee.
+    $notifier.Show($notification)
+    return 0
+}
+
+function Get-DshAppId {
     # Prefer the already registered DSH Start-menu identity. Do not create or
     # spoof registration. Keep the existing PowerShell fallback on other installs.
     $appId = '{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe'
@@ -191,17 +201,28 @@ function Invoke-DshToast {
             $appId = [string]$installed[0].AppID
         }
     } catch { }
-    $notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($appId)
-    # Setting's enum projection may be null in Windows PowerShell 5.1. Show's
-    # acceptance/exception is the result boundary, not a delivery guarantee.
-    $notifier.Show($notification)
+    return $appId
+}
+
+function Invoke-DshRemove {
+    # Withdraw a stale toast after its task was handled or the history was cleared.
+    [void][Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]
+    $appId = Get-DshAppId
+    $history = [Windows.UI.Notifications.ToastNotificationManager]::History
+    if ([string]$Tag -match '^[a-f0-9]{16}$') {
+        $history.Remove([string]$Tag, 'whale-sentinel', $appId)
+    } else {
+        $history.RemoveGroup('whale-sentinel', $appId)
+    }
     return 0
 }
 
 try {
+    if ($Mode -eq 'Remove') { exit (Invoke-DshRemove) }
     if ($Mode -eq 'Notify') { exit (Invoke-DshToast) }
     exit (Invoke-DshWake)
 } catch {
     if ($Mode -eq 'Notify') { exit 30 }
+    if ($Mode -eq 'Remove') { exit 30 }
     exit 1
 }

@@ -411,6 +411,7 @@
         const meta=[];
         if(item.workspace)meta.push({icon:'layers',text:item.workspace});
         if(item.children&&item.children.running>0)meta.push({icon:'bolt',text:t('panel.children',{n:item.children.running})});
+        if(item.pendingCount>1)meta.push({icon:'clock',text:t('panel.morePending',{n:item.pendingCount-1})});
         if(item.waiting)meta.push({icon:'clock',text:t('waiting.'+(item.waitKind||'choice'))});
         else if(item.phase==='tool'&&item.tool)meta.push({icon:'gear',text:t('panel.toolShort',{tool:item.tool})});
         else meta.push({icon:item.phase==='thinking'?'pulse':'gear',text:item.phase==='thinking'?t('panel.thinking'):t('panel.working')});
@@ -443,7 +444,16 @@
       const toolButton=(icon,label,pressed,action)=>h('button',{type:'button',className:'dpg-tool','aria-label':label,title:label,'aria-pressed':pressed===undefined?undefined:pressed,'data-active':pressed?'true':'false',onClick:action},h(Icon,{name:icon,size:15}));
       const tabButton=(item,index)=>h('button',{key:item.key,type:'button',className:'dpg-stat',role:'tab',id:'dpg-tab-'+item.key,'aria-controls':'dpg-tabpanel',tabIndex:tabKey===item.key?0:-1,ref:el=>{tabRefs.current[index]=el;},'data-kind':item.key,'data-active':tabKey===item.key?'true':'false','aria-selected':tabKey===item.key,title:item.label,onClick:()=>setTab(item.key),onKeyDown:event=>onTabKey(index,event)},
         h(Icon,{name:item.icon,size:14}),h('span',null,item.label),h('b',null,item.count));
-      const panel=open?h('section',{id:'dpg-panel',ref:panelRef,className:'dpg-panel',role:'dialog','aria-label':t('panel.radar'),'aria-modal':false},
+      const onPanelKeyDown=event=>{
+        if(event.key!=='Tab')return;
+        const root=panelRef.current;if(!root)return;
+        const nodes=[...root.querySelectorAll('button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el=>el.offsetParent!==null);
+        if(!nodes.length)return;
+        const first=nodes[0],last=nodes[nodes.length-1];
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+      };
+      const panel=open?h('section',{id:'dpg-panel',ref:panelRef,className:'dpg-panel',role:'dialog','aria-label':t('panel.radar'),'aria-modal':false,onKeyDown:onPanelKeyDown},
         h('header',{className:'dpg-head'},
           h('span',{className:'dpg-orb','data-phase':state.phase,role:'img','aria-label':topLabel,title:topLabel},h(Icon,{name:phaseGlyph,size:20}),state.runningCount||waiting?h('b',null,state.runningCount||waiting):null),
           h('span',{className:'dpg-headline'},
@@ -464,7 +474,6 @@
             toolButton('bell',t('panel.notify'),state.notifyEnabled,props.toggleNotify),
             toolButton('sound',t('panel.sound'),state.soundEnabled,props.toggleSound),
             toolButton('play',t('panel.preview'),undefined,props.previewSound),
-            toolButton('expand',t('panel.size')+' · '+t(state.size==='large'?'panel.large':'panel.standard'),state.size==='large',props.toggleSize),
             toolButton('hide',t('panel.hide'),undefined,props.toggleHidden),
             toolButton('pulse',t('panel.test'),undefined,props.testNotification),
             toolButton('trash',t('panel.clear'),undefined,props.clearHistory)),
@@ -515,7 +524,6 @@
             toggleSound: () => store.toggleSound(),
             previewSound: () => store.previewSound(),
             setVolume: value => store.setVolume(value),
-            toggleSize: () => store.toggleSize(),
             setMascotScale: value => store.setMascotScale(value),
             setBuddyScale: value => store.setBuddyScale(value),
             toggleFocusedNotify: () => store.toggleFocusedNotify(),

@@ -68,8 +68,8 @@ export function createNativeBridge({ platform = process.platform, spawnImpl = sp
         child.once('error', () => finish(result(false, 'spawn-failed')));
         child.once('close', (code, signal) => {
           if (signal || code === null) return finish(result(false, 'terminated'));
-          if (code === 0) return finish(result(true, mode === 'Wake' ? 'foreground' : 'submitted-local-toast-session-fallback-unavailable'));
-          finish(result(false, mode === 'Wake' ? (WAKE_FAILURES[code] || 'powershell-failed') : 'toast-failed'));
+          if (code === 0) return finish(result(true, mode === 'Wake' ? 'foreground' : mode === 'Remove' ? 'removed' : 'submitted-local-toast-session-fallback-unavailable'));
+          finish(result(false, mode === 'Wake' ? (WAKE_FAILURES[code] || 'powershell-failed') : mode === 'Remove' ? 'remove-failed' : 'toast-failed'));
         });
         timer = setTimeout(() => { finish(result(false, 'timeout')); stop(); }, TIMEOUT_MS);
       } catch {
@@ -96,6 +96,17 @@ export function createNativeBridge({ platform = process.platform, spawnImpl = sp
       const tag = createHash('sha256').update(sessionId, 'utf8').digest('hex').slice(0, 16);
       const encoded = Buffer.from(JSON.stringify({ title, body, sessionId, kind, iconPath, tag, soundEnabled:input.soundEnabled===true,meta:input.meta??'',activationUri:input.activationUri??'',noNavigation:input.noNavigation===true }), 'utf8').toString('base64');
       return run('Notify', ['-PayloadBase64', encoded]);
+    },
+    /** Withdraw one session toast, or the whole group when no session is given. */
+    remove(input = {}) {
+      const reason = unavailable();
+      if (reason) return Promise.resolve(result(false, reason));
+      const { sessionId } = input;
+      if (sessionId !== undefined && !validText(sessionId, 256, true)) return Promise.resolve(result(false, 'invalid-notification'));
+      const tag = typeof sessionId === 'string'
+        ? createHash('sha256').update(sessionId, 'utf8').digest('hex').slice(0, 16)
+        : '';
+      return run('Remove', tag ? ['-Tag', tag] : []);
     },
     dispose() {
       if (disposed) return;

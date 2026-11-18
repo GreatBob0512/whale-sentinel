@@ -17,13 +17,19 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
  const clampScale=v=>typeof v==='number'&&Number.isFinite(v)?Math.min(1.6,Math.max(0.8,Math.round(v*10)/10)):1;
  let serial=0,revision=0,enabled=loaded.enabled!==false,soundEnabled=loaded.soundEnabled===true,soundVolume=clampVolume(loaded.soundVolume),notifyWhenFocused=loaded.notifyWhenFocused===true,longRunEnabled=loaded.longRunEnabled===true,scope=SCOPES.has(loaded.scope)?loaded.scope:'all',historyLimit=LIMITS.has(loaded.historyLimit)?loaded.historyLimit:3,mascotScale=clampScale(loaded.mascotScale),buddyScale=clampScale(loaded.buddyScale),disposed=false,timer=null,lastWake=null;
  const history=[],delivery=[],focusQueue=[],nudges=new Map();let presence=new Map();
+ const results=[];
  const LONG_RUN_MS=15*60*1000;
  const changed=()=>{revision++;};
  const settings=()=>({enabled,soundEnabled,soundVolume,notifyWhenFocused,longRunEnabled,scope,historyLimit,mascotScale,buddyScale});
  const trace=(event)=>{delivery.unshift({at:now(),...event});delivery.splice(20);changed();};
  const titleOf=s=>s.title||'这个任务';
+ const terminalKinds=new Set(['done','error','interrupted','stopped','forked','unknown']);
  function publish(row,notify=true){
-  const event={...row,id:`${boot}:${++serial}`};history.unshift(event);history.splice(50);changed();
+  const event={...row,id:`${boot}:${++serial}`};history.unshift(event);history.splice(50);
+  // Results get their own bounded record: mixed history would push finished
+  // work out of reach as transient start/waiting events accumulate.
+  if(terminalKinds.has(event.kind)&&event.test!==true){results.unshift(event);results.splice(50);}
+  changed();
   if(notify&&enabled)queue.push(event);
   return event;
  }
@@ -80,13 +86,14 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
   });
   // Business stats only: a channel test is a diagnostic, never a finished task.
   const business=history.filter(e=>e.test!==true);
-  const stats={active:active.length,running:active.filter(x=>x.running).length,waiting:active.filter(x=>x.waiting).length,children:active.reduce((n,x)=>n+x.children.running,0),doneToday:business.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&at-e.at<86400000).length,events:business.length};
-  return {boot,version:'2.2.0',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,stats,events:[...history],notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
+  const stats={active:active.length,running:active.filter(x=>x.running).length,waiting:active.filter(x=>x.waiting).length,children:active.reduce((n,x)=>n+x.children.running,0),doneToday:results.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&at-e.at<86400000).length,events:business.length,results:results.length};
+  return {boot,version:'2.3.0',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,stats,events:[...history],results:[...results],resultsTotal:results.length,notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
  }
  function wording(n){
   const formatted=formatNotice(n);
   const phase=n.kind==='done'?'done':n.kind==='waiting'?'waiting':['error','interrupted'].includes(n.kind)?'error':'idle';
-  return {title:formatted.title,body:formatted.body,meta:formatted.meta,sessionId:n.sessionId||'whale-sentinel-test',kind:n.kind,soundEnabled,soundVolume,iconPath:fileURLToPath(new URL(`./assets/fish-${phase}-side.png`,import.meta.url))};
+  const meta=n.aggregated?`${formatted.meta} · 另有 ${n.aggregated} 个任务已完成`:formatted.meta;
+  return {title:formatted.title,body:formatted.body,meta,sessionId:n.sessionId||'whale-sentinel-test',kind:n.kind,soundEnabled,soundVolume,iconPath:fileURLToPath(new URL(`./assets/fish-${phase}-side.png`,import.meta.url))};
  }
  function foregroundNow(){
   const at=now();
@@ -116,6 +123,15 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
    checkLongRuns(at);
   // Deterministic time is injected in tests. Production deadlines use the host clock.
   const suppress=!notifyWhenFocused&&foregroundNow();
+  // Several tasks finishing at once should be one interruption, not a burst.
+  if(!suppress){
+   const done=queue.peekDue().filter(n=>n.kind==='done'&&!n.test);
+   if(done.length>1){
+    const keep=done.reduce((a,b)=>((b.at??0)>=(a.at??0)?b:a));
+    for(const n of done)if(n!==keep){queue.aggregate(n.id);changed();trace({id:n.id,stage:'native-aggregated'});}
+    keep.aggregated=done.length-1;
+   }
+  }
   for(const candidate of queue.peekDue()){
    // One notice can never abort the whole delivery pass.
    try{
@@ -187,7 +203,7 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
    case 'claim':{if(typeof body.id!=='string'||typeof body.client!=='string'||body.client.length>100)throw new Error('invalid claim');const ok=enabled&&queue.claim(body.id,body.client);if(ok)changed();return{ok};}
    case 'ack':{if(!['shown','error'].includes(body.stage))throw new Error('invalid receipt');const ok=queue.ack(body.id,body.client,body.stage);if(ok)trace({id:body.id,stage:body.stage==='shown'?'client-shown':'client-error'});return{ok};}
    case 'wake':{if(body.sessionId!==undefined&&(typeof body.sessionId!=='string'||body.sessionId.length>256))throw new Error('invalid session');lastWake=await native.wake();changed();return lastWake;}
-   case 'presence':{
+    case 'presence':{
     if(typeof body.visible!=='boolean'||typeof body.focused!=='boolean')throw new Error('invalid presence');
     // Per-window liveness: a hidden background window must not clear the fact
     // that another window is currently focused and already showing the panel.
@@ -195,6 +211,18 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
     presence.set(key,{visible:body.visible,focused:body.focused,at:now()});
     for(const [id,entry] of presence)if(now()-entry.at>60000)presence.delete(id);
     return{ok:true};
+   }
+   case 'suppress':{
+    if(!Array.isArray(body.ids)||body.ids.length===0||body.ids.length>20)throw new Error('invalid ids');
+    for(const id of body.ids)if(typeof id!=='string'||id.length>80)throw new Error('invalid id');
+    let count=0;
+    for(const id of body.ids){
+     const n=queue.find(id);
+     if(!n||!['pending','claimed','failed'].includes(n.status))continue;
+     n.status='withdrawn';count+=1;trace({id,stage:'page-foreground-suppressed'});
+    }
+    if(count)changed();
+    return{ok:true,suppressed:count};
    }
    case 'diagnostic':{
     const stages=new Set(['navigation-success','navigation-failed']);

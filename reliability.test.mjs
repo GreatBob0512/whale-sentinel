@@ -4,7 +4,7 @@ import {mkdtempSync,writeFileSync,readFileSync,readdirSync,existsSync} from 'nod
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DeliveryQueue,selectAttention} from './task-state.js';
-import {readPreferences,protocolFor} from './release-2.2.0.js';
+import {readPreferences,protocolFor} from './release-2.3.0.js';
 import {createActivationQueue} from './activation-queue.js';
 import {createTaskHost} from './host.js';
 
@@ -186,4 +186,54 @@ test('the Windows launcher is written as Unicode and stale routes are only prune
  assert.match(ps,/IO\.Directory\]::Exists/,'pruning requires proving the old launcher directory is gone');
  assert.match(ps,/shell\\open\\command/,'and reads the old command before deciding');
  assert.doesNotMatch(ps,/\$staleMarker -ceq \$marker\) \{ \$root\.DeleteSubKeyTree/,'a bare marker match must not delete a live instance');
+});
+
+test('foreground withdrawal is a host decision, not a client lie',async()=>{
+ let now=1000;
+ const{host}=hostSetup({now:()=>now});
+ const result=await host.action({action:'test'});
+ assert.equal(host.snapshot().notices.find(n=>n.id===result.id).status,'pending');
+ const suppressed=await host.action({action:'suppress',ids:[result.id]});
+ assert.equal(suppressed.suppressed,1);
+ assert.equal(host.snapshot().notices.find(n=>n.id===result.id).status,'withdrawn');
+ await assert.rejects(()=>host.action({action:'suppress',ids:'nope'}));
+ host.dispose();
+});
+
+test('finished results survive a flood of transient start events',async()=>{
+ let now=100000;
+ const{host}=hostSetup({now:()=>now});
+ const session={id:'s',state:{sessionId:'s',title:'S',child:false,running:true,since:1,lastSeq:1,pending:[],outcome:null}};
+ host.remember(session,false);
+ session.state={...session.state,lastSeq:2,running:false,outcome:{kind:'done',at:now-5000,seq:2,durationMs:1000,summary:'ok',summaryFinal:true}};
+ host.remember(session);
+ assert.equal(host.snapshot().results.length,1);
+ for(let i=0;i<60;i++){
+  session.state={...session.state,running:true,since:2000+i,lastSeq:3+i,outcome:null};
+  host.remember(session);
+ }
+ const snap=host.snapshot();
+ assert.equal(snap.results.length,1,'results have their own bounded record');
+ assert.equal(snap.results[0].kind,'done');
+ assert.equal(snap.resultsTotal,1);
+ assert.equal(snap.events.some(e=>e.id===snap.results[0].id),false,'mixed history already dropped it');
+ host.dispose();
+});
+
+test('simultaneous completions become one toast that says how many were folded',async()=>{
+ let now=1000;
+ const{host,native}=hostSetup({now:()=>now});
+ for(const id of ['a','b']){
+  const session={id,state:{sessionId:id,title:id,child:false,running:true,since:1,lastSeq:1,pending:[],outcome:null}};
+  host.remember(session,false);
+  session.state={...session.state,lastSeq:2,running:false,outcome:{kind:'done',at:now+id.charCodeAt(0),seq:2,durationMs:500,summary:'',summaryFinal:false}};
+  host.remember(session);
+ }
+ now+=10000;host.tick();
+ for(let i=0;i<12;i++)await Promise.resolve();
+ assert.equal(native.notifyCalls.length,1,'one interruption, not a burst');
+ assert.match(native.notifyCalls[0].meta,/另有 1 个任务已完成/);
+ const statuses=host.snapshot().notices.filter(n=>n.kind==='done').map(n=>n.status).sort();
+ assert.deepEqual(statuses,['aggregated','native-submitted']);
+ host.dispose();
 });

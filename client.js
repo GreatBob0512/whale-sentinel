@@ -41,7 +41,7 @@ window.__ModuleLoader__.load({
     const DICT = {
       zh: {
         name: '小鲸哨',
-        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'alert.saved':'已保存', 'alert.retry':'稍后自动重试', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'panel.children':'{n} 个子任务运行中', 'panel.longRun':'长任务提醒', 'panel.tab.waiting':'待处理', 'panel.tab.running':'进行中', 'panel.tab.results':'结果', 'panel.emptyWaiting':'没有需要你处理的任务', 'panel.emptyRunning':'没有正在运行的任务', 'panel.emptyResults':'还没有结果', 'panel.archiveNote':'仅保留最近 50 条结束记录，更早的结果已归档', 'panel.resultCount':'保留了 {n} 次结束记录', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
+        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'alert.saved':'已保存', 'alert.retry':'稍后自动重试', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'panel.children':'{n} 个子任务运行中', 'panel.longRun':'长任务提醒', 'panel.tab.waiting':'待处理', 'panel.tab.running':'进行中', 'panel.tab.results':'结果', 'panel.emptyWaiting':'没有需要你处理的任务', 'panel.emptyRunning':'没有正在运行的任务', 'panel.emptyResults':'还没有结果', 'panel.archiveNote':'仅保留最近 50 条结束记录，更早的结果已归档', 'panel.resultCount':'保留了 {n} 次结束记录', 'panel.previousTurn':'上一轮', 'panel.staleSync':'离线 · 上次同步 {ago}', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
         'event.stopped': '已手动停止', 'event.interrupted': '任务意外中断', 'event.forked': '已分叉', 'event.unknown': '任务结束', 'waiting.approval': '需要你批准', 'waiting.choice': '需要你选择', 'waiting.input': '需要你输入文字',
         title: '任务提醒',
         'state.idle': '待命中',
@@ -117,7 +117,7 @@ window.__ModuleLoader__.load({
       },
       en: {
         name: 'Xiao Jingshao',
-        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'alert.saved':'Saved', 'alert.retry':'retrying', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'panel.children':'{n} subagents running', 'panel.longRun':'Long-run nudge', 'panel.tab.waiting':'Pending', 'panel.tab.running':'Running', 'panel.tab.results':'Results', 'panel.emptyWaiting':'Nothing needs your answer', 'panel.emptyRunning':'Nothing is running', 'panel.emptyResults':'No results yet', 'panel.archiveNote':'Only the latest 50 terminal events are kept; older results are archived', 'panel.resultCount':'{n} terminal records kept', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
+        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'alert.saved':'Saved', 'alert.retry':'retrying', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'panel.children':'{n} subagents running', 'panel.longRun':'Long-run nudge', 'panel.tab.waiting':'Pending', 'panel.tab.running':'Running', 'panel.tab.results':'Results', 'panel.emptyWaiting':'Nothing needs your answer', 'panel.emptyRunning':'Nothing is running', 'panel.emptyResults':'No results yet', 'panel.archiveNote':'Only the latest 50 terminal events are kept; older results are archived', 'panel.resultCount':'{n} terminal records kept', 'panel.previousTurn':'Previous turn', 'panel.staleSync':'Offline · last sync {ago}', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
         'event.stopped': 'Stopped by user', 'event.interrupted': 'Task interrupted', 'event.forked': 'Forked', 'event.unknown': 'Task ended', 'waiting.approval': 'Approval needed', 'waiting.choice': 'A choice is needed', 'waiting.input': 'Text input needed',
         title: 'Task reminders',
         'state.idle': 'Standing by',
@@ -272,7 +272,7 @@ window.__ModuleLoader__.load({
       let lastRev=null,lastFocusId=null,pendingFocusAck=null;
       let storedSize='standard';try{storedSize=window.localStorage.getItem(SIZE_KEY)==='large'?'large':'standard'}catch{}
       const client = 'page-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
-      let snapshot = {phase:'idle',phaseSince:Date.now(),runningCount:0,waitingCount:0,muted:readFlag(MUTE_KEY,false),notifyEnabled:readFlag(NOTIFY_KEY,true),hidden:readFlag(HIDDEN_KEY,false),size:storedSize,mascotScale:1,buddyScale:1,notifyWhenFocused:false,longRunEnabled:false,scope:'all',historyLimit:3,soundEnabled:false,soundVolume:.2,active:[],stats:null,events:[],bubble:null,alert:null,alertCount:0,hostReady:false,native:false};
+      let snapshot = {phase:'idle',phaseSince:Date.now(),runningCount:0,waitingCount:0,muted:readFlag(MUTE_KEY,false),notifyEnabled:readFlag(NOTIFY_KEY,true),hidden:readFlag(HIDDEN_KEY,false),size:storedSize,mascotScale:1,buddyScale:1,notifyWhenFocused:false,longRunEnabled:false,scope:'all',historyLimit:3,soundEnabled:false,soundVolume:.2,active:[],stats:null,events:[],results:[],resultsTotal:0,lastSyncAt:null,bubble:null,alert:null,alertCount:0,hostReady:false,native:false};
       const patch = values => {if(disposed)return;snapshot={...snapshot,...values};for(const fn of [...listeners])fn();};
       const observable={getSnapshot:()=>snapshot,subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn)}};
       async function action(body) {
@@ -280,6 +280,16 @@ window.__ModuleLoader__.load({
         return res;
       }
       function noteAlert(title,result){patch({alert:{at:Date.now(),title,ok:result?.ok===true,reason:result?.reason??''},alertCount:snapshot.alertCount+(result?.ok===true?1:0)});}
+      const terminalKinds=new Set(['done','error','interrupted','stopped','forked','unknown']);
+      function markProcessed(id){processed.add(id);if(processed.size>200)processed.delete(processed.values().next().value);}
+      /** One navigation path for rows, bubbles and system notifications. */
+      function openSessionWithDiagnostic(sessionId,noticeId){
+        const ok=openSession(ctx.get('uiWorkspace'),sessionId);
+        if(typeof sessionId==='string'&&sessionId){
+          action({action:'diagnostic',stage:ok?'navigation-success':'navigation-failed',sessionId,noticeId,reason:ok?undefined:'会话导航未就绪'}).catch(()=>{});
+        }
+        return ok;
+      }
       function updatePhase(){
         const active=snapshot.active;
         let phase=active.some(x=>x.waiting)?'waiting':active.some(x=>x.running)?'running':'idle';
@@ -309,7 +319,7 @@ window.__ModuleLoader__.load({
             else noteAlert(notice.title,{ok:false,reason:'页面发送失败，后台将尝试原生通知'});
           }catch(error){if(!disposed)noteAlert(notice.title,{ok:false,reason:'通知回执失败：'+String(error)});}
         };
-        const n=deliver(notice,{onShow:()=>receipt('shown'),onError:()=>receipt('error'),onClick:()=>{action({action:'wake',sessionId:notice.sessionId}).then(r=>{if(!r.ok)noteAlert(notice.title,{ok:false,reason:'窗口唤起失败：'+r.reason})}).catch(e=>noteAlert(notice.title,{ok:false,reason:String(e)}));openSession(ctx.get('uiWorkspace'),notice.sessionId);replay(notice);}});
+        const n=deliver(notice,{onShow:()=>receipt('shown'),onError:()=>receipt('error'),onClick:()=>{action({action:'wake',sessionId:notice.sessionId}).then(r=>{if(!r.ok)noteAlert(notice.title,{ok:false,reason:'窗口唤起失败：'+r.reason})}).catch(e=>noteAlert(notice.title,{ok:false,reason:String(e)}));openSessionWithDiagnostic(notice.sessionId,notice.id);replay(notice);}});
         if(n?.notification){
           notification=n.notification;
           const previous=shown.get(notice.sessionId);try{previous?.close()}catch{}
@@ -371,7 +381,8 @@ window.__ModuleLoader__.load({
           const list=Array.isArray(state.events)?state.events:[];
           const recent=list[0];
           events=list.slice(0,MAX_EVENTS);
-          const incoming={hostReady:true,connectionLost:false,notifyEnabled:state.enabled!==false,soundEnabled:state.settings?.soundEnabled===true,soundVolume:state.settings?.soundVolume??.2,mascotScale:state.settings?.mascotScale??1,buddyScale:state.settings?.buddyScale??1,notifyWhenFocused:state.settings?.notifyWhenFocused===true,longRunEnabled:state.settings?.longRunEnabled===true,scope:state.settings?.scope==='attention'?'attention':'all',historyLimit:[3,5,10].includes(state.settings?.historyLimit)?state.settings.historyLimit:3,native:state.native===true,active:state.active??[],stats:state.stats??null,runningCount:(state.active??[]).filter(x=>x.running).length,waitingCount:(state.active??[]).filter(x=>x.waiting).length,events};
+          const results=Array.isArray(state.results)?state.results:list.filter(event=>terminalKinds.has(event.kind)&&event.test!==true);
+          const incoming={hostReady:true,connectionLost:false,lastSyncAt:Date.now(),notifyEnabled:state.enabled!==false,soundEnabled:state.settings?.soundEnabled===true,soundVolume:state.settings?.soundVolume??.2,mascotScale:state.settings?.mascotScale??1,buddyScale:state.settings?.buddyScale??1,notifyWhenFocused:state.settings?.notifyWhenFocused===true,longRunEnabled:state.settings?.longRunEnabled===true,scope:state.settings?.scope==='attention'?'attention':'all',historyLimit:[3,5,10].includes(state.settings?.historyLimit)?state.settings.historyLimit:3,native:state.native===true,active:state.active??[],stats:state.stats??null,runningCount:(state.active??[]).filter(x=>x.running).length,waitingCount:(state.active??[]).filter(x=>x.waiting).length,events,results,resultsTotal:Number.isFinite(state.resultsTotal)?state.resultsTotal:results.length};
           // Never let a stale snapshot overwrite a value the user just changed.
           for(const key of dirty)delete incoming[key];
           patch(incoming);
@@ -380,9 +391,20 @@ window.__ModuleLoader__.load({
           const notices=state.notices??[];
           for(const [id,n] of [...shown]){
             const latest=notices.filter(x=>x.sessionId===id).at(-1);
-            if(!latest||['withdrawn','native','native-failed'].includes(latest.status)){try{n.close()}catch{}shown.delete(id);}
+            if(!latest||['withdrawn','native','native-failed','aggregated'].includes(latest.status)){try{n.close()}catch{}shown.delete(id);}
           }
-          if(snapshot.notifyEnabled){for(const n of notices){if(n.status!=='pending'||processed.has(n.id))continue;try{await send(n);}catch(error){noteAlert('通知',{ok:false,reason:'通知认领失败，稍后重试'});break;}}}
+          if(snapshot.notifyEnabled){
+            const suppressed=[];
+            // The foreground rule is one rule for both channels: if you are
+            // already looking at DSH, the panel is the reminder, not a toast.
+            const foreground=!isBackgroundNow();
+            for(const n of notices){
+              if(n.status!=='pending'||processed.has(n.id))continue;
+              if(!snapshot.notifyWhenFocused&&foreground){markProcessed(n.id);suppressed.push(n.id);continue;}
+              try{await send(n);}catch(error){noteAlert('通知',{ok:false,reason:'通知认领失败，稍后重试'});break;}
+            }
+            if(suppressed.length)action({action:'suppress',ids:suppressed}).catch(()=>{});
+          }
           const nativeResult=state.delivery?.[0];
           if(nativeResult&&(nativeResult.id+':'+nativeResult.stage)!==snapshot.lastDelivery&&nativeResult.stage.startsWith('native-')){patch({lastDelivery:nativeResult.id+':'+nativeResult.stage});noteAlert('后台通知',{ok:false,reason:nativeResult.stage==='native-submitted'?'已提交 Windows 通知，未确认显示':nativeResult.reason||'后台原生发送中'});}
         }catch(error){
@@ -446,7 +468,7 @@ window.__ModuleLoader__.load({
       function toggleFocusedNotify(){saveSetting({notifyWhenFocused:!snapshot.notifyWhenFocused});}
       function toggleLongRun(){saveSetting({longRunEnabled:!snapshot.longRunEnabled});}
       poll();
-      return {toggleSound,previewSound,setVolume,toggleSize,setMascotScale,toggleFocusedNotify,toggleLongRun,setBuddyScale,unlockAudio:()=>cues.unlock(),observable,noteAlert,toggleMute,toggleHidden,toggleNotify,clearHistory,testNotification,dismissBubble:()=>{clearTimeout(bubbleTimer);patch({bubble:null})},dispose};
+      return {toggleSound,previewSound,setVolume,toggleSize,setMascotScale,toggleFocusedNotify,toggleLongRun,setBuddyScale,unlockAudio:()=>cues.unlock(),observable,noteAlert,toggleMute,toggleHidden,toggleNotify,clearHistory,testNotification,openSession:(sessionId,noticeId)=>openSessionWithDiagnostic(sessionId,noticeId),dismissBubble:()=>{clearTimeout(bubbleTimer);patch({bubble:null})},dispose};
     }
 
     function formatDuration(t, ms) {
@@ -907,6 +929,7 @@ window.__ModuleLoader__.load({
 .dpg-stat[data-kind="results"]{background:color-mix(in srgb,var(--dsw-alias-bg-layer-2,#E8FBF2) 45%,#C6F4DE 55%)}
 .dpg-stat b{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
 .dpg-count{flex:none;padding:0 4px;border:1.5px solid var(--muted);border-radius:999px;font-size:10px;font-weight:800;line-height:14px;color:var(--muted)}
+.dpg-prev{flex:none;padding:0 4px;border:1.5px solid var(--dsw-alias-state-warn-primary,#F5C246);border-radius:999px;font-size:10px;font-weight:800;line-height:14px;color:var(--dsw-alias-state-warn-primary,#B4751D)}
 .dpg-archive-note{margin:8px 10px 0;text-align:center;font-size:10.5px;font-weight:700;color:var(--muted)}
 .dpg-list{display:flex;flex-direction:column;gap:8px;padding:9px 10px 0}
 .dpg-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:8px;width:100%;padding:9px 10px;border:3px solid var(--ink);border-radius:15px;background:var(--card);color:var(--ink);font:inherit;text-align:left;cursor:pointer;box-shadow:3px 3px 0 rgba(34,48,79,.22);transition:transform .13s ease,box-shadow .13s ease}
@@ -1019,21 +1042,23 @@ window.__ModuleLoader__.load({
       const attention=activity.find(x=>x.waiting);
       const focus=attention??activity[0];
       const topLabel=attention?t('waiting.'+(attention.waitKind||'choice')):t('state.'+state.phase);
-      const toggle=event=>{triggerRef.current=event?.currentTarget||null;setOpen(v=>!v)};
+      const preferredTab=()=>{const items=state.active??[];if(items.some(x=>x.waiting))return'waiting';if(items.some(x=>x.running))return'running';return'results';};
+      const toggle=event=>{triggerRef.current=event?.currentTarget||null;if(!open)setTab(preferredTab());setOpen(!open)};
       const phaseText=item=>item.waiting?t('waiting.'+(item.waitKind||'choice')):item.phase==='tool'&&item.tool?t('panel.tool',{tool:item.tool}):item.phase==='thinking'?t('panel.thinking'):t('panel.working');
       const [tools,setTools]=React.useState(false);
       const [allHistory,setAllHistory]=React.useState(false);
       const [tab,setTab]=React.useState(null);
       const panelText=(value,max=120)=>plainText(value,max);
-      const connText=state.hostReady?t('panel.connected'):state.connectionLost?t('panel.offline'):t('panel.connecting');
+      const connText=state.hostReady?t('panel.connected'):state.connectionLost?t('panel.staleSync',{ago:state.lastSyncAt?formatAgo(t,state.lastSyncAt,now):t('time.justNow')}):t('panel.connecting');
       const alertStatus=state.alert?(state.alert.ok?t('alert.sent',{n:state.alertCount}):state.alert.reason):t('alert.ready');
       const phaseGlyph=GLYPH[state.phase]??'dot';
       // Mutually exclusive buckets: a session waiting for you is not "running".
       const waitingItems=activity.filter(x=>x.waiting);
       const runningItems=activity.filter(x=>!x.waiting);
       const terminalKinds=new Set(['done','error','interrupted','stopped','forked','unknown']);
+      const resultSource=Array.isArray(state.results)?state.results:state.events;
       const resultMap=new Map();
-      for(const event of state.events){
+      for(const event of resultSource){
         if(!terminalKinds.has(event.kind)||!event.sessionId)continue;
         const previous=resultMap.get(event.sessionId);
         if(previous)previous.count+=1;else resultMap.set(event.sessionId,{...event,count:1});
@@ -1052,6 +1077,15 @@ window.__ModuleLoader__.load({
       const list=tabItems[tabKey];
       const shown=tabKey==='results'?(allHistory?list:list.slice(0,5)):list;
       const emptyText=tabKey==='waiting'?t('panel.emptyWaiting'):tabKey==='running'?t('panel.emptyRunning'):t('panel.emptyResults');
+      const activeIds=new Set(activity.map(item=>item.sessionId));
+      const tabRefs=React.useRef([]);
+      const onTabKey=(index,event)=>{
+        const next=event.key==='ArrowRight'?(index+1)%3:event.key==='ArrowLeft'?(index+2)%3:event.key==='Home'?0:event.key==='End'?2:-1;
+        if(next<0)return;
+        event.preventDefault();
+        setTab(tabs[next].key);
+        tabRefs.current[next]?.focus();
+      };
       const arrowBox=h('span',{className:'dpg-go','aria-hidden':'true'},h(Icon,{name:'arrow',size:14}));
       const taskRow=item=>{
         const pct=Number.isFinite(item.progress)&&item.todoTotal>0?Math.round(item.progress*100):null;
@@ -1082,11 +1116,14 @@ window.__ModuleLoader__.load({
           h('span',{className:'dpg-row-body'},
             h('span',{className:'dpg-log-head'},
               h('span',{className:'dpg-row-title'},label+'：'+(event.title||t('title.untitled'))),
+              activeIds.has(event.sessionId)?h('span',{className:'dpg-prev'},t('panel.previousTurn')):null,
               event.count>1?h('span',{className:'dpg-count',title:t('panel.resultCount',{n:event.count})},'×'+event.count):null,
               h('span',{className:'dpg-row-time'},formatAgo(t,event.at,now))),
             summary?h('span',{className:'dpg-row-note'},summary):null));
       };
       const toolButton=(icon,label,pressed,action)=>h('button',{type:'button',className:'dpg-tool','aria-label':label,title:label,'aria-pressed':pressed===undefined?undefined:pressed,'data-active':pressed?'true':'false',onClick:action},h(Icon,{name:icon,size:15}));
+      const tabButton=(item,index)=>h('button',{key:item.key,type:'button',className:'dpg-stat',role:'tab',id:'dpg-tab-'+item.key,'aria-controls':'dpg-tabpanel',tabIndex:tabKey===item.key?0:-1,ref:el=>{tabRefs.current[index]=el;},'data-kind':item.key,'data-active':tabKey===item.key?'true':'false','aria-selected':tabKey===item.key,title:item.label,onClick:()=>setTab(item.key),onKeyDown:event=>onTabKey(index,event)},
+        h(Icon,{name:item.icon,size:14}),h('span',null,item.label),h('b',null,item.count));
       const panel=open?h('section',{id:'dpg-panel',ref:panelRef,className:'dpg-panel',role:'dialog','aria-label':t('panel.radar'),'aria-modal':false},
         h('header',{className:'dpg-head'},
           h('span',{className:'dpg-orb','data-phase':state.phase,role:'img','aria-label':topLabel,title:topLabel},h(Icon,{name:phaseGlyph,size:20}),state.runningCount||waiting?h('b',null,state.runningCount||waiting):null),
@@ -1096,13 +1133,12 @@ window.__ModuleLoader__.load({
           h('span',{className:'dpg-head-gap'}),
           h('button',{type:'button',className:'dpg-tool','aria-label':t('panel.options'),title:t('panel.options'),'aria-expanded':tools,onClick:()=>setTools(v=>!v)},h(Icon,{name:'gear',size:16})),
           h('button',{type:'button',className:'dpg-close','aria-label':t('panel.close'),title:t('panel.close'),onClick:()=>setOpen(false)},h(Icon,{name:'close',size:16}))),
-        h('div',{className:'dpg-tabs',role:'tablist','aria-label':t('panel.radar')},
-          tabs.map(item=>h('button',{key:item.key,type:'button',className:'dpg-stat',role:'tab','data-kind':item.key,'data-active':tabKey===item.key?'true':'false','aria-selected':tabKey===item.key,title:item.label,onClick:()=>setTab(item.key)},
-            h(Icon,{name:item.icon,size:14}),h('span',null,item.label),h('b',null,item.count)))),
-        shown.length?h('div',{className:'dpg-list'},shown.map(tabKey==='results'?logRow:taskRow)):h('p',{className:'dpg-empty'},emptyText),
-        tabKey==='results'&&list.length>5?h('button',{type:'button',className:'dpg-more','aria-expanded':allHistory,onClick:()=>setAllHistory(v=>!v),title:allHistory?t('panel.less'):t('panel.more')},
-          h(Icon,{name:allHistory?'up':'down',size:13}),h('b',null,allHistory?t('panel.less'):t('panel.moreShow',{n:list.length-5}))):null,
-        tabKey==='results'&&results.length>=20?h('p',{className:'dpg-archive-note'},t('panel.archiveNote')):null,
+        h('div',{className:'dpg-tabs',role:'tablist','aria-label':t('panel.radar')},tabs.map(tabButton)),
+        h('div',{role:'tabpanel',id:'dpg-tabpanel',tabIndex:0,'aria-labelledby':'dpg-tab-'+tabKey},
+          shown.length?h('div',{className:'dpg-list'},shown.map(tabKey==='results'?logRow:taskRow)):h('p',{className:'dpg-empty'},emptyText),
+          tabKey==='results'&&list.length>5?h('button',{type:'button',className:'dpg-more','aria-expanded':allHistory,onClick:()=>setAllHistory(v=>!v),title:allHistory?t('panel.less'):t('panel.more')},
+            h(Icon,{name:allHistory?'up':'down',size:13}),h('b',null,allHistory?t('panel.less'):t('panel.moreShow',{n:list.length-5}))):null,
+          tabKey==='results'&&(results.length>=20||state.resultsTotal>results.length)?h('p',{className:'dpg-archive-note'},t('panel.archiveNote')):null),
         tools?h('div',{className:'dpg-tools'},
           h('div',{className:'dpg-toolrow'},
             toolButton('mute',t('panel.mute'),state.muted,props.toggleMute),
@@ -1130,10 +1166,10 @@ window.__ModuleLoader__.load({
           bubbleEvent.sessionId?h('span',{className:'dpg-bubble-go','aria-hidden':true},h(Icon,{name:'arrow',size:12})):null),
         h('button',{type:'button',className:'dpg-bubble-close','aria-label':t('bubble.dismiss'),title:t('bubble.dismiss'),onClick:props.dismissBubble},h(Icon,{name:'close',size:13}))):null;
       const badge=waiting||state.runningCount;
-      const restore=state.hidden?h('button',{type:'button',className:'dpg-restore','data-phase':state.phase,'aria-label':waiting?t('panel.restoreBadge',{n:waiting}):t('panel.show'),title:t('panel.show'),onClick:props.toggleHidden},h('svg',{viewBox:'0 0 24 24',width:22,height:22,'aria-hidden':true},h('path',{d:'M3 12c0-5 4-7 8-7 5 0 7 3 7 6l4-3-1 6c-3 5-7 7-12 5-4-1-6-4-6-7Zm5-2h.01M10 3l1-2m2 2 1-2',fill:'none',stroke:'currentColor',strokeWidth:1.6,strokeLinecap:'round'})),badge?h('span',{className:'dpg-mini-badge'},badge):null):null;
+      const restore=state.hidden?h('button',{type:'button',className:'dpg-restore','data-phase':state.phase,'aria-label':waiting?t('panel.restoreBadge',{n:waiting}):t('panel.open'),title:t('panel.open'),onClick:()=>setOpen(true)},h('svg',{viewBox:'0 0 24 24',width:22,height:22,'aria-hidden':true},h('path',{d:'M3 12c0-5 4-7 8-7 5 0 7 3 7 6l4-3-1 6c-3 5-7 7-12 5-4-1-6-4-6-7Zm5-2h.01M10 3l1-2m2 2 1-2',fill:'none',stroke:'currentColor',strokeWidth:1.6,strokeLinecap:'round'})),badge?h('span',{className:'dpg-mini-badge'},badge):null):null;
       const alertDots=Math.min(3,waiting);
       const alerts=waiting>0?h('span',{className:'dpg-alerts','data-count':waiting,'aria-hidden':'true'},Array.from({length:alertDots},(_,i)=>h('i',{key:i,className:'dpg-alert-dot'}))):null;
-      return h('div',{className:'dpg-root','data-artwork': 'whale-it-seated-v1','data-phase':state.phase,'data-size':state.size||'standard','data-hidden':state.hidden?'true':'false','data-scale':String(state.mascotScale??1),style:{'--dpg-scale':String(state.mascotScale??1),'--dpg-buddy-scale':String(state.buddyScale??1)}},h('style',null,CSS),state.hidden?h('div',{className:'dpg-anchor','data-collapsed':'true'},bubble,restore):h('div',{className:'dpg-anchor','data-open':open?'true':'false'},bubble,panel,
+      return h('div',{className:'dpg-root','data-artwork': 'whale-it-seated-v1','data-phase':state.phase,'data-size':state.size||'standard','data-hidden':state.hidden?'true':'false','data-scale':String(state.mascotScale??1),style:{'--dpg-scale':String(state.mascotScale??1),'--dpg-buddy-scale':String(state.buddyScale??1)}},h('style',null,CSS),state.hidden?h('div',{className:'dpg-anchor','data-collapsed':'true'},bubble,panel,restore):h('div',{className:'dpg-anchor','data-open':open?'true':'false'},bubble,panel,
         h('button',{type:'button',className:'dpg-mascot',onClick:toggle,'aria-label':(open?t('panel.close'):t('panel.open'))+(waiting>0?' · '+t('panel.restoreBadge',{n:waiting}):''),'aria-expanded':open,'aria-controls':'dpg-panel',title:focus?.title||topLabel},h(Character,{phase:state.phase,muted:state.muted,open}),alerts)));
     }
 
@@ -1167,7 +1203,7 @@ window.__ModuleLoader__.load({
             toggleLongRun: () => store.toggleLongRun(),
             unlockAudio: () => store.unlockAudio(),
             testNotification: () => store.testNotification(),
-            openSession: (sessionId) => openSession(ctx.get('uiWorkspace'), sessionId),
+            openSession: (sessionId, noticeId) => store.openSession(sessionId, noticeId),
             clearHistory: () => store.clearHistory(),
             dismissBubble: () => store.dismissBubble()
           })

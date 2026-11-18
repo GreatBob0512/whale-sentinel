@@ -1,9 +1,13 @@
-// 2.2.0: the top pills are real tabs and results are archived per session.
-// - 待处理 / 进行中 / 结果 are mutually exclusive: a waiting session is never
-//   counted as running, and each bucket shows only its own rows.
-// - Results group terminal events by session (latest result + occurrence count),
-//   show five by default, expand on demand, and disclose the retained window.
-// 2.1.1: themed waiting card and no duplicate live rows in recent activity.
+// 2.3.0: notification discipline and a calmer opening.
+// - One foreground rule for both channels: while you are on the page, a notice
+//   is withdrawn by the host instead of becoming a toast.
+// - Simultaneous completions fold into one toast that says how many were folded.
+// - Results get an independent bounded record, survive transient-event floods,
+//   and are labelled "previous turn" when their session is active again.
+// - The opening tab is chosen once; tabs are arrow-key operable with a labelled
+//   panel; a stale connection shows its last sync time.
+// - A hidden mascot leaves a badge that opens the radar.
+// 2.2.0: mutually exclusive tabs and per-session result archive.
 // 2.1.0: radar and multi-window release.
 // - Workspace label and delegated-subagent activity are aggregated into the root
 //   row, so a running child is visible without becoming its own notification.
@@ -21,9 +25,9 @@
 // - A toast that cannot carry a click target is delivered as notification-only.
 import {readFileSync,writeFileSync,mkdirSync,renameSync,unlinkSync,readdirSync} from 'node:fs';
 import {join} from 'node:path';import {homedir} from 'node:os';import {createHash,randomUUID} from 'node:crypto';
-import {initialState,foldTask} from './task-state.js?release=2.2.0';
-import {createTaskHost} from './host.js?release=2.2.0';
-import {createNativeBridge} from './native.js?release=2.2.0';
+import {initialState,foldTask} from './task-state.js?release=2.3.0';
+import {createTaskHost} from './host.js?release=2.3.0';
+import {createNativeBridge} from './native.js?release=2.3.0';
 import {createWindowsActivation} from './win-activation.js';
 import {createActivationQueue} from './activation-queue.js';
 export const inject=['agents','sessionProjections','webServer','connection'];

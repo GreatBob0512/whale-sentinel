@@ -248,6 +248,7 @@
 .dpg-stat[data-kind="results"]{background:color-mix(in srgb,var(--dsw-alias-bg-layer-2,#E8FBF2) 45%,#C6F4DE 55%)}
 .dpg-stat b{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
 .dpg-count{flex:none;padding:0 4px;border:1.5px solid var(--muted);border-radius:999px;font-size:10px;font-weight:800;line-height:14px;color:var(--muted)}
+.dpg-prev{flex:none;padding:0 4px;border:1.5px solid var(--dsw-alias-state-warn-primary,#F5C246);border-radius:999px;font-size:10px;font-weight:800;line-height:14px;color:var(--dsw-alias-state-warn-primary,#B4751D)}
 .dpg-archive-note{margin:8px 10px 0;text-align:center;font-size:10.5px;font-weight:700;color:var(--muted)}
 .dpg-list{display:flex;flex-direction:column;gap:8px;padding:9px 10px 0}
 .dpg-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:8px;width:100%;padding:9px 10px;border:3px solid var(--ink);border-radius:15px;background:var(--card);color:var(--ink);font:inherit;text-align:left;cursor:pointer;box-shadow:3px 3px 0 rgba(34,48,79,.22);transition:transform .13s ease,box-shadow .13s ease}
@@ -360,21 +361,23 @@
       const attention=activity.find(x=>x.waiting);
       const focus=attention??activity[0];
       const topLabel=attention?t('waiting.'+(attention.waitKind||'choice')):t('state.'+state.phase);
-      const toggle=event=>{triggerRef.current=event?.currentTarget||null;setOpen(v=>!v)};
+      const preferredTab=()=>{const items=state.active??[];if(items.some(x=>x.waiting))return'waiting';if(items.some(x=>x.running))return'running';return'results';};
+      const toggle=event=>{triggerRef.current=event?.currentTarget||null;if(!open)setTab(preferredTab());setOpen(!open)};
       const phaseText=item=>item.waiting?t('waiting.'+(item.waitKind||'choice')):item.phase==='tool'&&item.tool?t('panel.tool',{tool:item.tool}):item.phase==='thinking'?t('panel.thinking'):t('panel.working');
       const [tools,setTools]=React.useState(false);
       const [allHistory,setAllHistory]=React.useState(false);
       const [tab,setTab]=React.useState(null);
       const panelText=(value,max=120)=>plainText(value,max);
-      const connText=state.hostReady?t('panel.connected'):state.connectionLost?t('panel.offline'):t('panel.connecting');
+      const connText=state.hostReady?t('panel.connected'):state.connectionLost?t('panel.staleSync',{ago:state.lastSyncAt?formatAgo(t,state.lastSyncAt,now):t('time.justNow')}):t('panel.connecting');
       const alertStatus=state.alert?(state.alert.ok?t('alert.sent',{n:state.alertCount}):state.alert.reason):t('alert.ready');
       const phaseGlyph=GLYPH[state.phase]??'dot';
       // Mutually exclusive buckets: a session waiting for you is not "running".
       const waitingItems=activity.filter(x=>x.waiting);
       const runningItems=activity.filter(x=>!x.waiting);
       const terminalKinds=new Set(['done','error','interrupted','stopped','forked','unknown']);
+      const resultSource=Array.isArray(state.results)?state.results:state.events;
       const resultMap=new Map();
-      for(const event of state.events){
+      for(const event of resultSource){
         if(!terminalKinds.has(event.kind)||!event.sessionId)continue;
         const previous=resultMap.get(event.sessionId);
         if(previous)previous.count+=1;else resultMap.set(event.sessionId,{...event,count:1});
@@ -393,6 +396,15 @@
       const list=tabItems[tabKey];
       const shown=tabKey==='results'?(allHistory?list:list.slice(0,5)):list;
       const emptyText=tabKey==='waiting'?t('panel.emptyWaiting'):tabKey==='running'?t('panel.emptyRunning'):t('panel.emptyResults');
+      const activeIds=new Set(activity.map(item=>item.sessionId));
+      const tabRefs=React.useRef([]);
+      const onTabKey=(index,event)=>{
+        const next=event.key==='ArrowRight'?(index+1)%3:event.key==='ArrowLeft'?(index+2)%3:event.key==='Home'?0:event.key==='End'?2:-1;
+        if(next<0)return;
+        event.preventDefault();
+        setTab(tabs[next].key);
+        tabRefs.current[next]?.focus();
+      };
       const arrowBox=h('span',{className:'dpg-go','aria-hidden':'true'},h(Icon,{name:'arrow',size:14}));
       const taskRow=item=>{
         const pct=Number.isFinite(item.progress)&&item.todoTotal>0?Math.round(item.progress*100):null;
@@ -423,11 +435,14 @@
           h('span',{className:'dpg-row-body'},
             h('span',{className:'dpg-log-head'},
               h('span',{className:'dpg-row-title'},label+'：'+(event.title||t('title.untitled'))),
+              activeIds.has(event.sessionId)?h('span',{className:'dpg-prev'},t('panel.previousTurn')):null,
               event.count>1?h('span',{className:'dpg-count',title:t('panel.resultCount',{n:event.count})},'×'+event.count):null,
               h('span',{className:'dpg-row-time'},formatAgo(t,event.at,now))),
             summary?h('span',{className:'dpg-row-note'},summary):null));
       };
       const toolButton=(icon,label,pressed,action)=>h('button',{type:'button',className:'dpg-tool','aria-label':label,title:label,'aria-pressed':pressed===undefined?undefined:pressed,'data-active':pressed?'true':'false',onClick:action},h(Icon,{name:icon,size:15}));
+      const tabButton=(item,index)=>h('button',{key:item.key,type:'button',className:'dpg-stat',role:'tab',id:'dpg-tab-'+item.key,'aria-controls':'dpg-tabpanel',tabIndex:tabKey===item.key?0:-1,ref:el=>{tabRefs.current[index]=el;},'data-kind':item.key,'data-active':tabKey===item.key?'true':'false','aria-selected':tabKey===item.key,title:item.label,onClick:()=>setTab(item.key),onKeyDown:event=>onTabKey(index,event)},
+        h(Icon,{name:item.icon,size:14}),h('span',null,item.label),h('b',null,item.count));
       const panel=open?h('section',{id:'dpg-panel',ref:panelRef,className:'dpg-panel',role:'dialog','aria-label':t('panel.radar'),'aria-modal':false},
         h('header',{className:'dpg-head'},
           h('span',{className:'dpg-orb','data-phase':state.phase,role:'img','aria-label':topLabel,title:topLabel},h(Icon,{name:phaseGlyph,size:20}),state.runningCount||waiting?h('b',null,state.runningCount||waiting):null),
@@ -437,13 +452,12 @@
           h('span',{className:'dpg-head-gap'}),
           h('button',{type:'button',className:'dpg-tool','aria-label':t('panel.options'),title:t('panel.options'),'aria-expanded':tools,onClick:()=>setTools(v=>!v)},h(Icon,{name:'gear',size:16})),
           h('button',{type:'button',className:'dpg-close','aria-label':t('panel.close'),title:t('panel.close'),onClick:()=>setOpen(false)},h(Icon,{name:'close',size:16}))),
-        h('div',{className:'dpg-tabs',role:'tablist','aria-label':t('panel.radar')},
-          tabs.map(item=>h('button',{key:item.key,type:'button',className:'dpg-stat',role:'tab','data-kind':item.key,'data-active':tabKey===item.key?'true':'false','aria-selected':tabKey===item.key,title:item.label,onClick:()=>setTab(item.key)},
-            h(Icon,{name:item.icon,size:14}),h('span',null,item.label),h('b',null,item.count)))),
-        shown.length?h('div',{className:'dpg-list'},shown.map(tabKey==='results'?logRow:taskRow)):h('p',{className:'dpg-empty'},emptyText),
-        tabKey==='results'&&list.length>5?h('button',{type:'button',className:'dpg-more','aria-expanded':allHistory,onClick:()=>setAllHistory(v=>!v),title:allHistory?t('panel.less'):t('panel.more')},
-          h(Icon,{name:allHistory?'up':'down',size:13}),h('b',null,allHistory?t('panel.less'):t('panel.moreShow',{n:list.length-5}))):null,
-        tabKey==='results'&&results.length>=20?h('p',{className:'dpg-archive-note'},t('panel.archiveNote')):null,
+        h('div',{className:'dpg-tabs',role:'tablist','aria-label':t('panel.radar')},tabs.map(tabButton)),
+        h('div',{role:'tabpanel',id:'dpg-tabpanel',tabIndex:0,'aria-labelledby':'dpg-tab-'+tabKey},
+          shown.length?h('div',{className:'dpg-list'},shown.map(tabKey==='results'?logRow:taskRow)):h('p',{className:'dpg-empty'},emptyText),
+          tabKey==='results'&&list.length>5?h('button',{type:'button',className:'dpg-more','aria-expanded':allHistory,onClick:()=>setAllHistory(v=>!v),title:allHistory?t('panel.less'):t('panel.more')},
+            h(Icon,{name:allHistory?'up':'down',size:13}),h('b',null,allHistory?t('panel.less'):t('panel.moreShow',{n:list.length-5}))):null,
+          tabKey==='results'&&(results.length>=20||state.resultsTotal>results.length)?h('p',{className:'dpg-archive-note'},t('panel.archiveNote')):null),
         tools?h('div',{className:'dpg-tools'},
           h('div',{className:'dpg-toolrow'},
             toolButton('mute',t('panel.mute'),state.muted,props.toggleMute),
@@ -471,10 +485,10 @@
           bubbleEvent.sessionId?h('span',{className:'dpg-bubble-go','aria-hidden':true},h(Icon,{name:'arrow',size:12})):null),
         h('button',{type:'button',className:'dpg-bubble-close','aria-label':t('bubble.dismiss'),title:t('bubble.dismiss'),onClick:props.dismissBubble},h(Icon,{name:'close',size:13}))):null;
       const badge=waiting||state.runningCount;
-      const restore=state.hidden?h('button',{type:'button',className:'dpg-restore','data-phase':state.phase,'aria-label':waiting?t('panel.restoreBadge',{n:waiting}):t('panel.show'),title:t('panel.show'),onClick:props.toggleHidden},h('svg',{viewBox:'0 0 24 24',width:22,height:22,'aria-hidden':true},h('path',{d:'M3 12c0-5 4-7 8-7 5 0 7 3 7 6l4-3-1 6c-3 5-7 7-12 5-4-1-6-4-6-7Zm5-2h.01M10 3l1-2m2 2 1-2',fill:'none',stroke:'currentColor',strokeWidth:1.6,strokeLinecap:'round'})),badge?h('span',{className:'dpg-mini-badge'},badge):null):null;
+      const restore=state.hidden?h('button',{type:'button',className:'dpg-restore','data-phase':state.phase,'aria-label':waiting?t('panel.restoreBadge',{n:waiting}):t('panel.open'),title:t('panel.open'),onClick:()=>setOpen(true)},h('svg',{viewBox:'0 0 24 24',width:22,height:22,'aria-hidden':true},h('path',{d:'M3 12c0-5 4-7 8-7 5 0 7 3 7 6l4-3-1 6c-3 5-7 7-12 5-4-1-6-4-6-7Zm5-2h.01M10 3l1-2m2 2 1-2',fill:'none',stroke:'currentColor',strokeWidth:1.6,strokeLinecap:'round'})),badge?h('span',{className:'dpg-mini-badge'},badge):null):null;
       const alertDots=Math.min(3,waiting);
       const alerts=waiting>0?h('span',{className:'dpg-alerts','data-count':waiting,'aria-hidden':'true'},Array.from({length:alertDots},(_,i)=>h('i',{key:i,className:'dpg-alert-dot'}))):null;
-      return h('div',{className:'dpg-root','data-artwork': 'whale-it-seated-v1','data-phase':state.phase,'data-size':state.size||'standard','data-hidden':state.hidden?'true':'false','data-scale':String(state.mascotScale??1),style:{'--dpg-scale':String(state.mascotScale??1),'--dpg-buddy-scale':String(state.buddyScale??1)}},h('style',null,CSS),state.hidden?h('div',{className:'dpg-anchor','data-collapsed':'true'},bubble,restore):h('div',{className:'dpg-anchor','data-open':open?'true':'false'},bubble,panel,
+      return h('div',{className:'dpg-root','data-artwork': 'whale-it-seated-v1','data-phase':state.phase,'data-size':state.size||'standard','data-hidden':state.hidden?'true':'false','data-scale':String(state.mascotScale??1),style:{'--dpg-scale':String(state.mascotScale??1),'--dpg-buddy-scale':String(state.buddyScale??1)}},h('style',null,CSS),state.hidden?h('div',{className:'dpg-anchor','data-collapsed':'true'},bubble,panel,restore):h('div',{className:'dpg-anchor','data-open':open?'true':'false'},bubble,panel,
         h('button',{type:'button',className:'dpg-mascot',onClick:toggle,'aria-label':(open?t('panel.close'):t('panel.open'))+(waiting>0?' · '+t('panel.restoreBadge',{n:waiting}):''),'aria-expanded':open,'aria-controls':'dpg-panel',title:focus?.title||topLabel},h(Character,{phase:state.phase,muted:state.muted,open}),alerts)));
     }
 
@@ -508,7 +522,7 @@
             toggleLongRun: () => store.toggleLongRun(),
             unlockAudio: () => store.unlockAudio(),
             testNotification: () => store.testNotification(),
-            openSession: (sessionId) => openSession(ctx.get('uiWorkspace'), sessionId),
+            openSession: (sessionId, noticeId) => store.openSession(sessionId, noticeId),
             clearHistory: () => store.clearHistory(),
             dismissBubble: () => store.dismissBubble()
           })

@@ -1,4 +1,4 @@
-# Whale Sentinel 2.2.0 · task radar
+# Whale Sentinel 2.3.0 · task radar
 
 > Chinese name: 小鲸哨 (Little Whale Sentinel)
 
@@ -6,7 +6,7 @@
 
 [中文完整说明与图解](<README.md>) · [验收记录](<docs/ACCEPTANCE.md>)
 
-Version 2.2.0 turns the three header pills into **real tabs — Pending / Running / Results — that never overlap** (a waiting session is not counted as running), and archives results per session: one row per session with an `×n` count, five rows by default, expandable, with the retained window disclosed. Workspace and subagent labels, multi-window presence, the long-run nudge, navigation diagnostics and host theme tokens are retained from 2.1; the 2.0 reliability guarantees remain.
+Version 2.3.0 adds notification discipline: **one foreground rule for both channels (a notice is withdrawn by the host while you are on the page instead of becoming a toast), simultaneous completions fold into one toast that reports how many were folded, results have their own bounded record and are labelled "previous turn" when their session has started again.** Tabs are arrow-key operable with a labelled panel, the opening tab is chosen once, a stale connection shows its last sync time, and a hidden mascot leaves a badge that opens the radar.
 
 The mascot is a child-form character with **two runtime artworks**. While the panel is collapsed she **sits at a small work desk** in five task states: idle waving, typing during a running task, raising a hand while waiting for you, stretching after completion, and troubleshooting from under the desk on error. Opening the panel swaps her for a **standing pose that grips the panel edge and points at the tasks**; closing it switches back. There is no age selector or outfit switching.
 
@@ -33,6 +33,6 @@ On viewports narrower than 520 px the panel keeps every control and the expanded
 
 The expanded pose animates with a gentle whole-body float and a pulse at the pointing hand. It deliberately has no separate blinking or head layer: rotating a clipped copy of the same bitmap tears the silhouette at the cut edge, so that approach was removed.
 
-Current verification: 168 automated tests passed plus a release-consistency gate; the connected page reported version 2.2.0 with the three-tab layout, workspace labels and subagent counts, a live `activationReady: true`, a channel test that left history and the finished count unchanged, a preference write that read back and could be restored, and a panel that opened at 330 px and closed again. A direct `wscript` invocation of the registered launcher wrote the expected one-time click file, and the waiting-card tint measured 12.2:1 contrast against theme text in the live dark theme. Narrow-viewport rules exist in the stylesheet but were not measured on a 520 px viewport; a real banner click and two-instance parallel run remain unverified. See the [detailed record](<docs/ACCEPTANCE.md>).
+Current verification: 178 automated tests passed plus a release-consistency gate; the connected page reported version 2.3.0 with the three-tab layout, arrow-key switching, workspace labels and subagent counts, a foreground notice that was withdrawn instead of toasted, an independent result record, a badge that opens the radar, and a panel that opened at 330 px and closed again. A direct `wscript` invocation of the registered launcher wrote the expected one-time click file, and the waiting-card tint measured 12.2:1 contrast against theme text in the live dark theme. Narrow-viewport rules exist in the stylesheet but were not measured on a 520 px viewport; a real banner click and two-instance parallel run remain unverified. See the [detailed record](<docs/ACCEPTANCE.md>).
 
 See [artwork provenance](<docs/ARTWORK.md>) and [attribution](<ATTRIBUTION.md>): AI generation or renaming does not remove third-party character/reference rights. This is an unofficial community plugin and is not affiliated with DeepSeek.

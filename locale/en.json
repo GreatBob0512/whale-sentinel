@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Whale Sentinel",
-    "description": "Whale Sentinel (小鲸哨): a lightweight DSH task radar. Collapsed, the mascot sits at her desk; once the panel opens she stands beside it, gripping the edge and pointing at the tasks. Each task shows its workspace and how many subagents are running, collapsed and expanded sizes are adjustable independently, in-page notices survive hiding the mascot, foreground system notifications are optional, and an opt-in long-run nudge is available. Failed reminders retry, a missing click bridge degrades to notification-only, and a corrupt settings file falls back to safe defaults. Does not modify the DSH core.",
+    "description": "Whale Sentinel (小鲸哨): a lightweight DSH task radar. Collapsed, the mascot sits at her desk; once the panel opens she stands beside it, gripping the edge and pointing at the tasks. Pending / Running / Results are clickable tabs with arrow-key support, and each task shows its workspace and running subagents. While you are on the DSH page, reminders stay in the panel and the system notice is withdrawn; simultaneous completions fold into one toast. Failed reminders retry, a missing click bridge degrades to notification-only, and a corrupt settings file falls back to safe defaults. Does not modify the DSH core.",
     "detail": "README.md"
   }
 }

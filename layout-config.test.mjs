@@ -6,6 +6,7 @@ test('hidden mascot keeps an in-panel notice instead of losing every reminder',(
   const branch=src.slice(start,start+900);
   assert.match(branch,/data-collapsed/,'collapsed state renders its own container');
   assert.match(branch,/bubble/,'hidden branch still renders the bubble');
+  assert.match(branch,/panel/,'the badge can open the radar while the mascot stays hidden');
   assert.match(branch,/restore/,'hidden branch keeps the restore button');
 });
 test('mascot sizes are configurable data, not hard-coded strings',()=>{
@@ -88,6 +89,19 @@ test('results are archived per session and capped by default',()=>{
   assert.match(src,/resultMap\.get\(event\.sessionId\)/,'one result row per session');
   assert.match(src,/list\.slice\(0,5\)/,'five results by default');
   assert.match(src,/dpg-archive-note/,'the retained window is disclosed');
+});
+test('tabs are keyboard operable and own a labelled tab panel',()=>{
+  assert.match(src,/'aria-controls':'dpg-tabpanel'/,'each tab names its panel');
+  assert.match(src,/role:'tabpanel'/,'the content is a tab panel');
+  assert.match(src,/ArrowRight/,'left/right arrow navigation exists');
+  assert.match(src,/tabIndex:tabKey===item\.key\?0:-1/,'roving tab index');
+  assert.match(src,/onKeyDown:event=>onTabKey/,'keyboard handler is wired');
+});
+test('the opening tab is chosen once, and a hidden mascot opens the panel',()=>{
+  assert.match(src,/if\(!open\)setTab\(preferredTab\(\)\)/,'opening freezes the default tab');
+  assert.match(src,/onClick:\(\)=>setOpen\(true\)/,'the restore badge opens the radar');
+  assert.match(src,/panel\.staleSync/,'a stale connection shows the last sync time');
+  assert.match(src,/dpg-prev/,'previous-turn results are labelled');
 });
 test('a task row shows its workspace and live delegated subagents',()=>{
   assert.match(src,/item\.workspace/,'workspace label comes from the host row');

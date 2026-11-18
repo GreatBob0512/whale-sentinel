@@ -1,6 +1,6 @@
 # 鲸哨文档与素材维护
 
-当前版本：2.2.0。两套运行素材：坐姿 `whale-it-seated-v1`（`assets/fish-*.png`）与展开态 `buddy-*.webp`（记录在 `assets/artwork.json` 的 `buddy` 字段；WebP 必须同时出现在 `package.json` 的 `files` 中）。
+当前版本：2.3.0。两套运行素材：坐姿 `whale-it-seated-v1`（`assets/fish-*.png`）与展开态 `buddy-*.webp`（记录在 `assets/artwork.json` 的 `buddy` 字段；WebP 必须同时出现在 `package.json` 的 `files` 中）。
 
 ## 唯一事实来源
 
@@ -76,6 +76,9 @@
 5. **发布一致性由脚本把关**：`scripts/verify-release.mjs` 校验版本、入口、导出、`index.js`、host 版本、文档与素材清单；`check.mjs` 会先跑它。
 6. **主题只依赖宿主 token**：面板底色/文字/边框/状态点使用 `--dsw-alias-*`，不要新增 `prefers-color-scheme` 分支。改混合比例后必须跑 `theme-contrast.test.mjs`（正文 ≥ 7:1、次要 ≥ 4.5:1），并按宿主新色值更新测试里的代表值。
 7. **客户端只能通过构建改**：改 `src/` 后执行 `node scripts/build-client.mjs`；直接改 `client.js` 会被 `--check` 拒绝。
+8. **前台只有一条规则**：页面在前台且未开启“前台也通知”时，客户端调用 `suppress` 让宿主撤回 pending 通知；不要再用“本地不弹但宿主 10 秒后补弹”的旧行为。
+9. **结果独立记录**：终态事件同时写入 `results`（上限 50），不要从混合 `events` 里现筛；同一会话在活动行里再次出现时，旧结果标“上一轮”。
+10. **完成合并仅限原生**：同一轮 `done` 批量只保留最新一条，其余标 `aggregated` 并写 `另有 N 个任务已完成`；不要把合并逻辑放到页面通知通道。
 
 开发验证脚本 `scripts/verify-activation.ps1` 会临时注册两个测试协议、验证双实例并存与中文路径点击，并在结束时注销、删除临时目录；它不随插件分发，也不要把它改成常驻逻辑。
 

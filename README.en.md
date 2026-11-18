@@ -1,4 +1,4 @@
-# Whale Sentinel 2.1.0 · task radar
+# Whale Sentinel 2.1.1 · task radar
 
 > Chinese name: 小鲸哨 (Little Whale Sentinel)
 
@@ -6,7 +6,7 @@
 
 [中文完整说明与图解](<README.md>) · [验收记录](<docs/ACCEPTANCE.md>)
 
-Version 2.1.0 adds radar context and multi-window accuracy: **each task shows its workspace and how many delegated subagents are running; one focused window keeps another hidden window from re-triggering system notifications; an optional long-run nudge fires once per running turn; navigation success and failure are reported back as diagnostics.** The 2.0 reliability guarantees remain: failed reminders retry, a missing click bridge degrades to notification-only, two instances do not break each other's click route, and a corrupt settings file falls back to safe defaults.
+Version 2.1.1 adds radar context and multi-window accuracy: **each task shows its workspace and how many delegated subagents are running; one focused window keeps another hidden window from re-triggering system notifications; an optional long-run nudge fires once per running turn; navigation success and failure are reported back as diagnostics. A live session is no longer repeated in recent activity, and the waiting card follows the theme instead of rendering light text on cream.** The 2.0 reliability guarantees remain: failed reminders retry, a missing click bridge degrades to notification-only, two instances do not break each other's click route, and a corrupt settings file falls back to safe defaults.
 
 The mascot is a child-form character with **two runtime artworks**. While the panel is collapsed she **sits at a small work desk** in five task states: idle waving, typing during a running task, raising a hand while waiting for you, stretching after completion, and troubleshooting from under the desk on error. Opening the panel swaps her for a **standing pose that grips the panel edge and points at the tasks**; closing it switches back. There is no age selector or outfit switching.
 
@@ -33,6 +33,6 @@ On viewports narrower than 520 px the panel keeps every control and the expanded
 
 The expanded pose animates with a gentle whole-body float and a pulse at the pointing hand. It deliberately has no separate blinking or head layer: rotating a clipped copy of the same bitmap tears the silhouette at the cut edge, so that approach was removed.
 
-Current verification: 161 automated tests passed plus a release-consistency gate; the connected page reported version 2.1.0 with workspace labels and subagent counts, a live `activationReady: true`, a channel test that left history and the finished count unchanged, a preference write that read back and could be restored, and a panel that opened at 330 px and closed again. A direct `wscript` invocation of the registered launcher wrote the expected one-time click file. Narrow-viewport and dark-mode rules exist in the stylesheet but were not measured on a 520 px viewport or a dark desktop theme; a real banner click and two-instance parallel run remain unverified. See the [detailed record](<docs/ACCEPTANCE.md>).
+Current verification: 165 automated tests passed plus a release-consistency gate; the connected page reported version 2.1.1 with workspace labels and subagent counts, a live `activationReady: true`, a channel test that left history and the finished count unchanged, a preference write that read back and could be restored, no duplicate live rows in recent activity, and a panel that opened at 330 px and closed again. A direct `wscript` invocation of the registered launcher wrote the expected one-time click file, and the waiting-card tint measured 12.2:1 contrast against theme text in the live dark theme. Narrow-viewport rules exist in the stylesheet but were not measured on a 520 px viewport; a real banner click and two-instance parallel run remain unverified. See the [detailed record](<docs/ACCEPTANCE.md>).
 
 See [artwork provenance](<docs/ARTWORK.md>) and [attribution](<ATTRIBUTION.md>): AI generation or renaming does not remove third-party character/reference rights. This is an unofficial community plugin and is not affiliated with DeepSeek.

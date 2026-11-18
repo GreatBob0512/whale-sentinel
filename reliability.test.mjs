@@ -4,7 +4,7 @@ import {mkdtempSync,writeFileSync,readFileSync,readdirSync,existsSync} from 'nod
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DeliveryQueue,selectAttention} from './task-state.js';
-import {readPreferences,protocolFor} from './release-2.1.0.js';
+import {readPreferences,protocolFor} from './release-2.1.1.js';
 import {createActivationQueue} from './activation-queue.js';
 import {createTaskHost} from './host.js';
 

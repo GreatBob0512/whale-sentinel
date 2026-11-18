@@ -1,6 +1,6 @@
 # 鲸哨文档与素材维护
 
-当前版本：2.1.0。两套运行素材：坐姿 `whale-it-seated-v1`（`assets/fish-*.png`）与展开态 `buddy-*.webp`（记录在 `assets/artwork.json` 的 `buddy` 字段；WebP 必须同时出现在 `package.json` 的 `files` 中）。
+当前版本：2.1.1。两套运行素材：坐姿 `whale-it-seated-v1`（`assets/fish-*.png`）与展开态 `buddy-*.webp`（记录在 `assets/artwork.json` 的 `buddy` 字段；WebP 必须同时出现在 `package.json` 的 `files` 中）。
 
 ## 唯一事实来源
 

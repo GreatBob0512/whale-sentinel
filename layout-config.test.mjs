@@ -65,6 +65,17 @@ test('panel colors follow host theme tokens instead of the OS preference',()=>{
   assert.match(src,/--muted:var\(--dsw-alias-label-secondary/,'secondary text follows the host');
   assert.doesNotMatch(src,/@media\(prefers-color-scheme:dark\)/,'dark is decided by the host theme, not the OS');
 });
+test('the waiting card uses a theme tint, never a hardcoded light surface',()=>{
+  const rule=src.split('\n').find(line=>line.startsWith('.dpg-task[data-waiting="true"]'));
+  assert.ok(rule,'waiting card rule exists');
+  assert.match(rule,/color-mix\(in srgb,var\(--dsw-alias-bg-layer-1/,'waiting tint follows the host surface');
+  assert.match(rule,/var\(--dsw-alias-state-warn-primary/,'waiting tint follows the host warning color');
+  assert.doesNotMatch(rule,/#FFFBF0\}/,'a fixed cream background would make light text invisible in dark themes');
+});
+test('active sessions are not repeated in recent activity',()=>{
+  assert.match(src,/activeSession&&\(event\.kind==='running'\|\|event\.kind==='waiting'\)/,'only live transient events are filtered');
+  assert.match(src,/data-session/,'rows expose their session for this check');
+});
 test('stat pills read host statistics instead of mixing sessions and events',()=>{
   assert.match(src,/stats\.active/,'task count comes from the host');
   assert.match(src,/stats\.doneToday/,'finished count has a real window');

@@ -255,7 +255,7 @@
 .dpg-row-mark[data-kind="waiting"]{background:var(--butter)}
 .dpg-go{display:grid;place-items:center;width:30px;height:30px;border:3px solid var(--ink);border-radius:9px;background:var(--card);color:var(--ink);box-shadow:2px 2px 0 rgba(34,48,79,.26)}
 .dpg-row-title{font-size:14px;font-weight:800;line-height:1.3;word-break:break-word}
-.dpg-task[data-waiting="true"]{background:#FFFBF0}
+.dpg-task[data-waiting="true"]{background:color-mix(in srgb,var(--dsw-alias-bg-layer-1,#FFFBF0) 88%,var(--dsw-alias-state-warn-primary,#FFD25E) 12%)}
 .dpg-meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 7px;margin-top:5px;font-size:11.5px;font-weight:700;color:var(--muted)}
 .dpg-meta-item{display:inline-flex;align-items:center;gap:4px;min-width:0}
 .dpg-meta-item b{font-weight:700;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:126px}
@@ -381,7 +381,7 @@
         else meta.push({icon:item.phase==='thinking'?'pulse':'gear',text:item.phase==='thinking'?t('panel.thinking'):t('panel.working')});
         if(Number.isFinite(item.step))meta.push({icon:'step',text:t('panel.step',{step:item.step})});
         if(Number.isFinite(item.since))meta.push({icon:'clock',text:formatDuration(t,Math.max(0,now-item.since))});
-        return h('button',{key:item.sessionId,type:'button',className:'dpg-row dpg-task','data-waiting':item.waiting?'true':'false','data-phase':item.phase,title:t('panel.jump'),'aria-label':(item.title||t('title.untitled'))+' · '+meta.map(m=>m.text).join(' · '),onClick:()=>props.openSession(item.sessionId)},
+        return h('button',{key:item.sessionId,type:'button',className:'dpg-row dpg-task','data-waiting':item.waiting?'true':'false','data-phase':item.phase,'data-session':item.sessionId,title:t('panel.jump'),'aria-label':(item.title||t('title.untitled'))+' · '+meta.map(m=>m.text).join(' · '),onClick:()=>props.openSession(item.sessionId)},
           h('span',{className:'dpg-task-head'},
             h('i',{className:'dpg-row-mark','data-kind':item.waiting?'waiting':'running'}),
             h('span',{className:'dpg-row-title'},item.title||t('title.untitled')),
@@ -392,10 +392,15 @@
             h('i',{className:'dpg-bar',role:'progressbar','aria-valuemin':0,'aria-valuemax':100,'aria-valuenow':pct,'aria-label':t('panel.progress',{done:item.todoDone,total:item.todoTotal,percent:pct})},h('b',{style:{transform:'scaleX('+Math.max(0,Math.min(1,item.progress))+')'}})),
             h('span',{className:'dpg-row-pct'},item.todoDone+'/'+item.todoTotal)):null);
       });
-      const rows=state.events.map(event=>{
+      const rows=state.events.filter(event=>{
+        // A session's own start/waiting event is already the active row above;
+        // listing it again reads as a duplicate task. Results are kept.
+        const activeSession=activity.some(item=>item.sessionId===event.sessionId);
+        return !(activeSession&&(event.kind==='running'||event.kind==='waiting'));
+      }).map(event=>{
         const label=t('panel.short.'+event.kind)||t('event.'+event.kind);
         const summary=event.summaryFinal&&event.summary?panelText(event.summary,120):['error','interrupted'].includes(event.kind)?panelText(event.message,120):'';
-        return h('button',{type:'button',key:event.id,className:'dpg-row dpg-log','data-kind':event.kind,disabled:!event.sessionId,title:t('panel.openResult'),onClick:()=>props.openSession(event.sessionId)},
+        return h('button',{type:'button',key:event.id,className:'dpg-row dpg-log','data-kind':event.kind,'data-session':event.sessionId||'',disabled:!event.sessionId,title:t('panel.openResult'),onClick:()=>props.openSession(event.sessionId)},
           h('i',{className:'dpg-glyph','data-kind':event.kind,'aria-hidden':'true'},h(Icon,{name:GLYPH[event.kind]??'dot',size:15})),
           h('span',{className:'dpg-row-body'},
             h('span',{className:'dpg-log-head'},

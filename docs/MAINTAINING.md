@@ -74,6 +74,10 @@
 3. **长任务每轮一次**：`nudges` 以 `sessionId → since` 去重，`since` 变化（新一轮）才允许再次提醒；阈值固定 15 分钟，只有开关可配。
 4. **导航结果要回传**：`diagnostic` 动作只接受 `navigation-success` / `navigation-failed`，写入 `delivery` 轨迹；失败不得改动连接状态。
 5. **发布一致性由脚本把关**：`scripts/verify-release.mjs` 校验版本、入口、导出、`index.js`、host 版本、文档与素材清单；`check.mjs` 会先跑它。
+6. **主题只依赖宿主 token**：面板底色/文字/边框/状态点使用 `--dsw-alias-*`，不要新增 `prefers-color-scheme` 分支。改混合比例后必须跑 `theme-contrast.test.mjs`（正文 ≥ 7:1、次要 ≥ 4.5:1），并按宿主新色值更新测试里的代表值。
+7. **客户端只能通过构建改**：改 `src/` 后执行 `node scripts/build-client.mjs`；直接改 `client.js` 会被 `--check` 拒绝。
+
+开发验证脚本 `scripts/verify-activation.ps1` 会临时注册两个测试协议、验证双实例并存与中文路径点击，并在结束时注销、删除临时目录；它不随插件分发，也不要把它改成常驻逻辑。
 
 ## 分发
 

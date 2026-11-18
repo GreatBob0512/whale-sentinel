@@ -41,7 +41,7 @@ window.__ModuleLoader__.load({
     const DICT = {
       zh: {
         name: '小鲸哨',
-        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'alert.saved':'已保存', 'alert.retry':'稍后自动重试', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'panel.children':'{n} 个子任务运行中', 'panel.longRun':'长任务提醒', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
+        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'alert.saved':'已保存', 'alert.retry':'稍后自动重试', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'panel.children':'{n} 个子任务运行中', 'panel.longRun':'长任务提醒', 'panel.tab.waiting':'待处理', 'panel.tab.running':'进行中', 'panel.tab.results':'结果', 'panel.emptyWaiting':'没有需要你处理的任务', 'panel.emptyRunning':'没有正在运行的任务', 'panel.emptyResults':'还没有结果', 'panel.archiveNote':'仅保留最近 50 条结束记录，更早的结果已归档', 'panel.resultCount':'保留了 {n} 次结束记录', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
         'event.stopped': '已手动停止', 'event.interrupted': '任务意外中断', 'event.forked': '已分叉', 'event.unknown': '任务结束', 'waiting.approval': '需要你批准', 'waiting.choice': '需要你选择', 'waiting.input': '需要你输入文字',
         title: '任务提醒',
         'state.idle': '待命中',
@@ -117,7 +117,7 @@ window.__ModuleLoader__.load({
       },
       en: {
         name: 'Xiao Jingshao',
-        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'alert.saved':'Saved', 'alert.retry':'retrying', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'panel.children':'{n} subagents running', 'panel.longRun':'Long-run nudge', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
+        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'alert.saved':'Saved', 'alert.retry':'retrying', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'panel.children':'{n} subagents running', 'panel.longRun':'Long-run nudge', 'panel.tab.waiting':'Pending', 'panel.tab.running':'Running', 'panel.tab.results':'Results', 'panel.emptyWaiting':'Nothing needs your answer', 'panel.emptyRunning':'Nothing is running', 'panel.emptyResults':'No results yet', 'panel.archiveNote':'Only the latest 50 terminal events are kept; older results are archived', 'panel.resultCount':'{n} terminal records kept', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
         'event.stopped': 'Stopped by user', 'event.interrupted': 'Task interrupted', 'event.forked': 'Forked', 'event.unknown': 'Task ended', 'waiting.approval': 'Approval needed', 'waiting.choice': 'A choice is needed', 'waiting.input': 'Text input needed',
         title: 'Task reminders',
         'state.idle': 'Standing by',
@@ -897,13 +897,17 @@ window.__ModuleLoader__.load({
 .dpg-close:hover{background:var(--coral)}
 .dpg-tool:hover{background:var(--sky)}
 .dpg-tool[data-active="true"]{background:var(--mint)}
-.dpg-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:9px 10px;border-bottom:3px solid var(--ink)}
-.dpg-stat{display:flex;align-items:center;justify-content:center;gap:4px;min-height:34px;padding:0 4px;border:3px solid var(--ink);border-radius:12px;font-size:11.5px;font-weight:800;color:var(--ink);white-space:nowrap;box-shadow:2px 2px 0 rgba(34,48,79,.22)}
+.dpg-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:9px 10px;border-bottom:3px solid var(--ink)}
+.dpg-stat{display:flex;align-items:center;justify-content:center;gap:4px;min-height:34px;padding:0 4px;border:3px solid var(--ink);border-radius:12px;font:inherit;font-size:11.5px;font-weight:800;color:var(--ink);white-space:nowrap;box-shadow:2px 2px 0 rgba(34,48,79,.22);cursor:pointer;background:var(--card);transition:transform .12s ease,box-shadow .12s ease}
+.dpg-stat:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 rgba(34,48,79,.3)}
+.dpg-stat[data-active="true"]{outline:3px solid var(--sea);outline-offset:1px}
 .dpg-stat svg{flex:none}
-.dpg-stat[data-kind="tasks"]{background:color-mix(in srgb,var(--dsw-alias-bg-layer-2,#EAF3FF) 45%,#CBEAFB 55%)}
-.dpg-stat[data-kind="running"]{background:color-mix(in srgb,var(--dsw-alias-bg-layer-2,#FFF7E4) 45%,#FFE6A3 55%)}
-.dpg-stat[data-kind="done"]{background:color-mix(in srgb,var(--dsw-alias-bg-layer-2,#E8FBF2) 45%,#C6F4DE 55%)}
+.dpg-stat[data-kind="waiting"]{background:color-mix(in srgb,var(--dsw-alias-bg-layer-2,#FFF7E4) 45%,#FFE6A3 55%)}
+.dpg-stat[data-kind="running"]{background:color-mix(in srgb,var(--dsw-alias-bg-layer-2,#EAF3FF) 45%,#CBEAFB 55%)}
+.dpg-stat[data-kind="results"]{background:color-mix(in srgb,var(--dsw-alias-bg-layer-2,#E8FBF2) 45%,#C6F4DE 55%)}
 .dpg-stat b{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.dpg-count{flex:none;padding:0 4px;border:1.5px solid var(--muted);border-radius:999px;font-size:10px;font-weight:800;line-height:14px;color:var(--muted)}
+.dpg-archive-note{margin:8px 10px 0;text-align:center;font-size:10.5px;font-weight:700;color:var(--muted)}
 .dpg-list{display:flex;flex-direction:column;gap:8px;padding:9px 10px 0}
 .dpg-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:8px;width:100%;padding:9px 10px;border:3px solid var(--ink);border-radius:15px;background:var(--card);color:var(--ink);font:inherit;text-align:left;cursor:pointer;box-shadow:3px 3px 0 rgba(34,48,79,.22);transition:transform .13s ease,box-shadow .13s ease}
 .dpg-row:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(34,48,79,.3)}
@@ -955,7 +959,7 @@ window.__ModuleLoader__.load({
 .dpg-anchor[data-open="true"] .dpg-panel{width:calc(100vw - 20px);max-height:calc(100dvh - 84px)}
 }
 @media(max-width:360px){
-.dpg-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:7px 6px}
+.dpg-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:7px 6px}
 .dpg-stat{font-size:10px;gap:2px;min-height:30px}
 .dpg-stat b{font-size:12px}
 .dpg-close,.dpg-tool{width:28px;height:28px}
@@ -1019,18 +1023,37 @@ window.__ModuleLoader__.load({
       const phaseText=item=>item.waiting?t('waiting.'+(item.waitKind||'choice')):item.phase==='tool'&&item.tool?t('panel.tool',{tool:item.tool}):item.phase==='thinking'?t('panel.thinking'):t('panel.working');
       const [tools,setTools]=React.useState(false);
       const [allHistory,setAllHistory]=React.useState(false);
+      const [tab,setTab]=React.useState(null);
       const panelText=(value,max=120)=>plainText(value,max);
       const connText=state.hostReady?t('panel.connected'):state.connectionLost?t('panel.offline'):t('panel.connecting');
       const alertStatus=state.alert?(state.alert.ok?t('alert.sent',{n:state.alertCount}):state.alert.reason):t('alert.ready');
       const phaseGlyph=GLYPH[state.phase]??'dot';
-      // Counts come from the Host: sessions are not events, and a channel test is
-      // not a finished task.
-      const stats=state.stats??{};
-      const total=Number.isFinite(stats.active)?stats.active:activity.length;
-      const statRunning=Number.isFinite(stats.running)?stats.running:state.runningCount;
-      const doneToday=Number.isFinite(stats.doneToday)?stats.doneToday:state.events.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&now-e.at<86400000).length;
+      // Mutually exclusive buckets: a session waiting for you is not "running".
+      const waitingItems=activity.filter(x=>x.waiting);
+      const runningItems=activity.filter(x=>!x.waiting);
+      const terminalKinds=new Set(['done','error','interrupted','stopped','forked','unknown']);
+      const resultMap=new Map();
+      for(const event of state.events){
+        if(!terminalKinds.has(event.kind)||!event.sessionId)continue;
+        const previous=resultMap.get(event.sessionId);
+        if(previous)previous.count+=1;else resultMap.set(event.sessionId,{...event,count:1});
+      }
+      const results=[...resultMap.values()];
+      const tabs=[
+        {key:'waiting',count:waitingItems.length,label:t('panel.tab.waiting'),icon:'clock'},
+        {key:'running',count:runningItems.length,label:t('panel.tab.running'),icon:'bolt'},
+        {key:'results',count:results.length,label:t('panel.tab.results'),icon:'checkCircle'}
+      ];
+      const tabItems={waiting:waitingItems,running:runningItems,results};
+      const autoTab=waitingItems.length?'waiting':runningItems.length?'running':'results';
+      // An explicit choice sticks even when that bucket is empty, so its empty
+      // state is reachable; only the untouched default follows the data.
+      const tabKey=tab??autoTab;
+      const list=tabItems[tabKey];
+      const shown=tabKey==='results'?(allHistory?list:list.slice(0,5)):list;
+      const emptyText=tabKey==='waiting'?t('panel.emptyWaiting'):tabKey==='running'?t('panel.emptyRunning'):t('panel.emptyResults');
       const arrowBox=h('span',{className:'dpg-go','aria-hidden':'true'},h(Icon,{name:'arrow',size:14}));
-      const activeRows=activity.map(item=>{
+      const taskRow=item=>{
         const pct=Number.isFinite(item.progress)&&item.todoTotal>0?Math.round(item.progress*100):null;
         const meta=[];
         if(item.workspace)meta.push({icon:'layers',text:item.workspace});
@@ -1050,23 +1073,19 @@ window.__ModuleLoader__.load({
           pct!==null?h('span',{className:'dpg-row-progress'},
             h('i',{className:'dpg-bar',role:'progressbar','aria-valuemin':0,'aria-valuemax':100,'aria-valuenow':pct,'aria-label':t('panel.progress',{done:item.todoDone,total:item.todoTotal,percent:pct})},h('b',{style:{transform:'scaleX('+Math.max(0,Math.min(1,item.progress))+')'}})),
             h('span',{className:'dpg-row-pct'},item.todoDone+'/'+item.todoTotal)):null);
-      });
-      const rows=state.events.filter(event=>{
-        // A session's own start/waiting event is already the active row above;
-        // listing it again reads as a duplicate task. Results are kept.
-        const activeSession=activity.some(item=>item.sessionId===event.sessionId);
-        return !(activeSession&&(event.kind==='running'||event.kind==='waiting'));
-      }).map(event=>{
+      };
+      const logRow=event=>{
         const label=t('panel.short.'+event.kind)||t('event.'+event.kind);
         const summary=event.summaryFinal&&event.summary?panelText(event.summary,120):['error','interrupted'].includes(event.kind)?panelText(event.message,120):'';
-        return h('button',{type:'button',key:event.id,className:'dpg-row dpg-log','data-kind':event.kind,'data-session':event.sessionId||'',disabled:!event.sessionId,title:t('panel.openResult'),onClick:()=>props.openSession(event.sessionId)},
+        return h('button',{type:'button',key:event.sessionId||event.id,className:'dpg-row dpg-log','data-kind':event.kind,'data-session':event.sessionId||'',disabled:!event.sessionId,title:t('panel.openResult'),onClick:()=>props.openSession(event.sessionId)},
           h('i',{className:'dpg-glyph','data-kind':event.kind,'aria-hidden':'true'},h(Icon,{name:GLYPH[event.kind]??'dot',size:15})),
           h('span',{className:'dpg-row-body'},
             h('span',{className:'dpg-log-head'},
               h('span',{className:'dpg-row-title'},label+'：'+(event.title||t('title.untitled'))),
+              event.count>1?h('span',{className:'dpg-count',title:t('panel.resultCount',{n:event.count})},'×'+event.count):null,
               h('span',{className:'dpg-row-time'},formatAgo(t,event.at,now))),
             summary?h('span',{className:'dpg-row-note'},summary):null));
-      });
+      };
       const toolButton=(icon,label,pressed,action)=>h('button',{type:'button',className:'dpg-tool','aria-label':label,title:label,'aria-pressed':pressed===undefined?undefined:pressed,'data-active':pressed?'true':'false',onClick:action},h(Icon,{name:icon,size:15}));
       const panel=open?h('section',{id:'dpg-panel',ref:panelRef,className:'dpg-panel',role:'dialog','aria-label':t('panel.radar'),'aria-modal':false},
         h('header',{className:'dpg-head'},
@@ -1077,14 +1096,13 @@ window.__ModuleLoader__.load({
           h('span',{className:'dpg-head-gap'}),
           h('button',{type:'button',className:'dpg-tool','aria-label':t('panel.options'),title:t('panel.options'),'aria-expanded':tools,onClick:()=>setTools(v=>!v)},h(Icon,{name:'gear',size:16})),
           h('button',{type:'button',className:'dpg-close','aria-label':t('panel.close'),title:t('panel.close'),onClick:()=>setOpen(false)},h(Icon,{name:'close',size:16}))),
-        h('div',{className:'dpg-stats'},
-          h('span',{className:'dpg-stat','data-kind':'tasks'},h(Icon,{name:'layers',size:14}),h('span',null,t('panel.statTasks')),h('b',null,total)),
-          h('span',{className:'dpg-stat','data-kind':'running'},h(Icon,{name:'bolt',size:14}),h('span',null,t('panel.busy')),h('b',null,statRunning)),
-          h('span',{className:'dpg-stat','data-kind':'done'},h(Icon,{name:'checkCircle',size:14}),h('span',null,t('panel.statDone')),h('b',null,doneToday))),
-        activeRows.length?h('div',{className:'dpg-list','aria-label':t('panel.active')},activeRows):h('p',{className:'dpg-empty'},t('panel.idleLine')),
-        rows.length?h('div',{className:'dpg-list'},allHistory?rows:rows.slice(0,3)):null,
-        rows.length>3?h('button',{type:'button',className:'dpg-more','aria-expanded':allHistory,onClick:()=>setAllHistory(v=>!v),title:allHistory?t('panel.less'):t('panel.more')},
-          h(Icon,{name:allHistory?'up':'down',size:13}),h('b',null,allHistory?t('panel.less'):t('panel.moreShow',{n:rows.length}))):null,
+        h('div',{className:'dpg-tabs',role:'tablist','aria-label':t('panel.radar')},
+          tabs.map(item=>h('button',{key:item.key,type:'button',className:'dpg-stat',role:'tab','data-kind':item.key,'data-active':tabKey===item.key?'true':'false','aria-selected':tabKey===item.key,title:item.label,onClick:()=>setTab(item.key)},
+            h(Icon,{name:item.icon,size:14}),h('span',null,item.label),h('b',null,item.count)))),
+        shown.length?h('div',{className:'dpg-list'},shown.map(tabKey==='results'?logRow:taskRow)):h('p',{className:'dpg-empty'},emptyText),
+        tabKey==='results'&&list.length>5?h('button',{type:'button',className:'dpg-more','aria-expanded':allHistory,onClick:()=>setAllHistory(v=>!v),title:allHistory?t('panel.less'):t('panel.more')},
+          h(Icon,{name:allHistory?'up':'down',size:13}),h('b',null,allHistory?t('panel.less'):t('panel.moreShow',{n:list.length-5}))):null,
+        tabKey==='results'&&results.length>=20?h('p',{className:'dpg-archive-note'},t('panel.archiveNote')):null,
         tools?h('div',{className:'dpg-tools'},
           h('div',{className:'dpg-toolrow'},
             toolButton('mute',t('panel.mute'),state.muted,props.toggleMute),

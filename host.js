@@ -81,7 +81,7 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
   // Business stats only: a channel test is a diagnostic, never a finished task.
   const business=history.filter(e=>e.test!==true);
   const stats={active:active.length,running:active.filter(x=>x.running).length,waiting:active.filter(x=>x.waiting).length,children:active.reduce((n,x)=>n+x.children.running,0),doneToday:business.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&at-e.at<86400000).length,events:business.length};
-  return {boot,version:'2.1.1',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,stats,events:[...history],notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
+  return {boot,version:'2.2.0',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,stats,events:[...history],notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
  }
  function wording(n){
   const formatted=formatNotice(n);

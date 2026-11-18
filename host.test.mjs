@@ -47,7 +47,7 @@ test('active rows prioritize waiting then newest activity with honest progress a
  commit(host,a,'tool/call',{name:'ask_user_question',callId:'q',arguments:'{}'},2,150);
  commit(host,c,'step/start',{step:4},2,400);commit(host,c,'todo/write',{todos:[{content:'done',status:'completed'},{content:'next',status:'pending'}]},3,500);
  commit(host,c,'tool/call',{name:'read',callId:'r',arguments:'secret'},4,600);
- const snap=host.snapshot();assert.equal(snap.version,'2.1.1');assert.deepEqual(snap.active.map(x=>x.sessionId),['a','c','b']);
+ const snap=host.snapshot();assert.equal(snap.version,'2.2.0');assert.deepEqual(snap.active.map(x=>x.sessionId),['a','c','b']);
  const row=snap.active[1];assert.equal(row.phase,'tool');assert.equal(row.step,4);assert.equal(row.tool,'read');assert.equal(row.toolCount,0);assert.equal(row.todoTotal,2);assert.equal(row.todoDone,1);assert.equal(row.progress,0.5);assert.equal(row.updatedAt,600);assert.equal(row.stalled,false);assert.equal(snap.active[2].progress,null);
  now=400000;assert.equal(host.snapshot().active[1].stalled,true);assert.equal(host.snapshot().active[1].phase,'tool');assert.equal(host.snapshot().events.filter(x=>x.kind==='error').length,0);host.dispose();
 });

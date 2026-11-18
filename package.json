@@ -1,11 +1,11 @@
 {
   "name": "@local/whale-sentinel",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
   "description": "小鲸哨：DSH 轻量任务雷达。收起时坐姿办公，展开后站到看板旁指向任务，两种尺寸可分别调整。",
   "exports": {
-    ".": "./release-2.1.1.js",
+    ".": "./release-2.2.0.js",
     "./client": "./client.js",
     "./locale/*.json": "./locale/*.json",
     "./assets/*": "./assets/*",
@@ -16,7 +16,7 @@
   },
   "files": [
     "index.js",
-    "release-2.1.1.js",
+    "release-2.2.0.js",
     "notification-format.js",
     "activation-queue.js",
     "win-activation.js",

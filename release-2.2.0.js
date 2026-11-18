@@ -1,9 +1,9 @@
-// 2.1.1: fix the waiting card in themed panels and stop repeating active
-// sessions in recent activity.
-// - The waiting card used a fixed cream surface while text followed theme
-//   tokens, so dark themes rendered light text on light cream.
-// - A session's own start/waiting event was listed again under recent
-//   activity; it is now filtered while terminal results are kept.
+// 2.2.0: the top pills are real tabs and results are archived per session.
+// - 待处理 / 进行中 / 结果 are mutually exclusive: a waiting session is never
+//   counted as running, and each bucket shows only its own rows.
+// - Results group terminal events by session (latest result + occurrence count),
+//   show five by default, expand on demand, and disclose the retained window.
+// 2.1.1: themed waiting card and no duplicate live rows in recent activity.
 // 2.1.0: radar and multi-window release.
 // - Workspace label and delegated-subagent activity are aggregated into the root
 //   row, so a running child is visible without becoming its own notification.
@@ -21,9 +21,9 @@
 // - A toast that cannot carry a click target is delivered as notification-only.
 import {readFileSync,writeFileSync,mkdirSync,renameSync,unlinkSync,readdirSync} from 'node:fs';
 import {join} from 'node:path';import {homedir} from 'node:os';import {createHash,randomUUID} from 'node:crypto';
-import {initialState,foldTask} from './task-state.js?release=2.1.1';
-import {createTaskHost} from './host.js?release=2.1.1';
-import {createNativeBridge} from './native.js?release=2.1.1';
+import {initialState,foldTask} from './task-state.js?release=2.2.0';
+import {createTaskHost} from './host.js?release=2.2.0';
+import {createNativeBridge} from './native.js?release=2.2.0';
 import {createWindowsActivation} from './win-activation.js';
 import {createActivationQueue} from './activation-queue.js';
 export const inject=['agents','sessionProjections','webServer','connection'];

@@ -25,7 +25,7 @@ test('panel matches the generated anime-cartoon reference',()=>{
   assert.match(css,/\.dpg-panel\{[^}]*box-shadow:4px 5px 0/, 'offset sticker shadow');
   assert.match(css,/\.dpg-head\{[^}]*linear-gradient\(135deg,color-mix\(in srgb,var\(--dsw-alias-bg-layer-1[^)]*\) 35%,#A8DCF7/, 'sky-to-lavender header');
   assert.match(css,/\.dpg-title\{[^}]*font-size:17px[^}]*font-weight:800/, 'large readable title');
-  assert.match(css,/\.dpg-stats\{[^}]*grid-template-columns:repeat\(3,1fr\)/, 'three pastel stat pills');
+  assert.match(css,/\.dpg-tabs\{[^}]*grid-template-columns:repeat\(3,1fr\)/, 'three equal tabs');
   assert.match(css,/\.dpg-row\{[^}]*border:3px solid[^}]*border-radius:15px/, 'outlined task cards');
   assert.match(css,/\.dpg-bar\{[^}]*height:14px/, 'thick progress bar');
   assert.doesNotMatch(css,/border-top:0/, 'every card keeps its full outline');

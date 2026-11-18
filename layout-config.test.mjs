@@ -73,13 +73,21 @@ test('the waiting card uses a theme tint, never a hardcoded light surface',()=>{
   assert.doesNotMatch(rule,/#FFFBF0\}/,'a fixed cream background would make light text invisible in dark themes');
 });
 test('active sessions are not repeated in recent activity',()=>{
-  assert.match(src,/activeSession&&\(event\.kind==='running'\|\|event\.kind==='waiting'\)/,'only live transient events are filtered');
-  assert.match(src,/data-session/,'rows expose their session for this check');
+  assert.match(src,/terminalKinds=new Set\(\[/,'only terminal kinds become result rows');
+  assert.match(src,/resultMap\.get\(event\.sessionId\)/,'results are grouped by session');
+  assert.doesNotMatch(src,/event\.kind==='running'\|\|event\.kind==='waiting'/,'live transient events never become results');
 });
-test('stat pills read host statistics instead of mixing sessions and events',()=>{
-  assert.match(src,/stats\.active/,'task count comes from the host');
-  assert.match(src,/stats\.doneToday/,'finished count has a real window');
-  assert.doesNotMatch(src,/activity\.length\+state\.events\.length/,'sessions and events must not be added together');
+test('the top row is a real tab list with mutually exclusive buckets',()=>{
+  assert.match(src,/role:'tablist'/,'the row is a tab list');
+  assert.match(src,/role:'tab'/,'each bucket is a tab');
+  assert.match(src,/data-active/,'the selected tab is visible');
+  assert.match(src,/waitingItems=activity\.filter\(x=>x\.waiting\)/,'waiting is its own bucket');
+  assert.match(src,/runningItems=activity\.filter\(x=>!x\.waiting\)/,'a waiting session is not counted as running');
+});
+test('results are archived per session and capped by default',()=>{
+  assert.match(src,/resultMap\.get\(event\.sessionId\)/,'one result row per session');
+  assert.match(src,/list\.slice\(0,5\)/,'five results by default');
+  assert.match(src,/dpg-archive-note/,'the retained window is disclosed');
 });
 test('a task row shows its workspace and live delegated subagents',()=>{
   assert.match(src,/item\.workspace/,'workspace label comes from the host row');

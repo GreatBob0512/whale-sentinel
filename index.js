@@ -1,1 +1,1 @@
-export {inject,apply} from './release-2.1.1.js';
+export {inject,apply} from './release-2.2.0.js';

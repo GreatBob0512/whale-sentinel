@@ -84,7 +84,7 @@
 13. **代理释放要回收**：agent/disposed 除发布结束事件外，必须删除 facts/seen/nudges/stalledStates/waitingEvents，并保留 detached 墓碑供 agent/created 清除。
 14. **焦点与尺寸各只有一个入口**：面板 Tab 焦点在面板内循环；尺寸只由两个滑块控制，不要再加“标准/大”开关。
 
-开发验证脚本 `scripts/verify-activation.ps1` 会临时注册两个测试协议、验证双实例并存与中文路径点击，并在结束时注销、删除临时目录；它不随插件分发，也不要把它改成常驻逻辑。
+开发验证脚本 `scripts/verify-activation.ps1` 会临时注册两个测试协议、验证双实例并存与中文路径点击，并在结束时注销、删除临时目录；`scripts/verify-toast.ps1` 会真发一条 Toast、用 `History.GetHistory` 数数量、再按 Tag/整组撤回并清理。两者都不随插件分发，也不要把它改成常驻逻辑。
 
 ## 分发
 

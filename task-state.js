@@ -1,6 +1,7 @@
 /** Pure, checkpointable task facts derived only from committed DSH events. */
 export function initialState(header) {
   return { sessionId: header.id, title: '', child: header.origin === 'subagent' || header.delegationDepth > 0, running: false, since: null, pending: [], outcome: null, lastSeq: -1,
+    cwd: typeof header.cwd === 'string' ? header.cwd : '', parentSession: typeof header.parentSession === 'string' ? header.parentSession : null,
     phase:'idle',step:null,currentTools:[],toolCount:0,todoTotal:0,todoDone:0,progress:null,updatedAt:null,summary:'',summaryEligible:false,summaryFinal:false };
 }
 const clip = x => String(x ?? '').replace(/\s+/g, ' ').trim().slice(0, 240);
@@ -103,5 +104,10 @@ export class DeliveryQueue {
  defer(id,ms=30000){const n=this.find(id);if(!n||!['pending','claimed','failed'].includes(n.status))return false;n.status='pending';n.deadline=this.now()+ms;return true;}
  /** Keep eligibility semantics of 1.x: one eligible item leaves the queue once. */
  due(){const due=this.peekDue();for(const n of due)this.beginNative(n.id);return due;}
+ /** Drop only terminal, old receipts so a long session cannot grow without bound. */
+ prune(at,maxAgeMs=3600000){
+  const terminal=new Set(['withdrawn','shown','native-submitted','native-failed']);
+  this.items=this.items.filter(n=>!(terminal.has(n.status)&&Number.isFinite(n.at)&&at-n.at>maxAgeMs));
+ }
  list(){return this.items.map(n=>({...n}));}
 }

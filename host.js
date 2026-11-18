@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { basename } from 'node:path';
 import { DeliveryQueue, selectAttention } from './task-state.js';
 import { formatNotice } from './notification-format.js?release=2.0.0';
 
@@ -14,10 +15,11 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
  const loaded=loadedRaw&&typeof loadedRaw==='object'&&!Array.isArray(loadedRaw)?loadedRaw:{};
  const SCOPES=new Set(['all','attention']),LIMITS=new Set([3,5,10]);
  const clampScale=v=>typeof v==='number'&&Number.isFinite(v)?Math.min(1.6,Math.max(0.8,Math.round(v*10)/10)):1;
- let serial=0,revision=0,enabled=loaded.enabled!==false,soundEnabled=loaded.soundEnabled===true,soundVolume=clampVolume(loaded.soundVolume),notifyWhenFocused=loaded.notifyWhenFocused===true,scope=SCOPES.has(loaded.scope)?loaded.scope:'all',historyLimit=LIMITS.has(loaded.historyLimit)?loaded.historyLimit:3,mascotScale=clampScale(loaded.mascotScale),buddyScale=clampScale(loaded.buddyScale),disposed=false,timer=null,lastWake=null;
- const history=[],delivery=[],focusQueue=[];let presence=null;
+ let serial=0,revision=0,enabled=loaded.enabled!==false,soundEnabled=loaded.soundEnabled===true,soundVolume=clampVolume(loaded.soundVolume),notifyWhenFocused=loaded.notifyWhenFocused===true,longRunEnabled=loaded.longRunEnabled===true,scope=SCOPES.has(loaded.scope)?loaded.scope:'all',historyLimit=LIMITS.has(loaded.historyLimit)?loaded.historyLimit:3,mascotScale=clampScale(loaded.mascotScale),buddyScale=clampScale(loaded.buddyScale),disposed=false,timer=null,lastWake=null;
+ const history=[],delivery=[],focusQueue=[],nudges=new Map();let presence=new Map();
+ const LONG_RUN_MS=15*60*1000;
  const changed=()=>{revision++;};
- const settings=()=>({enabled,soundEnabled,soundVolume,notifyWhenFocused,scope,historyLimit,mascotScale,buddyScale});
+ const settings=()=>({enabled,soundEnabled,soundVolume,notifyWhenFocused,longRunEnabled,scope,historyLimit,mascotScale,buddyScale});
  const trace=(event)=>{delivery.unshift({at:now(),...event});delivery.splice(20);changed();};
  const titleOf=s=>s.title||'这个任务';
  function publish(row,notify=true){
@@ -32,7 +34,7 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
   return event;
  }
  function restoreWait(s,force=false){
-  if(!enabled||detached.has(s.sessionId)||!s.pending.length)return;
+  if(!enabled||s.child||detached.has(s.sessionId)||!s.pending.length)return;
   const p=selectAttention(s.pending),event=waitingEvent(s,p);
   const current=queue.items.filter(n=>n.sessionId===s.sessionId&&n.kind==='waiting'&&n.status!=='withdrawn').at(-1);
   if(!force&&current?.pendingId===p.id)return;
@@ -40,9 +42,12 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
   queue.push({...event,id:`${boot}:${++serial}`});changed();
  }
  function remember(session,emit=true){
-  const s=projection.stateOf(session);if(s.child)return;
+  const s=projection.stateOf(session);
   const before=facts.get(session.id),watermark=seen.get(session.id)??-1;
   if(!before||s.lastSeq!==before.lastSeq){facts.set(session.id,s);changed();}
+  // A delegated child never notifies on its own, but its activity is aggregated
+  // into the root row so the radar does not look idle while subagents work.
+  if(s.child)return;
   if(emit&&s.lastSeq<=watermark)return;
   seen.set(session.id,s.lastSeq);
   if(emit&&s.running&&(!before?.running||s.since!==before.since))publish({kind:'running',sessionId:session.id,title:titleOf(s),at:s.since??now()},false);
@@ -58,22 +63,46 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
  }
  function snapshot(){
   const at=now(),rows=[...facts.values()].filter(x=>!detached.has(x.sessionId)&&(x.running||x.pending.length));
-  rows.sort((a,b)=>Number(b.pending.length>0)-Number(a.pending.length>0)||(b.updatedAt??b.since??0)-(a.updatedAt??a.since??0));
-  const active=rows.map(x=>{
+  const delegated=new Map();
+  for(const x of rows){
+   if(!x.child||!x.parentSession)continue;
+   const agg=delegated.get(x.parentSession)??{running:0,total:0,waiting:0};
+   agg.total+=1;if(x.running)agg.running+=1;if(x.pending.length)agg.waiting+=1;
+   delegated.set(x.parentSession,agg);
+  }
+  const roots=rows.filter(x=>!x.child);
+  roots.sort((a,b)=>Number(b.pending.length>0)-Number(a.pending.length>0)||(b.updatedAt??b.since??0)-(a.updatedAt??a.since??0));
+  const active=roots.map(x=>{
    const updatedAt=x.updatedAt??x.since??null,stalled=updatedAt!==null&&at-updatedAt>=300000;
    if(stalledStates.has(x.sessionId)&&stalledStates.get(x.sessionId)!==stalled)changed();stalledStates.set(x.sessionId,stalled);
    const currentTools=x.currentTools??[],attention=selectAttention(x.pending);
-   return {sessionId:x.sessionId,title:titleOf(x),running:x.running,waiting:!!attention,waitKind:attention?.kind??null,message:attention?.message??'',since:x.since,phase:attention?'waiting':x.phase??'thinking',step:x.step??null,currentTools:currentTools.map(t=>({...t})),tool:currentTools.at(-1)?.name??null,toolCount:x.toolCount??0,todoTotal:x.todoTotal??0,todoDone:x.todoDone??0,progress:x.progress??null,updatedAt,stalled};
+   return {sessionId:x.sessionId,title:titleOf(x),running:x.running,waiting:!!attention,waitKind:attention?.kind??null,message:attention?.message??'',since:x.since,phase:attention?'waiting':x.phase??'thinking',step:x.step??null,currentTools:currentTools.map(t=>({...t})),tool:currentTools.at(-1)?.name??null,toolCount:x.toolCount??0,todoTotal:x.todoTotal??0,todoDone:x.todoDone??0,progress:x.progress??null,updatedAt,stalled,workspace:x.cwd?basename(x.cwd):'',children:delegated.get(x.sessionId)??{running:0,total:0,waiting:0}};
   });
   // Business stats only: a channel test is a diagnostic, never a finished task.
   const business=history.filter(e=>e.test!==true);
-  const stats={active:active.length,running:active.filter(x=>x.running).length,waiting:active.filter(x=>x.waiting).length,doneToday:business.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&at-e.at<86400000).length,events:business.length};
-  return {boot,version:'2.0.0',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,stats,events:[...history],notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
+  const stats={active:active.length,running:active.filter(x=>x.running).length,waiting:active.filter(x=>x.waiting).length,children:active.reduce((n,x)=>n+x.children.running,0),doneToday:business.filter(e=>e.kind==='done'&&Number.isFinite(e.at)&&at-e.at<86400000).length,events:business.length};
+  return {boot,version:'2.1.0',enabled,settings:settings(),rev:`${boot}:${revision}`,seq:serial,at,active,stats,events:[...history],notices:queue.list(),delivery:[...delivery],focusRequest:focusQueue[0]?{id:focusQueue[0].id,sessionId:focusQueue[0].sessionId}:null,activationReady:activation?.ready===true,lastWake,native:process.platform==='win32'};
  }
  function wording(n){
   const formatted=formatNotice(n);
   const phase=n.kind==='done'?'done':n.kind==='waiting'?'waiting':['error','interrupted'].includes(n.kind)?'error':'idle';
   return {title:formatted.title,body:formatted.body,meta:formatted.meta,sessionId:n.sessionId||'whale-sentinel-test',kind:n.kind,soundEnabled,soundVolume,iconPath:fileURLToPath(new URL(`./assets/fish-${phase}-side.png`,import.meta.url))};
+ }
+ function foregroundNow(){
+  const at=now();
+  for(const entry of presence.values())if(at-entry.at<20000&&entry.visible&&entry.focused)return true;
+  return false;
+ }
+ /** Once per running turn: a real long run is worth one nudge, not a series. */
+ function checkLongRuns(at){
+  if(!longRunEnabled)return;
+  for(const s of facts.values()){
+   if(s.child||!s.running||s.since===null)continue;
+   if(nudges.get(s.sessionId)===s.since)continue;
+   if(at-s.since<LONG_RUN_MS)continue;
+   nudges.set(s.sessionId,s.since);
+   publish({kind:'longRun',sessionId:s.sessionId,title:titleOf(s),at,durationMs:at-s.since},true);
+  }
  }
  function tick(at=now()){
   if(disposed)return;
@@ -82,9 +111,11 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
     native.wake().then(result=>{if(!disposed){lastWake=result;trace({id:click.noticeId,stage:'native-click-wake',reason:result.reason});}},error=>{if(!disposed)trace({id:click.noticeId,stage:'native-click-error',reason:String(error)});});
    }}catch(error){trace({stage:'native-click-error',reason:String(error)});}
    while(focusQueue[0]?.expires<=now()){focusQueue.shift();changed();}
+   queue.prune(at);
    if(!enabled)return;
+   checkLongRuns(at);
   // Deterministic time is injected in tests. Production deadlines use the host clock.
-  const suppress=!notifyWhenFocused&&presence&&presence.visible&&presence.focused&&now()-presence.at<20000;
+  const suppress=!notifyWhenFocused&&foregroundNow();
   for(const candidate of queue.peekDue()){
    // One notice can never abort the whole delivery pass.
    try{
@@ -123,20 +154,21 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
     }
     case 'focus-ack':{const request=focusQueue[0];if(!request||request.id!==body.id||request.client!==body.client||request.expires<=now()||request.lease<=now())return{ok:false};focusQueue.shift();trace({id:request.noticeId,stage:'native-click-navigation-requested'});return{ok:true};}
     case 'preferences':{
-    const known=['enabled','soundEnabled','soundVolume','notifyWhenFocused','scope','historyLimit','mascotScale','buddyScale'];
+    const known=['enabled','soundEnabled','soundVolume','notifyWhenFocused','longRunEnabled','scope','historyLimit','mascotScale','buddyScale'];
     if(body.enabled!==undefined&&typeof body.enabled!=='boolean')throw new Error('enabled must be boolean');
     if(body.soundEnabled!==undefined&&typeof body.soundEnabled!=='boolean')throw new Error('soundEnabled must be boolean');
     if(body.soundVolume!==undefined&&(typeof body.soundVolume!=='number'||!Number.isFinite(body.soundVolume)))throw new Error('soundVolume must be finite');
     if(body.notifyWhenFocused!==undefined&&typeof body.notifyWhenFocused!=='boolean')throw new Error('notifyWhenFocused must be boolean');
+    if(body.longRunEnabled!==undefined&&typeof body.longRunEnabled!=='boolean')throw new Error('longRunEnabled must be boolean');
     if(body.scope!==undefined&&!SCOPES.has(body.scope))throw new Error('unknown scope');
     if(body.historyLimit!==undefined&&!LIMITS.has(body.historyLimit))throw new Error('unsupported historyLimit');
     if(body.mascotScale!==undefined&&(typeof body.mascotScale!=='number'||!Number.isFinite(body.mascotScale)))throw new Error('mascotScale must be finite');
     if(body.buddyScale!==undefined&&(typeof body.buddyScale!=='number'||!Number.isFinite(body.buddyScale)))throw new Error('buddyScale must be finite');
     if(!known.some(k=>body[k]!==undefined))throw new Error('missing preferences');
-    const next={enabled:body.enabled??enabled,soundEnabled:body.soundEnabled??soundEnabled,soundVolume:body.soundVolume===undefined?soundVolume:clampVolume(body.soundVolume),notifyWhenFocused:body.notifyWhenFocused??notifyWhenFocused,scope:body.scope??scope,historyLimit:body.historyLimit??historyLimit,mascotScale:body.mascotScale===undefined?mascotScale:clampScale(body.mascotScale),buddyScale:body.buddyScale===undefined?buddyScale:clampScale(body.buddyScale)};
+    const next={enabled:body.enabled??enabled,soundEnabled:body.soundEnabled??soundEnabled,soundVolume:body.soundVolume===undefined?soundVolume:clampVolume(body.soundVolume),notifyWhenFocused:body.notifyWhenFocused??notifyWhenFocused,longRunEnabled:body.longRunEnabled??longRunEnabled,scope:body.scope??scope,historyLimit:body.historyLimit??historyLimit,mascotScale:body.mascotScale===undefined?mascotScale:clampScale(body.mascotScale),buddyScale:body.buddyScale===undefined?buddyScale:clampScale(body.buddyScale)};
     preferences?.save?.(next);const wasEnabled=enabled;
     if(JSON.stringify(settings())!==JSON.stringify(next))changed();
-    ({enabled,soundEnabled,soundVolume,notifyWhenFocused,scope,historyLimit,mascotScale,buddyScale}=next);
+    ({enabled,soundEnabled,soundVolume,notifyWhenFocused,longRunEnabled,scope,historyLimit,mascotScale,buddyScale}=next);
     if(!enabled){for(const n of queue.items)if(n.status!=='withdrawn'){n.status='withdrawn';changed();}}
     else if(!wasEnabled)for(const s of facts.values())restoreWait(s);
     return{ok:true,enabled,settings:settings()};
@@ -157,7 +189,19 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
    case 'wake':{if(body.sessionId!==undefined&&(typeof body.sessionId!=='string'||body.sessionId.length>256))throw new Error('invalid session');lastWake=await native.wake();changed();return lastWake;}
    case 'presence':{
     if(typeof body.visible!=='boolean'||typeof body.focused!=='boolean')throw new Error('invalid presence');
-    presence={visible:body.visible,focused:body.focused,at:now()};return{ok:true};
+    // Per-window liveness: a hidden background window must not clear the fact
+    // that another window is currently focused and already showing the panel.
+    const key=typeof body.client==='string'&&body.client.length<=100?body.client:'legacy';
+    presence.set(key,{visible:body.visible,focused:body.focused,at:now()});
+    for(const [id,entry] of presence)if(now()-entry.at>60000)presence.delete(id);
+    return{ok:true};
+   }
+   case 'diagnostic':{
+    const stages=new Set(['navigation-success','navigation-failed']);
+    if(!stages.has(body.stage))throw new Error('unknown stage');
+    if(body.sessionId!==undefined&&(typeof body.sessionId!=='string'||body.sessionId.length>256))throw new Error('invalid session');
+    trace({id:typeof body.noticeId==='string'?body.noticeId:undefined,stage:body.stage,sessionId:body.sessionId,reason:typeof body.reason==='string'?body.reason.slice(0,200):undefined});
+    return{ok:true};
    }
    case 'clear':if(history.length){history.length=0;changed();}return{ok:true};
    default:throw new Error('unknown action');
@@ -172,6 +216,7 @@ export function createTaskHost(ctx, projection, native, {now=()=>Date.now(),pref
    remember(agent.session);
    const s=facts.get(agent.session.id);if(!s||detached.has(s.sessionId))return;
    detached.add(s.sessionId);queue.withdraw(s.sessionId);changed();
+   if(s.child)return;
    if(s.running||s.pending.length)publish({kind:'interrupted',sessionId:s.sessionId,title:titleOf(s),at:now(),message:'任务已结束运行（代理已释放）',summary:s.summary??'',summaryFinal:false,durationMs:s.since===null?null:Math.max(0,now()-s.since)},true);
   });
   const guard=(req,res,method)=>{const rejection=ctx.connection.requestRejection(req);if(rejection!==undefined){response(res,rejection,{error:'unauthorized'});return false;}if(req.method!==method){res.setHeader('allow',method);response(res,405,{error:'method'});return false;}return true;};

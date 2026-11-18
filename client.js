@@ -41,7 +41,7 @@ window.__ModuleLoader__.load({
     const DICT = {
       zh: {
         name: '小鲸哨',
-        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'alert.saved':'已保存', 'alert.retry':'稍后自动重试', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
+        'panel.sound': '柔和音效', 'panel.preview': '试听', 'panel.size': '角色尺寸', 'panel.standard': '标准', 'panel.large': '大', 'panel.options': '外观与提醒', 'panel.status': '会话雷达', 'panel.attention': '需要你处理', 'panel.busy': '运行中', 'panel.connection': '连接状态', 'panel.result': '结果与最近动态', 'panel.stalled': '暂未收到新活动，不代表失败', 'panel.progress': '已完成 {done} / {total} · {percent}%', 'panel.step': '第 {step} 步', 'panel.tool': '正在使用 {tool}', 'panel.thinking': '思考与整理', 'panel.working': '正在处理', 'panel.toolsDone': '已完成 {n} 次工具调用', 'panel.volume': '提示音音量', 'panel.soundHint': '默认关闭 · 本地短音 · 不访问麦克风', 'panel.hideHint': '隐藏后仍保留状态徽章与通知', 'panel.offline':'连接中断 · 显示最后状态', 'panel.connected': '后台已连接', 'panel.connecting': '正在连接后台', 'panel.emptyResult': '新的结果会留在这里', 'panel.countLabel': '{running} 运行 · {waiting} 待处理', 'panel.restoreBadge': '恢复会话雷达 · {n} 个待处理', 'panel.soundBlocked': '需要先点一次试听以解锁音效', 'panel.docs': '图解说明见插件详情', 'panel.radar': '任务雷达', 'panel.statTasks': '任务', 'panel.statDone': '已完成', 'panel.moreShow': '查看更多结果（{n}）', 'panel.toolShort': '使用工具：{tool}', 'panel.short.done': '完成', 'panel.short.error': '异常', 'panel.short.interrupted': '中断', 'panel.short.stopped': '暂停', 'panel.short.waiting': '等待', 'panel.short.forked': '分叉', 'panel.short.unknown': '结束', 'panel.short.running': '开始', 'panel.short.longRun': '长任务', 'panel.less': '收起', 'panel.more': '全部', 'panel.scope':'进行中范围', 'panel.scopeAll':'全部会话', 'panel.scopeAttention':'只看待处理', 'panel.rows':'结果条数', 'panel.focusedNotify':'前台也通知', 'panel.scale':'大小', 'alert.saved':'已保存', 'alert.retry':'稍后自动重试', 'panel.scaleSeated':'收起尺寸', 'panel.scaleExpanded':'展开尺寸', 'panel.children':'{n} 个子任务运行中', 'panel.longRun':'长任务提醒', 'phase.tool': '工具执行', 'phase.thinking': '思考中', 'panel.openResult': '查看此会话结果',
         'event.stopped': '已手动停止', 'event.interrupted': '任务意外中断', 'event.forked': '已分叉', 'event.unknown': '任务结束', 'waiting.approval': '需要你批准', 'waiting.choice': '需要你选择', 'waiting.input': '需要你输入文字',
         title: '任务提醒',
         'state.idle': '待命中',
@@ -117,7 +117,7 @@ window.__ModuleLoader__.load({
       },
       en: {
         name: 'Xiao Jingshao',
-        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'alert.saved':'Saved', 'alert.retry':'retrying', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
+        'panel.sound': 'Soft cues', 'panel.preview': 'Preview', 'panel.size': 'Mascot size', 'panel.standard': 'Standard', 'panel.large': 'Large', 'panel.options': 'Appearance and alerts', 'panel.status': 'Session radar', 'panel.attention': 'Needs you', 'panel.busy': 'Running', 'panel.connection': 'Connection', 'panel.result': 'Results and recent activity', 'panel.stalled': 'No recent activity — not a failure', 'panel.progress': '{done} / {total} complete · {percent}%', 'panel.step': 'Step {step}', 'panel.tool': 'Using {tool}', 'panel.thinking': 'Thinking and organizing', 'panel.working': 'Working', 'panel.toolsDone': '{n} tool calls completed', 'panel.volume': 'Cue volume', 'panel.soundHint': 'Off by default · local short tones · no microphone', 'panel.hideHint': 'Hidden mascot keeps alerts and its status badge', 'panel.offline':'Offline · showing last known state', 'panel.connected': 'Host connected', 'panel.connecting': 'Connecting to host', 'panel.emptyResult': 'New results will appear here', 'panel.countLabel': '{running} running · {waiting} need you', 'panel.restoreBadge': 'Restore session radar · {n} need you', 'panel.soundBlocked': 'Click Preview once to unlock audio', 'panel.docs': 'Illustrated guide in plugin details', 'panel.radar': 'Task radar', 'panel.statTasks': 'Tasks', 'panel.statDone': 'Done', 'panel.moreShow': 'View more results ({n})', 'panel.toolShort': 'Using {tool}', 'panel.short.done': 'Done', 'panel.short.error': 'Error', 'panel.short.interrupted': 'Interrupted', 'panel.short.stopped': 'Paused', 'panel.short.waiting': 'Waiting', 'panel.short.forked': 'Forked', 'panel.short.unknown': 'Ended', 'panel.short.running': 'Started', 'panel.short.longRun': 'Long run', 'panel.less': 'Show less', 'panel.more': 'All', 'panel.scope':'Running scope', 'panel.scopeAll':'All sessions', 'panel.scopeAttention':'Needs me only', 'panel.rows':'Result rows', 'panel.focusedNotify':'Notify when focused', 'panel.scale':'Size', 'alert.saved':'Saved', 'alert.retry':'retrying', 'panel.scaleSeated':'Collapsed size', 'panel.scaleExpanded':'Expanded size', 'panel.children':'{n} subagents running', 'panel.longRun':'Long-run nudge', 'phase.tool': 'Using a tool', 'phase.thinking': 'Thinking', 'panel.openResult': 'Open this session result',
         'event.stopped': 'Stopped by user', 'event.interrupted': 'Task interrupted', 'event.forked': 'Forked', 'event.unknown': 'Task ended', 'waiting.approval': 'Approval needed', 'waiting.choice': 'A choice is needed', 'waiting.input': 'Text input needed',
         title: 'Task reminders',
         'state.idle': 'Standing by',
@@ -272,7 +272,7 @@ window.__ModuleLoader__.load({
       let lastRev=null,lastFocusId=null,pendingFocusAck=null;
       let storedSize='standard';try{storedSize=window.localStorage.getItem(SIZE_KEY)==='large'?'large':'standard'}catch{}
       const client = 'page-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
-      let snapshot = {phase:'idle',phaseSince:Date.now(),runningCount:0,waitingCount:0,muted:readFlag(MUTE_KEY,false),notifyEnabled:readFlag(NOTIFY_KEY,true),hidden:readFlag(HIDDEN_KEY,false),size:storedSize,mascotScale:1,buddyScale:1,notifyWhenFocused:false,scope:'all',historyLimit:3,soundEnabled:false,soundVolume:.2,active:[],events:[],bubble:null,alert:null,alertCount:0,hostReady:false,native:false};
+      let snapshot = {phase:'idle',phaseSince:Date.now(),runningCount:0,waitingCount:0,muted:readFlag(MUTE_KEY,false),notifyEnabled:readFlag(NOTIFY_KEY,true),hidden:readFlag(HIDDEN_KEY,false),size:storedSize,mascotScale:1,buddyScale:1,notifyWhenFocused:false,longRunEnabled:false,scope:'all',historyLimit:3,soundEnabled:false,soundVolume:.2,active:[],stats:null,events:[],bubble:null,alert:null,alertCount:0,hostReady:false,native:false};
       const patch = values => {if(disposed)return;snapshot={...snapshot,...values};for(const fn of [...listeners])fn();};
       const observable={getSnapshot:()=>snapshot,subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn)}};
       async function action(body) {
@@ -340,6 +340,7 @@ window.__ModuleLoader__.load({
             await navigate(claim.sessionId||focus.sessionId);
             if(disposed)return;
             navFailures=0;lastFocusId=focus.id;pendingFocusAck=focus.id;
+            action({action:'diagnostic',stage:'navigation-success',sessionId:claim.sessionId||focus.sessionId,noticeId:focus.id}).catch(()=>{});
             try{window.focus()}catch{}
             const ack=await action({action:'focus-ack',id:focus.id,client});if(ack.ok)pendingFocusAck=null;
           }catch(error){
@@ -347,6 +348,7 @@ window.__ModuleLoader__.load({
             if(navFailures<3){noteAlert('会话导航',{ok:false,reason:'暂时打不开目标会话，稍后自动重试'});return;}
             // Release the request so one broken target cannot block later clicks.
             navFailures=0;lastFocusId=focus.id;pendingFocusAck=focus.id;
+            action({action:'diagnostic',stage:'navigation-failed',sessionId:claim.sessionId||focus.sessionId,noticeId:focus.id,reason:String(error&&error.message||error)}).catch(()=>{});
             noteAlert('会话导航',{ok:false,reason:'无法打开目标会话，已释放本次点击'});
             try{const ack=await action({action:'focus-ack',id:focus.id,client});if(ack.ok)pendingFocusAck=null;}catch{}
           }
@@ -369,7 +371,7 @@ window.__ModuleLoader__.load({
           const list=Array.isArray(state.events)?state.events:[];
           const recent=list[0];
           events=list.slice(0,MAX_EVENTS);
-          const incoming={hostReady:true,connectionLost:false,notifyEnabled:state.enabled!==false,soundEnabled:state.settings?.soundEnabled===true,soundVolume:state.settings?.soundVolume??.2,mascotScale:state.settings?.mascotScale??1,buddyScale:state.settings?.buddyScale??1,notifyWhenFocused:state.settings?.notifyWhenFocused===true,scope:state.settings?.scope==='attention'?'attention':'all',historyLimit:[3,5,10].includes(state.settings?.historyLimit)?state.settings.historyLimit:3,native:state.native===true,active:state.active??[],stats:state.stats??null,runningCount:(state.active??[]).filter(x=>x.running).length,waitingCount:(state.active??[]).filter(x=>x.waiting).length,events};
+          const incoming={hostReady:true,connectionLost:false,notifyEnabled:state.enabled!==false,soundEnabled:state.settings?.soundEnabled===true,soundVolume:state.settings?.soundVolume??.2,mascotScale:state.settings?.mascotScale??1,buddyScale:state.settings?.buddyScale??1,notifyWhenFocused:state.settings?.notifyWhenFocused===true,longRunEnabled:state.settings?.longRunEnabled===true,scope:state.settings?.scope==='attention'?'attention':'all',historyLimit:[3,5,10].includes(state.settings?.historyLimit)?state.settings.historyLimit:3,native:state.native===true,active:state.active??[],stats:state.stats??null,runningCount:(state.active??[]).filter(x=>x.running).length,waitingCount:(state.active??[]).filter(x=>x.waiting).length,events};
           // Never let a stale snapshot overwrite a value the user just changed.
           for(const key of dirty)delete incoming[key];
           patch(incoming);
@@ -393,7 +395,7 @@ window.__ModuleLoader__.load({
         const now=Date.now();if(!force&&now-presenceAt<9000)return;presenceAt=now;
         const visible=document.visibilityState!=='hidden'&&document.hidden!==true;
         const focused=visible&&typeof document.hasFocus==='function'?document.hasFocus():false;
-        action({action:'presence',visible,focused}).catch(()=>{});
+        action({action:'presence',client,visible,focused}).catch(()=>{});
       }
       function onPresenceChange(){reportPresence(true);}
       if(typeof document.addEventListener==='function'){
@@ -442,8 +444,9 @@ window.__ModuleLoader__.load({
       function setMascotScale(value){const mascotScale=Math.min(1.6,Math.max(0.8,Math.round((Number(value)||1)*10)/10));saveSetting({mascotScale});}
       function setBuddyScale(value){const buddyScale=Math.min(1.6,Math.max(0.8,Math.round((Number(value)||1)*10)/10));saveSetting({buddyScale});}
       function toggleFocusedNotify(){saveSetting({notifyWhenFocused:!snapshot.notifyWhenFocused});}
+      function toggleLongRun(){saveSetting({longRunEnabled:!snapshot.longRunEnabled});}
       poll();
-      return {toggleSound,previewSound,setVolume,toggleSize,setMascotScale,toggleFocusedNotify,setBuddyScale,unlockAudio:()=>cues.unlock(),observable,noteAlert,toggleMute,toggleHidden,toggleNotify,clearHistory,testNotification,dismissBubble:()=>{clearTimeout(bubbleTimer);patch({bubble:null})},dispose};
+      return {toggleSound,previewSound,setVolume,toggleSize,setMascotScale,toggleFocusedNotify,toggleLongRun,setBuddyScale,unlockAudio:()=>cues.unlock(),observable,noteAlert,toggleMute,toggleHidden,toggleNotify,clearHistory,testNotification,dismissBubble:()=>{clearTimeout(bubbleTimer);patch({bubble:null})},dispose};
     }
 
     function formatDuration(t, ms) {
@@ -557,11 +560,27 @@ window.__ModuleLoader__.load({
       };
     }
 
-    /** Native notification bodies are plain text, never Markdown documents. */
-    function toastPlain(value,max=96){
-      const plain=String(value??'').replace(/```[^\n]*\n[\s\S]*?(?:```|$)/g,' ').replace(/~~~[^\n]*\n[\s\S]*?(?:~~~|$)/g,' ').replace(/<[^>]*>/g,' ').replace(/!\[[^\]]*\]\([^)]*\)/g,' ').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/https?:\/\/\S+/g,' ').replace(/^\s*(?:#{1,6}\s+|[-+*]\s+|\d+[.)]\s+|>\s*)/gm,'').replace(/[*_`~]/g,'').replace(/\s+/g,' ').trim();
-      const chars=Array.from(plain);return chars.length>max?chars.slice(0,max-1).join('')+'…':plain;
+    /**
+     * One plain-text rule for panel rows, bubbles and notifications. Keep it
+     * byte-compatible with the Host's cleanExcerpt; a test compares both.
+     */
+    function plainText(value,max=96){
+      const plain=String(value??'')
+        .replace(/```[^\n]*\n[\s\S]*?(?:```|$)/g,' ')
+        .replace(/~~~[^\n]*\n[\s\S]*?(?:~~~|$)/g,' ')
+        .replace(/!\[[^\]]*\]\([^)]*\)/g,' ')
+        .replace(/\[([^\]]+)\]\([^)]*\)/g,'$1')
+        .replace(/https?:\/\/\S+/g,' ')
+        .replace(/<[^>]*>/g,' ')
+        .replace(/^\s{0,3}(?:#{1,6}\s+|>\s*|[-+*]\s+|\d+[.)]\s+)/gm,'')
+        .replace(/[*_`~]/g,'')
+        .replace(/\\([\\[\]{}()#+.!>-])/g,'$1')
+        .replace(/[\u0000-\u001f\u007f]+/g,' ')
+        .replace(/\s+/g,' ').trim();
+      const chars=Array.from(plain);
+      return chars.length>max?chars.slice(0,Math.max(0,max-1)).join('')+'…':plain;
     }
+    const toastPlain=plainText;
     /** Try to raise one native reminder. Never throws; returns what happened. */
     function showDesktopNotification(alert, options={}) {
       const Native=window.Notification;
@@ -1012,10 +1031,7 @@ window.__ModuleLoader__.load({
       const phaseText=item=>item.waiting?t('waiting.'+(item.waitKind||'choice')):item.phase==='tool'&&item.tool?t('panel.tool',{tool:item.tool}):item.phase==='thinking'?t('panel.thinking'):t('panel.working');
       const [tools,setTools]=React.useState(false);
       const [allHistory,setAllHistory]=React.useState(false);
-      const panelText=(value,max=120)=>{
-        const plain=String(value??'').replace(/```[^\n]*\n[\s\S]*?(?:```|$)/g,' ').replace(/!\[[^\]]*\]\([^)]*\)/g,' ').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/https?:\/\/\S+/g,' ').replace(/<[^>]*>/g,' ').replace(/^\s*(?:#{1,6}\s+|[-+*]\s+|\d+[.)]\s+|>\s*)/gm,'').replace(/[*_`~]/g,'').replace(/\s+/g,' ').trim();
-        const chars=Array.from(plain);return chars.length>max?chars.slice(0,max-1).join('')+'…':plain;
-      };
+      const panelText=(value,max=120)=>plainText(value,max);
       const connText=state.hostReady?t('panel.connected'):state.connectionLost?t('panel.offline'):t('panel.connecting');
       const alertStatus=state.alert?(state.alert.ok?t('alert.sent',{n:state.alertCount}):state.alert.reason):t('alert.ready');
       const phaseGlyph=GLYPH[state.phase]??'dot';
@@ -1029,6 +1045,8 @@ window.__ModuleLoader__.load({
       const activeRows=activity.map(item=>{
         const pct=Number.isFinite(item.progress)&&item.todoTotal>0?Math.round(item.progress*100):null;
         const meta=[];
+        if(item.workspace)meta.push({icon:'layers',text:item.workspace});
+        if(item.children&&item.children.running>0)meta.push({icon:'bolt',text:t('panel.children',{n:item.children.running})});
         if(item.waiting)meta.push({icon:'clock',text:t('waiting.'+(item.waitKind||'choice'))});
         else if(item.phase==='tool'&&item.tool)meta.push({icon:'gear',text:t('panel.toolShort',{tool:item.tool})});
         else meta.push({icon:item.phase==='thinking'?'pulse':'gear',text:item.phase==='thinking'?t('panel.thinking'):t('panel.working')});
@@ -1086,7 +1104,8 @@ window.__ModuleLoader__.load({
             toolButton('trash',t('panel.clear'),undefined,props.clearHistory)),
           h('label',{className:'dpg-vol'},h(Icon,{name:'sound',size:13}),h('span',{className:'dpg-num'},Math.round((state.soundVolume??.2)*100)+'%'),h('input',{type:'range',min:.05,max:.5,step:.05,value:state.soundVolume??.2,'aria-label':t('panel.volume'),onChange:e=>props.setVolume(e.target.value)})),
           h('div',{className:'dpg-toolrow dpg-toolrow-wrap'},
-            h('button',{type:'button',className:'dpg-chip','data-active':state.notifyWhenFocused?'true':'false',title:t('panel.focusedNotify'),'aria-pressed':state.notifyWhenFocused,onClick:props.toggleFocusedNotify},h(Icon,{name:'bell',size:13}),h('span',null,t('panel.focusedNotify')))),
+            h('button',{type:'button',className:'dpg-chip','data-active':state.notifyWhenFocused?'true':'false',title:t('panel.focusedNotify'),'aria-pressed':state.notifyWhenFocused,onClick:props.toggleFocusedNotify},h(Icon,{name:'bell',size:13}),h('span',null,t('panel.focusedNotify'))),
+            h('button',{type:'button',className:'dpg-chip','data-active':state.longRunEnabled?'true':'false',title:t('panel.longRun'),'aria-pressed':state.longRunEnabled,onClick:props.toggleLongRun},h(Icon,{name:'clock',size:13}),h('span',null,t('panel.longRun')))),
           h('label',{className:'dpg-vol'},h(Icon,{name:'expand',size:13}),h('span',{className:'dpg-vol-label'},t('panel.scaleSeated')),h('span',{className:'dpg-num'},Math.round((state.mascotScale??1)*100)+'%'),h('input',{type:'range',min:.8,max:1.6,step:.1,value:state.mascotScale??1,'aria-label':t('panel.scaleSeated'),onChange:e=>props.setMascotScale(e.target.value)})),
           h('label',{className:'dpg-vol'},h(Icon,{name:'expand',size:13}),h('span',{className:'dpg-vol-label'},t('panel.scaleExpanded')),h('span',{className:'dpg-num'},Math.round((state.buddyScale??1)*100)+'%'),h('input',{type:'range',min:.8,max:1.6,step:.1,value:state.buddyScale??1,'aria-label':t('panel.scaleExpanded'),onChange:e=>props.setBuddyScale(e.target.value)})),
           h('span',{className:'dpg-debug','data-ready':state.hostReady?'true':'false',title:alertStatus},h('span',null,alertStatus))):null):null;
@@ -1134,6 +1153,7 @@ window.__ModuleLoader__.load({
             setMascotScale: value => store.setMascotScale(value),
             setBuddyScale: value => store.setBuddyScale(value),
             toggleFocusedNotify: () => store.toggleFocusedNotify(),
+            toggleLongRun: () => store.toggleLongRun(),
             unlockAudio: () => store.unlockAudio(),
             testNotification: () => store.testNotification(),
             openSession: (sessionId) => openSession(ctx.get('uiWorkspace'), sessionId),

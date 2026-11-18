@@ -1,6 +1,6 @@
 # 鲸哨文档与素材维护
 
-当前版本：2.0.0。两套运行素材：坐姿 `whale-it-seated-v1`（`assets/fish-*.png`）与展开态 `buddy-*.webp`（记录在 `assets/artwork.json` 的 `buddy` 字段；WebP 必须同时出现在 `package.json` 的 `files` 中）。
+当前版本：2.1.0。两套运行素材：坐姿 `whale-it-seated-v1`（`assets/fish-*.png`）与展开态 `buddy-*.webp`（记录在 `assets/artwork.json` 的 `buddy` 字段；WebP 必须同时出现在 `package.json` 的 `files` 中）。
 
 ## 唯一事实来源
 
@@ -64,6 +64,14 @@
 5. **导航不能污染轮询**：`handleFocus()` 独立于状态同步，导航失败只更新导航提示；连续失败 3 次释放该点击，不能让队首卡住 60 秒。
 
 另外：设置写入必须经过 `saveSetting()` 的脏值保护，旧快照不得覆盖刚拖动的值；`test` 通知不得写入 history 或参与统计。
+
+## 2.1 雷达与多窗口不变量
+
+1. **子代理只聚合、不单独提醒**：`remember()` 会保存子会话事实，但 `s.child` 在通知、事件与 `restoreWait` 之前返回；子会话只汇总到根行的 `children`。
+2. **presence 按窗口记录**：`presence` 是 `client → heartbeat` 映射，任一窗口 20 秒内可见且聚焦即视为前台；不要退回单个全局变量。
+3. **长任务每轮一次**：`nudges` 以 `sessionId → since` 去重，`since` 变化（新一轮）才允许再次提醒；阈值固定 15 分钟，只有开关可配。
+4. **导航结果要回传**：`diagnostic` 动作只接受 `navigation-success` / `navigation-failed`，写入 `delivery` 轨迹；失败不得改动连接状态。
+5. **发布一致性由脚本把关**：`scripts/verify-release.mjs` 校验版本、入口、导出、`index.js`、host 版本、文档与素材清单；`check.mjs` 会先跑它。
 
 ## 分发
 

@@ -68,6 +68,20 @@ test('stat pills read host statistics instead of mixing sessions and events',()=
   assert.match(src,/stats\.doneToday/,'finished count has a real window');
   assert.doesNotMatch(src,/activity\.length\+state\.events\.length/,'sessions and events must not be added together');
 });
+test('a task row shows its workspace and live delegated subagents',()=>{
+  assert.match(src,/item\.workspace/,'workspace label comes from the host row');
+  assert.match(src,/item\.children\.running/,'delegated activity is shown on the root row');
+  assert.match(src,/panel\.children/,'the subagent label is localized');
+});
+test('the long-run nudge is a real setting, not dead copy',()=>{
+  assert.match(src,/longRunEnabled/,'long-run state comes from settings');
+  assert.match(src,/toggleLongRun/,'a control toggles it');
+  assert.match(src,/panel\.longRun/,'the control has a localized label');
+});
+test('navigation outcomes are reported back as diagnostics',()=>{
+  assert.match(src,/stage:'navigation-success'/,'success is traced');
+  assert.match(src,/stage:'navigation-failed'/,'failure is traced with a reason');
+});
 test('new controls are wired into the slot props and would not silently do nothing',()=>{
   const inject=src.slice(src.indexOf("inject: () => ({"),src.indexOf("})",src.indexOf("inject: () => ({"))+3);
   for(const name of ['setMascotScale','toggleFocusedNotify','setBuddyScale','testNotification'])

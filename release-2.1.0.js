@@ -1,3 +1,10 @@
+// 2.1.0: radar and multi-window release.
+// - Workspace label and delegated-subagent activity are aggregated into the root
+//   row, so a running child is visible without becoming its own notification.
+// - Presence is tracked per Client window; one hidden window can no longer clear
+//   the fact that another window is focused.
+// - Optional long-run nudge, once per running turn.
+// - Navigation success/failure is reported back as a diagnostic trace.
 // 2.0.0: reliability release.
 // - One deterministic protocol per profile, so a second live instance can no
 //   longer delete the first one's click route; each instance still only accepts
@@ -8,9 +15,9 @@
 // - A toast that cannot carry a click target is delivered as notification-only.
 import {readFileSync,writeFileSync,mkdirSync,renameSync,unlinkSync,readdirSync} from 'node:fs';
 import {join} from 'node:path';import {homedir} from 'node:os';import {createHash,randomUUID} from 'node:crypto';
-import {initialState,foldTask} from './task-state.js?release=2.0.0';
-import {createTaskHost} from './host.js?release=2.0.0';
-import {createNativeBridge} from './native.js?release=2.0.0';
+import {initialState,foldTask} from './task-state.js?release=2.1.0';
+import {createTaskHost} from './host.js?release=2.1.0';
+import {createNativeBridge} from './native.js?release=2.1.0';
 import {createWindowsActivation} from './win-activation.js';
 import {createActivationQueue} from './activation-queue.js';
 export const inject=['agents','sessionProjections','webServer','connection'];
@@ -39,7 +46,7 @@ export function protocolFor(root){
 
 export async function apply(ctx){
  const stateSchema={parse(v){if(!v||typeof v.sessionId!=='string'||!Array.isArray(v.pending)||typeof v.running!=='boolean'||typeof v.phase!=='string'||!Array.isArray(v.currentTools))throw Error('Invalid mascot checkpoint');return v;}};
- const handle=await ctx.sessionProjections.register({key:'local.whale-sentinel.state',stateVersion:3,stateSchema,init:initialState,apply:foldTask});
+ const handle=await ctx.sessionProjections.register({key:'local.whale-sentinel.state',stateVersion:4,stateSchema,init:initialState,apply:foldTask});
  const dir=join(process.env.DSH_HOME||join(homedir(),'.dsh'),'storages','whale-sentinel'),file=join(dir,'preferences.json');
  const preferences={load(){return readPreferences(file);},save(v){mkdirSync(dir,{recursive:true});writeFileSync(file+'.tmp',JSON.stringify(v));renameSync(file+'.tmp',file);}};
  const profileRoot=process.env.DSH_HOME||join(homedir(),'.dsh');

@@ -35,8 +35,8 @@ test('disabled pending is recorded once and enabling restores only current waits
 });
 test('settings validate booleans, clamp volume, persist and reach fallback',async()=>{
  let saved,now=1000;const{host,native}=setup({now:()=>now,preferences:{load:()=>({soundEnabled:true,soundVolume:9}),save:x=>saved=x}});
- assert.deepEqual(host.snapshot().settings,{enabled:true,soundEnabled:true,soundVolume:0.5,notifyWhenFocused:false,scope:'all',historyLimit:3,mascotScale:1,buddyScale:1});
- await host.action({action:'preferences',soundEnabled:false,soundVolume:-3});assert.deepEqual(saved,{enabled:true,soundEnabled:false,soundVolume:0.05,notifyWhenFocused:false,scope:'all',historyLimit:3,mascotScale:1,buddyScale:1});
+ assert.deepEqual(host.snapshot().settings,{enabled:true,soundEnabled:true,soundVolume:0.5,notifyWhenFocused:false,longRunEnabled:false,scope:'all',historyLimit:3,mascotScale:1,buddyScale:1});
+ await host.action({action:'preferences',soundEnabled:false,soundVolume:-3});assert.deepEqual(saved,{enabled:true,soundEnabled:false,soundVolume:0.05,notifyWhenFocused:false,longRunEnabled:false,scope:'all',historyLimit:3,mascotScale:1,buddyScale:1});
  await assert.rejects(host.action({action:'preferences',soundEnabled:'yes'}));await assert.rejects(host.action({action:'preferences',soundVolume:'0.3'}));
  await host.action({action:'preferences',soundEnabled:true,soundVolume:0.22});await host.action({action:'test'});now+=9000;host.tick();await Promise.resolve();assert.equal(native.notifyCalls[0].soundEnabled,true);assert.equal(native.notifyCalls[0].soundVolume,0.22);host.dispose();
 });
@@ -47,7 +47,7 @@ test('active rows prioritize waiting then newest activity with honest progress a
  commit(host,a,'tool/call',{name:'ask_user_question',callId:'q',arguments:'{}'},2,150);
  commit(host,c,'step/start',{step:4},2,400);commit(host,c,'todo/write',{todos:[{content:'done',status:'completed'},{content:'next',status:'pending'}]},3,500);
  commit(host,c,'tool/call',{name:'read',callId:'r',arguments:'secret'},4,600);
- const snap=host.snapshot();assert.equal(snap.version,'2.0.0');assert.deepEqual(snap.active.map(x=>x.sessionId),['a','c','b']);
+ const snap=host.snapshot();assert.equal(snap.version,'2.1.0');assert.deepEqual(snap.active.map(x=>x.sessionId),['a','c','b']);
  const row=snap.active[1];assert.equal(row.phase,'tool');assert.equal(row.step,4);assert.equal(row.tool,'read');assert.equal(row.toolCount,0);assert.equal(row.todoTotal,2);assert.equal(row.todoDone,1);assert.equal(row.progress,0.5);assert.equal(row.updatedAt,600);assert.equal(row.stalled,false);assert.equal(snap.active[2].progress,null);
  now=400000;assert.equal(host.snapshot().active[1].stalled,true);assert.equal(host.snapshot().active[1].phase,'tool');assert.equal(host.snapshot().events.filter(x=>x.kind==='error').length,0);host.dispose();
 });

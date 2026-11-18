@@ -18,7 +18,9 @@
 
 拆帧脚本 `outputs/whale-it-states/split-seated.py`：白底 flood fill 抠除背景 → 按 alpha 连通域拆分（不按固定列宽，避免裁断头发或鲸尾）→ **按宽高取更小比例**统一缩放并留安全边距，输出 `frames-seated/{phase}-384.png`。
 
-运行素材构建 `python whale-sentinel/scripts/build-it-artwork.py`：读取上述拆帧结果，输出页面 384×576／图标 128×128／侧图 160×192，并同步更新客户端的两套内联 PNG 与 `data-artwork` 标识，避免磁盘已换而页面仍显示旧图或旧标识。
+运行素材构建 `python whale-sentinel/scripts/build-it-artwork.py`：读取上述拆帧结果，缩放到 288×432 并量化到 160 色，输出页面立绘、图标 128×128、侧图 160×192，同时更新素材清单与 `data-artwork` 标识。**它不再改 `client.js`**：内联立绘由 `node scripts/build-client.mjs` 从 `assets/` 生成。
+
+客户端源码拆成 `src/client-core.js`、`src/client-text.js`、`src/client-panel.js`；`client.js` 是构建产物（包装 + 源部件 + 生成的 `BUDDY`/`SPRITES`/`NOTIFY_FACES`）。改界面必须改 `src/` 后执行 `node scripts/build-client.mjs`，`check.mjs` 会用 `--check` 拒绝过期产物。
 
 **2. 展开态五表情**
 

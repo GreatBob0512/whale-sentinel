@@ -23,7 +23,7 @@ test('panel matches the generated anime-cartoon reference',()=>{
   const css=src.slice(src.indexOf('const CSS ='),src.indexOf('function snapshotDebug'));
   assert.match(css,/\.dpg-panel\{[^}]*border:3px solid/, 'thick ink outline like the reference');
   assert.match(css,/\.dpg-panel\{[^}]*box-shadow:4px 5px 0/, 'offset sticker shadow');
-  assert.match(css,/\.dpg-head\{[^}]*linear-gradient\(135deg,#A8DCF7/, 'sky-to-lavender header');
+  assert.match(css,/\.dpg-head\{[^}]*linear-gradient\(135deg,color-mix\(in srgb,var\(--dsw-alias-bg-layer-1[^)]*\) 35%,#A8DCF7/, 'sky-to-lavender header');
   assert.match(css,/\.dpg-title\{[^}]*font-size:17px[^}]*font-weight:800/, 'large readable title');
   assert.match(css,/\.dpg-stats\{[^}]*grid-template-columns:repeat\(3,1fr\)/, 'three pastel stat pills');
   assert.match(css,/\.dpg-row\{[^}]*border:3px solid[^}]*border-radius:15px/, 'outlined task cards');

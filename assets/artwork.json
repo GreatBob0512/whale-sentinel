@@ -9,39 +9,39 @@
   "sheetSha256": "8c1c5513db3c7a454cb54c2adf01f7f8763077fa2fd9e255cf4a547026924f17",
   "model": "gpt-image-2.6-sunburst",
   "canvas": [
-    384,
-    576
+    288,
+    432
   ],
   "states": {
     "idle": {
       "source": "outputs/whale-it-states/frames-seated/idle-384.png",
       "sourceSha256": "880edd913a5efa1d890dd75d9d4fb0af489139a9abf17223f32cf5cdabbce5ae",
       "normalizedBounds": [
-        9,
-        8,
-        375,
-        568
+        4,
+        4,
+        284,
+        428
       ],
       "files": {
         "sprite": {
-          "sha256": "13fe864d92c88b64a4d0bb121e90e318090810ddd4b6c6a13425a0fa0d1ba5e1",
-          "bytes": 62644,
+          "sha256": "b3942a389f88428864f0cc0c659b47a222f5a0e91a32c7359c5f5ae348780eb8",
+          "bytes": 40342,
           "size": [
-            384,
-            576
+            288,
+            432
           ]
         },
         "-icon": {
-          "sha256": "a4832152490ef62f32e51543df3cda0dc4cca8822eb6d469fdad9ad2beabfa0a",
-          "bytes": 5891,
+          "sha256": "d7a08ec1a5c1ebd8f4bdb159a843a4e6ba8d7f6c7e7e3459cf3086267aab5ca3",
+          "bytes": 5679,
           "size": [
             128,
             128
           ]
         },
         "-side": {
-          "sha256": "6dda4ba40f643fdf61969e3ef2303ff1e7ede39eb2d1586a5ef1276a28becf1e",
-          "bytes": 10768,
+          "sha256": "ba071b15e67a493073900832fe26974f7e6dd6f5ee777206c75fe50ef4292f26",
+          "bytes": 10312,
           "size": [
             160,
             192
@@ -53,31 +53,31 @@
       "source": "outputs/whale-it-states/frames-seated/running-384.png",
       "sourceSha256": "96db58954cc734ee67119e8144668c4552ad74e9b886cdbbfe15c666410335dd",
       "normalizedBounds": [
-        8,
-        16,
-        376,
-        568
+        4,
+        10,
+        284,
+        428
       ],
       "files": {
         "sprite": {
-          "sha256": "6d0d94928d867822e7d67fbb72b18b4d29215d3f1fb7db1a3ca7fcba0b09595e",
-          "bytes": 61539,
+          "sha256": "e397dd047c3b482914a2f40e3d82f5328261996f23892f0461fb6cac3b017df7",
+          "bytes": 39272,
           "size": [
-            384,
-            576
+            288,
+            432
           ]
         },
         "-icon": {
-          "sha256": "fecd4d9928e72ae1a052c30ac686fa71ba3b6f75c9dc275770c05d7e576592cd",
-          "bytes": 5912,
+          "sha256": "ebc913dea44979ea2dcb7688eebfb9ac224cc20f383009818a852fb26fe16a85",
+          "bytes": 5695,
           "size": [
             128,
             128
           ]
         },
         "-side": {
-          "sha256": "2fb1c6ba80ad9c2401130265d085687436572570fdc08b47b08bbe15bdaab301",
-          "bytes": 10655,
+          "sha256": "6f438c0d4f33401cf0fded18b283ae4ceac3005484a27f6130dfe0a472709ee3",
+          "bytes": 10327,
           "size": [
             160,
             192
@@ -89,31 +89,31 @@
       "source": "outputs/whale-it-states/frames-seated/waiting-384.png",
       "sourceSha256": "adbc42c37a381f0ff0b7ebd42eaceece82f070f5a9510b79be7d59b30bc25584",
       "normalizedBounds": [
-        8,
-        31,
-        376,
-        568
+        4,
+        21,
+        284,
+        428
       ],
       "files": {
         "sprite": {
-          "sha256": "76c08911c95ae397794cb5776f01400f6572fd4ae6f1310a1de67158486591ea",
-          "bytes": 62099,
+          "sha256": "73d1faa4bda17454b60ec88bb37cd8f8c4983a76db5cd1b7b43e81a640c9b3d5",
+          "bytes": 39748,
           "size": [
-            384,
-            576
+            288,
+            432
           ]
         },
         "-icon": {
-          "sha256": "75b010c3d088018dc55c8aceeb110a6047f5b0da94f697c67a578f9e021e7e36",
-          "bytes": 5911,
+          "sha256": "39edaf0115ae89f9036b6a49ddc9ecaa9b0fc9a183d67d5559094beac61365b6",
+          "bytes": 5662,
           "size": [
             128,
             128
           ]
         },
         "-side": {
-          "sha256": "0712184f167953533c168456bbfc651f4bb685056a9ce7a40dd922ae630b9189",
-          "bytes": 10714,
+          "sha256": "b7a8e08127b161017d72b5d00e38c9bc0e1d59d1409eb58c80186cabe6d7be88",
+          "bytes": 10324,
           "size": [
             160,
             192
@@ -125,31 +125,31 @@
       "source": "outputs/whale-it-states/frames-seated/done-384.png",
       "sourceSha256": "f0b9feb6c2ab9a78736620cdedab97055f22f888d1de234e66c4351e19b798ec",
       "normalizedBounds": [
-        12,
-        8,
-        372,
-        568
+        7,
+        4,
+        281,
+        428
       ],
       "files": {
         "sprite": {
-          "sha256": "3e2d041b390b9c55bd04a3c70dc5baa56200372eb4f994f5d6e5ef45a7a4ee13",
-          "bytes": 62606,
+          "sha256": "9ceaa427674a850efa00460c78c0c5e172c706ae1d3a6d2b678e13eda9cde6a3",
+          "bytes": 40402,
           "size": [
-            384,
-            576
+            288,
+            432
           ]
         },
         "-icon": {
-          "sha256": "3d92689b928fb2b3e843673b06225f8a543efb1d2168ec3ad5421d2cdcd7d245",
-          "bytes": 5994,
+          "sha256": "e3f1d70522e79d218661f6014edeb43c9712ddebbf9aa664f22f1d166f4612e9",
+          "bytes": 5734,
           "size": [
             128,
             128
           ]
         },
         "-side": {
-          "sha256": "922c5556eb6032e6803442824f30620fc2ced12df761084c0c487c64783490f4",
-          "bytes": 10919,
+          "sha256": "d2a21d7d995c578ffa1899a3c3b4c9f85fda5c3e832a95651126605532f1f932",
+          "bytes": 10543,
           "size": [
             160,
             192
@@ -161,31 +161,31 @@
       "source": "outputs/whale-it-states/frames-seated/error-384.png",
       "sourceSha256": "3d2ccc7330f171e8f86086c7bcd763e8bfedc75c93d19b7fdb6073c34a73117e",
       "normalizedBounds": [
-        8,
-        208,
-        376,
-        568
+        4,
+        154,
+        284,
+        428
       ],
       "files": {
         "sprite": {
-          "sha256": "d275adc08fc774ed0fc4379b2f50288770eca289bee692c6a1f55fd59955ab5b",
-          "bytes": 46916,
+          "sha256": "6ed26475b0ef32a6c9909505948f9bc941d03d3bf4f94f58c75f36c6ce87a57d",
+          "bytes": 29906,
           "size": [
-            384,
-            576
+            288,
+            432
           ]
         },
         "-icon": {
-          "sha256": "c3de2460f5437b2226e99afa5ab8af311ade655d56b635c97f322d3ad0379535",
-          "bytes": 4520,
+          "sha256": "8a2d0dee5c562a62470b8d8d042e24beb1e472636737d19f522a95689426b983",
+          "bytes": 4307,
           "size": [
             128,
             128
           ]
         },
         "-side": {
-          "sha256": "fa5d643b709b3430a5d0790bf031b700585b474c33de52ea11707bd869a021d2",
-          "bytes": 8192,
+          "sha256": "14700e448d419932ea42954cc4de0c07c02d473b5c311fb6a0387ca88dd1a449",
+          "bytes": 7847,
           "size": [
             160,
             192

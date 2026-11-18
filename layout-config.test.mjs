@@ -58,10 +58,12 @@ test('a narrow viewport keeps the panel complete and lets the mascot yield',()=>
   assert.match(block,/\.dpg-anchor\[data-open="true"\] \.dpg-mascot\{display:none\}/,'the character yields before a control is clipped');
   assert.match(block,/width:calc\(100vw - 20px\)/,'the panel still fits the viewport');
 });
-test('the panel follows the OS dark preference instead of glowing white',()=>{
-  assert.match(src,/@media\(prefers-color-scheme:dark\)/,'dark appearance is handled');
-  const start=src.indexOf('@media(prefers-color-scheme:dark)');
-  assert.match(src.slice(start,start+1200),/--paper:#1B2436/,'panel surface is re-toned, not only text');
+test('panel colors follow host theme tokens instead of the OS preference',()=>{
+  assert.match(src,/--ink:var\(--dsw-alias-label-primary/,'text and ink follow the host theme');
+  assert.match(src,/--paper:color-mix\(in srgb,var\(--dsw-alias-bg-layer-1/,'surface follows the host layer token');
+  assert.match(src,/--card:color-mix\(in srgb,var\(--dsw-alias-bg-overlay/,'raised cards mix the host overlay token');
+  assert.match(src,/--muted:var\(--dsw-alias-label-secondary/,'secondary text follows the host');
+  assert.doesNotMatch(src,/@media\(prefers-color-scheme:dark\)/,'dark is decided by the host theme, not the OS');
 });
 test('stat pills read host statistics instead of mixing sessions and events',()=>{
   assert.match(src,/stats\.active/,'task count comes from the host');

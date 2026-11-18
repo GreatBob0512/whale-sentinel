@@ -28,7 +28,7 @@ test('each phase ships full-height artwork and pixel-identical inline copies',()
  assert.ok(manifest,'manifest missing');const sprites=inline('SPRITES'),icons=inline('NOTIFY_FACES');
  for(const phase of phases){
   const row=manifest.states[phase];
-  for(const[suffix,size]of [['',[384,576]],['-icon',[128,128]],['-side',[160,192]]]){
+  for(const[suffix,size]of [['',[288,432]],['-icon',[128,128]],['-side',[160,192]]]){
    const b=read('assets/fish-'+phase+suffix+'.png');assert.deepEqual(imageShape(b),size,phase+suffix+' geometry');
    assert.equal(sha(b),row.files[suffix||'sprite'].sha256,phase+suffix+' manifest hash');
   }
@@ -36,7 +36,7 @@ test('each phase ships full-height artwork and pixel-identical inline copies',()
    const value=block.match(new RegExp('\\b'+phase+": 'data:image/png;base64,([^']+)'"));assert.ok(value,phase+' inline');
    assert.deepEqual(Buffer.from(value[1],'base64'),read('assets/fish-'+phase+suffix+'.png'),phase+' inline must equal shipped image');
   }
-  assert.ok(row.normalizedBounds[0]>=8&&row.normalizedBounds[1]>=8&&row.normalizedBounds[2]<=376&&row.normalizedBounds[3]<=568,phase+' includes full body with safe margins');
+  assert.ok(row.normalizedBounds[0]>=4&&row.normalizedBounds[1]>=4&&row.normalizedBounds[2]<=286&&row.normalizedBounds[3]<=430,phase+' includes full body with safe margins');
  }
 });
 test('opening the panel swaps the seated mascot for the grab-and-point buddy',()=>{
@@ -68,7 +68,7 @@ test('art upgrade stays small and contains only intended runtime resources',()=>
  const pkg=JSON.parse(read('package.json'));assert.ok(pkg.files.includes('assets/*.png'),'do not ship exploratory gen/ images');
  assert.ok(pkg.files.includes('assets/*.webp'),'expanded-state WebP is a shipped asset, not only an inline copy');
  assert.ok(pkg.files.includes('assets/artwork.json'));
- // 2.0 adds narrow-viewport and dark-mode rules; the inline budget only grows
- // with documented UI work, never with extra embedded artwork.
- assert.ok(read('client.js').length<720000,'inline runtime budget 720KB');
+ // Page sprites are 288 × 432: above 1.5× at the largest supported size, while
+ // keeping the single client artifact under 600 KB.
+ assert.ok(read('client.js').length<600000,'inline runtime budget 600KB');
 });
